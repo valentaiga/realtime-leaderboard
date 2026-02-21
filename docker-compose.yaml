@@ -10,7 +10,7 @@
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       Kestrel__Endpoints__Localhost__Url: http://0.0.0.0:5110
-      Grpc__Identity__Endpoint: backoffice.identity
+      Grpc__Identity__Endpoint: http://backoffice.identity:5010
 
   backoffice-identity:
     container_name: leaderboard.backoffice.identity
