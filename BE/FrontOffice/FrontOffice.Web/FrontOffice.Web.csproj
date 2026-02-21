@@ -5,8 +5,10 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <InvariantGlobalization>true</InvariantGlobalization>
+        <RunAOTCompilation>true</RunAOTCompilation>
         <PublishAot>true</PublishAot>
-        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+        <StripSymbols>true</StripSymbols>
+        <RuntimeIdentifiers>win-x64;linux-x64;osx-x64</RuntimeIdentifiers>
     </PropertyGroup>
 
     <ItemGroup>
@@ -23,7 +25,6 @@
     <ItemGroup>
       <ProjectReference Include="..\..\BackOffice\BackOffice.Identity.Authentication\BackOffice.Identity.Authentication.csproj" />
       <ProjectReference Include="..\..\BackOffice\BackOffice.Identity.Grpc.Client\BackOffice.Identity.Grpc.Client.csproj" />
-      <ProjectReference Include="..\..\BackOffice\BackOffice.Tools.Grpc.Client\BackOffice.Tools.Grpc.Client.csproj" />
     </ItemGroup>
 
 </Project>

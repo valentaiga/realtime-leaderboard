@@ -1,23 +1,31 @@
 ﻿FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS base
 USER $APP_UID
 WORKDIR /app
-EXPOSE 8080
-EXPOSE 8081
+EXPOSE 5110
 
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 ARG BUILD_CONFIGURATION=Release
-WORKDIR /src
-COPY ["FrontOffice/FrontOffice.Web/FrontOffice.Web.csproj", "FrontOffice/FrontOffice.Web/"]
+
+# Install NativeAOT build prerequisites
+RUN apt-get update
+RUN apt-get install -y --no-install-recommends clang zlib1g-dev
+
+COPY ["FrontOffice/FrontOffice.Web/", "FrontOffice/FrontOffice.Web/"]
+COPY ["BackOffice/BackOffice.Identity.Authentication/", "BackOffice/BackOffice.Identity.Authentication/"]
+COPY ["BackOffice/BackOffice.Identity.Grpc.Client/", "BackOffice/BackOffice.Identity.Grpc.Client/"]
+COPY ["BackOffice/BackOffice.Tools.Grpc.Client/", "BackOffice/BackOffice.Tools.Grpc.Client/"]
+COPY ["BackOffice/BackOffice.Tools.Grpc.Client/", "BackOffice/BackOffice.Tools.Grpc.Client/"]
+COPY ["BackOffice/ProtoFiles/", "BackOffice/ProtoFiles/"]
+
 RUN dotnet restore "FrontOffice/FrontOffice.Web/FrontOffice.Web.csproj"
-COPY . .
-WORKDIR "/src/FrontOffice/FrontOffice.Web"
-RUN dotnet build "./FrontOffice.Web.csproj" -c $BUILD_CONFIGURATION -o /app/build
+
+RUN dotnet build "FrontOffice/FrontOffice.Web/FrontOffice.Web.csproj" -c $BUILD_CONFIGURATION --no-restore
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./FrontOffice.Web.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "FrontOffice/FrontOffice.Web/FrontOffice.Web.csproj" -c $BUILD_CONFIGURATION /p:UseAppHost=false --self-contained true -o /app/publish
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "FrontOffice.Web.dll"]
+ENTRYPOINT ["./FrontOffice.Web"]

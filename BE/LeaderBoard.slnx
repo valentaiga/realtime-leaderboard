@@ -1,4 +1,7 @@
 ﻿<Solution>
+    <Folder Name="/Solution Items/">
+        <File Path="..\docker-compose.yaml" />
+    </Folder>
   <Folder Name="/BackOffice/">
     <Project Path="BackOffice\BackOffice.Identity.Authentication\BackOffice.Identity.Authentication.csproj" Type="Classic C#" />
     <Project Path="BackOffice\BackOffice.Identity.Grpc.Client\BackOffice.Identity.Grpc.Client.csproj" Type="Classic C#" />

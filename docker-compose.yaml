@@ -1,0 +1,25 @@
+﻿services:
+  frontoffice-web:
+    container_name: leaderboard.frontoffice.web
+    image: leaderboard.frontoffice.web
+    ports:
+      - "5110:5110"
+    build:
+      context: "./BE/"
+      dockerfile: FrontOffice/FrontOffice.Web/Dockerfile
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      Kestrel__Endpoints__Localhost__Url: http://0.0.0.0:5110
+      Grpc__Identity__Endpoint: backoffice.identity
+
+  backoffice-identity:
+    container_name: leaderboard.backoffice.identity
+    image: leaderboard.backoffice.identity
+    ports:
+      - "5010:5010"
+    build:
+      context: "./BE/"
+      dockerfile: BackOffice/BackOffice.Identity/Dockerfile
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      Kestrel__Endpoints__Localhost__Url: http://0.0.0.0:5010
