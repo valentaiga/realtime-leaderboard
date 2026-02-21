@@ -1,0 +1,28 @@
+syntax = "proto3";
+package BackOffice.Identity.Grpc;
+import "google/protobuf/empty.proto";
+
+message GrpcLoginRequest {
+   string Username = 1;
+   string Password = 2;
+}
+message GrpcLoginResponse {
+   uint64 UserId = 1;
+   string Username = 2;
+   string JwtToken = 3;
+}
+message GrpcLogoutUserRequest {
+   string UserId = 1;
+}
+message GrpcRefreshUserTokenRequest {
+   string UserId = 1;
+   string RefreshToken = 2;
+}
+message GrpcRefreshUserTokenResponse {
+   string JwtToken = 1;
+}
+service IdentityApi {
+   rpc LoginUser (GrpcLoginRequest) returns (GrpcLoginResponse);
+   rpc LogoutUser (GrpcLogoutUserRequest) returns (.google.protobuf.Empty);
+   rpc RefreshUserToken (GrpcRefreshUserTokenRequest) returns (GrpcRefreshUserTokenResponse);
+}

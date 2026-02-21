@@ -1,3 +1,16 @@
 ﻿<Solution>
-
+  <Folder Name="/BackOffice/">
+    <Project Path="BackOffice\BackOffice.Identity.Authentication\BackOffice.Identity.Authentication.csproj" Type="Classic C#" />
+    <Project Path="BackOffice\BackOffice.Identity.Grpc.Client\BackOffice.Identity.Grpc.Client.csproj" Type="Classic C#" />
+    <Project Path="BackOffice\BackOffice.Identity.Grpc\BackOffice.Identity.Grpc.csproj" Type="Classic C#" />
+    <Project Path="BackOffice\BackOffice.Identity\BackOffice.Identity.csproj" Type="Classic C#" />
+    <Project Path="BackOffice\BackOffice.Tools.Grpc.Client\BackOffice.Tools.Grpc.Client.csproj" Type="Classic C#" />
+    <Project Path="BackOffice\BackOffice.Tools.ProtoFilesGen\BackOffice.Tools.ProtoFilesGen.csproj" Type="Classic C#" />
+  </Folder>
+  <Folder Name="/BackOffice/ProtoFiles/">
+    <File Path="BackOffice\ProtoFiles\Identity.Grpc.proto" />
+  </Folder>
+  <Folder Name="/FrontOffice/">
+    <Project Path="FrontOffice\FrontOffice.Web\FrontOffice.Web.csproj" Type="Classic C#" />
+  </Folder>
 </Solution>
