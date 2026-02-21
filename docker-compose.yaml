@@ -1,5 +1,5 @@
 ﻿services:
-  frontoffice-web:
+  frontoffice.web:
     container_name: leaderboard.frontoffice.web
     image: leaderboard.frontoffice.web
     ports:
@@ -12,7 +12,7 @@
       Kestrel__Endpoints__Localhost__Url: http://0.0.0.0:5110
       Grpc__Identity__Endpoint: http://backoffice.identity:5010
 
-  backoffice-identity:
+  backoffice.identity:
     container_name: leaderboard.backoffice.identity
     image: leaderboard.backoffice.identity
     ports:

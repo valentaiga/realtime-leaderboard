@@ -11,8 +11,12 @@ builder.Services.ConfigureHttpJsonOptions(options =>
     options.SerializerOptions.TypeInfoResolverChain.Insert(0, AppJsonSerializerContext.Default);
 });
 
-builder.Services.AddIdentityAuthentication(builder.Configuration);
+builder.Services
+    .AddAuthorization()
+    .AddIdentityAuthentication(builder.Configuration);
 builder.Services.AddIdentityGrpcClient("Grpc:Identity");
+builder.Services.AddHealthChecks()
+    .AddCheck<IdentityHealthCheck>("identity");
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi(options => options.OpenApiVersion = OpenApiSpecVersion.OpenApi3_0);
@@ -24,6 +28,8 @@ if (app.Environment.IsDevelopment() || app.Environment.EnvironmentName == "Docke
     app.MapOpenApi();
     app.UseSwaggerUI(options => options.SwaggerEndpoint("/openapi/v1.json", "v1"));
 }
+
+app.MapHealthChecks("/hc");
 
 var identityGroup = app.MapGroup("/api/identity");
 identityGroup.MapPost("login", IdentityController.Login).AllowAnonymous();
