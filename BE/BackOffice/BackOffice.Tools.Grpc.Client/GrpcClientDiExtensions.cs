@@ -12,7 +12,7 @@ public static class GrpcClientDiExtensions
     public static IServiceCollection AddClient<TGrpcService>(this IServiceCollection services, string configSectionPath, Func<GrpcChannel, TGrpcService> factory) where TGrpcService : ClientBase
     {
         services.TryAddSingleton<GrpcChannelFactory>();
-        services.AddOptions<GrpcClientOptions<TGrpcService>>()
+        services.AddOptions<GrpcClientOptions>()
             .Configure<IConfiguration>((opts, config) =>
             {
                 var section = string.Equals("", configSectionPath, StringComparison.OrdinalIgnoreCase)
@@ -24,7 +24,7 @@ public static class GrpcClientDiExtensions
 
         services.AddSingleton<TGrpcService>(sp =>
         {
-            var options = sp.GetRequiredService<IOptions<GrpcClientOptions<TGrpcService>>>();
+            var options = sp.GetRequiredService<IOptions<GrpcClientOptions>>();
             var channelFactory = sp.GetRequiredService<GrpcChannelFactory>();
             var channel = channelFactory.Get(options.Value.Endpoint);
             return factory.Invoke(channel);

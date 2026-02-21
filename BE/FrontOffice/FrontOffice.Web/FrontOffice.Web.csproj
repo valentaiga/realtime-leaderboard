@@ -5,9 +5,8 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <InvariantGlobalization>true</InvariantGlobalization>
-        <RunAOTCompilation>true</RunAOTCompilation>
         <PublishAot>true</PublishAot>
-        <StripSymbols>true</StripSymbols>
+        <EnableConfigurationBindingGenerator>true</EnableConfigurationBindingGenerator>
         <RuntimeIdentifiers>win-x64;linux-x64;osx-x64</RuntimeIdentifiers>
     </PropertyGroup>
 

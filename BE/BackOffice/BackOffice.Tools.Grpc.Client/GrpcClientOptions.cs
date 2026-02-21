@@ -1,8 +1,6 @@
-﻿using Grpc.Core;
+﻿namespace BackOffice.Tools.Grpc.Client;
 
-namespace BackOffice.Tools.Grpc.Client;
-
-public class GrpcClientOptions<TGrpcService> where TGrpcService : ClientBase
+public class GrpcClientOptions
 {
-    public string Endpoint { get; set; } = null!;
+    public required string Endpoint { get; set; }
 }

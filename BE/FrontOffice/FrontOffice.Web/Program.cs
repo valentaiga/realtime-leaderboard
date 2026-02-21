@@ -1,7 +1,9 @@
 using FrontOffice.Web.Identity;
 using BackOffice.Identity.Authentication;
-using BackOffice.Identity.Grpc.Client;
+using BackOffice.Identity.Grpc;
+using BackOffice.Tools.Grpc.Client;
 using FrontOffice.Web;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi;
 
 var builder = WebApplication.CreateSlimBuilder(args);
@@ -14,22 +16,30 @@ builder.Services.ConfigureHttpJsonOptions(options =>
 builder.Services
     .AddAuthorization()
     .AddIdentityAuthentication(builder.Configuration);
-builder.Services.AddIdentityGrpcClient("Grpc:Identity");
-builder.Services.AddHealthChecks()
-    .AddCheck<IdentityHealthCheck>("identity");
+
+builder.Services
+    .AddSingleton<GrpcChannelFactory>()
+    .AddOptions<GrpcClientOptions>("Grpc:Identity")
+        .Configure(options => builder.Configuration.GetSection("Grpc:Identity").Bind(options)).Services
+    .AddSingleton(sp =>
+    {
+        var optionsMonitor = sp.GetRequiredService<IOptionsMonitor<GrpcClientOptions>>();
+        var options = optionsMonitor.Get("Grpc:Identity");
+        var channelFactory = sp.GetRequiredService<GrpcChannelFactory>();
+        var channel = channelFactory.Get(options.Endpoint);
+        return new IdentityApi.IdentityApiClient(channel);
+    });
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi(options => options.OpenApiVersion = OpenApiSpecVersion.OpenApi3_0);
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment() || app.Environment.EnvironmentName == "Docker")
+if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
     app.UseSwaggerUI(options => options.SwaggerEndpoint("/openapi/v1.json", "v1"));
 }
-
-app.MapHealthChecks("/hc");
 
 var identityGroup = app.MapGroup("/api/identity");
 identityGroup.MapPost("login", IdentityController.Login).AllowAnonymous();
@@ -37,4 +47,3 @@ identityGroup.MapPost("refresh", IdentityController.RefreshToken).AllowAnonymous
 identityGroup.MapPost("logout", IdentityController.Logout).RequireAuthorization();
 
 app.Run();
-

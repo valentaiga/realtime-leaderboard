@@ -1,4 +1,5 @@
 ﻿using System.Text.Json.Serialization;
+using BackOffice.Tools.Grpc.Client;
 using FrontOffice.Web.Identity;
 
 namespace FrontOffice.Web;
@@ -9,6 +10,7 @@ namespace FrontOffice.Web;
 [JsonSerializable(typeof(RefreshTokenRequest))]
 [JsonSerializable(typeof(RefreshTokenResponse))]
 [JsonSerializable(typeof(UserShortInfo))]
+[JsonSerializable(typeof(GrpcClientOptions))]
 internal partial class AppJsonSerializerContext : JsonSerializerContext
 {
 }

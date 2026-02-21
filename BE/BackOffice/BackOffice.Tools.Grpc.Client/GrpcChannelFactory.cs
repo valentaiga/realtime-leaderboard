@@ -4,21 +4,14 @@ using Microsoft.Extensions.Logging;
 
 namespace BackOffice.Tools.Grpc.Client;
 
-internal sealed class GrpcChannelFactory : IDisposable
+public sealed class GrpcChannelFactory(ILogger<GrpcChannelFactory> logger) : IDisposable
 {
-    private readonly ILogger<GrpcChannelFactory> _logger;
-
     private readonly ConcurrentDictionary<string, GrpcChannel> _channels = new(concurrencyLevel: 2, capacity: 4);
-
-    public GrpcChannelFactory(ILogger<GrpcChannelFactory>  logger)
-    {
-        _logger = logger;
-    }
 
     public GrpcChannel Get(string endpoint) =>
         _channels.GetOrAdd(endpoint, s =>
         {
-            _logger.LogInformation("Grpc channel for {GrpcEndpoint} created", endpoint);
+            logger.LogInformation("Grpc channel for {GrpcEndpoint} created", endpoint);
             return GrpcChannel.ForAddress(s, new GrpcChannelOptions
             {
                 HttpHandler = new SocketsHttpHandler // for best performance
