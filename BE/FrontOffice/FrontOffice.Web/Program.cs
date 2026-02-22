@@ -3,6 +3,7 @@ using BackOffice.Identity.Grpc;
 using BackOffice.Tools.Grpc.Client;
 using FrontOffice.Web;
 using FrontOffice.Web.Authentication;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi;
 
@@ -14,7 +15,14 @@ builder.Services.ConfigureHttpJsonOptions(options =>
 });
 
 builder.Services
-    .AddJwtAuthentication(builder.Configuration);
+    .AddJwtAuthentication(builder.Configuration)
+    .AddCors(options =>
+    {
+        var policy = new CorsPolicy();
+        builder.Configuration.GetSection("Cors").Bind(policy);
+        options.DefaultPolicyName = "Frontend";
+        options.AddPolicy("Frontend", policy);
+    });
 
 builder.Services
     .AddSingleton<GrpcChannelFactory>() // todo vm: move this dirty code to other place
@@ -36,8 +44,17 @@ var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
+    app.UseCors(corsBuilder => corsBuilder
+        .AllowAnyOrigin()
+        .AllowAnyMethod()
+        .AllowAnyHeader());
+    
     app.MapOpenApi();
     app.UseSwaggerUI(options => options.SwaggerEndpoint("/openapi/v1.json", "v1"));
+}
+else
+{
+    app.UseCors();
 }
 
 var identityGroup = app.MapGroup("/api/identity");
