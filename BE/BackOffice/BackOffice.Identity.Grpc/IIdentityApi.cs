@@ -15,6 +15,6 @@ public interface IIdentityApi
 
 public record GrpcLoginRequest(string Username, string Password);
 public record GrpcLoginResponse(ulong UserId, string Username, string JwtToken);
-public record GrpcRefreshUserTokenRequest(string UserId, string RefreshToken);
+public record GrpcRefreshUserTokenRequest(ulong UserId);
 public record GrpcRefreshUserTokenResponse(string JwtToken);
-public record GrpcLogoutUserRequest(string UserId);
+public record GrpcLogoutUserRequest(ulong UserId);

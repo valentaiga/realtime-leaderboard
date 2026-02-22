@@ -12,11 +12,10 @@ message GrpcLoginResponse {
    string JwtToken = 3;
 }
 message GrpcLogoutUserRequest {
-   string UserId = 1;
+   uint64 UserId = 1;
 }
 message GrpcRefreshUserTokenRequest {
-   string UserId = 1;
-   string RefreshToken = 2;
+   uint64 UserId = 1;
 }
 message GrpcRefreshUserTokenResponse {
    string JwtToken = 1;

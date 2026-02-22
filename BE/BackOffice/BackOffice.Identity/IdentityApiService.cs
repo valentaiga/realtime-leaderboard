@@ -1,28 +1,32 @@
 ﻿using BackOffice.Identity.Grpc;
+using BackOffice.Identity.Identity;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 
 namespace BackOffice.Identity;
 
-public class IdentityApiService : IdentityApi.IdentityApiBase
+public class IdentityApiService(UserService userService, JwtTokenService jwtTokenService) : IdentityApi.IdentityApiBase
 {
-    private ulong _counter = 0;
-    public override Task<GrpcLoginResponse> LoginUser(GrpcLoginRequest request, ServerCallContext context)
+    public override async Task<GrpcLoginResponse> LoginUser(GrpcLoginRequest request, ServerCallContext context)
     {
-        return Task.FromResult(new GrpcLoginResponse
+        var loginResult = await userService.LoginUserAsync(request.Username, request.Password, context.CancellationToken);
+        var jwtToken = jwtTokenService.GenerateJwtToken(loginResult.UserId, request.Username);
+        return new GrpcLoginResponse
         {
-            UserId = Interlocked.Increment(ref _counter),
+            UserId = loginResult.UserId,
             Username = request.Username,
-            JwtToken = "some_jwt.hahaha"
-        });
+            JwtToken = jwtToken
+        };
     }
 
-    public override Task<GrpcRefreshUserTokenResponse> RefreshUserToken(GrpcRefreshUserTokenRequest request, ServerCallContext context)
+    public override async Task<GrpcRefreshUserTokenResponse> RefreshUserToken(GrpcRefreshUserTokenRequest request, ServerCallContext context)
     {
-        return Task.FromResult(new GrpcRefreshUserTokenResponse
+        var username = await userService.GetUserByIdAsync(request.UserId, context.CancellationToken);
+        var jwtToken = jwtTokenService.GenerateJwtToken(request.UserId, username);
+        return new GrpcRefreshUserTokenResponse
         {
-            JwtToken = "some_jwt.hahaha"
-        });
+            JwtToken = jwtToken
+        };
     }
 
     public override Task<Empty> LogoutUser(GrpcLogoutUserRequest request, ServerCallContext context)

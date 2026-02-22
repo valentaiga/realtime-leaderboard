@@ -1,8 +1,17 @@
+using System.IdentityModel.Tokens.Jwt;
 using BackOffice.Identity;
+using BackOffice.Identity.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddGrpc();
+
+builder.Services.AddOptions<JwtOptions>()
+    .Configure(options => builder.Configuration.GetSection("Jwt").Bind(options));
+builder.Services
+    .AddSingleton<UserService>()
+    .AddSingleton<JwtTokenService>()
+    .AddSingleton<JwtSecurityTokenHandler>();
 
 var app = builder.Build();
 

@@ -1,5 +1,5 @@
 using FrontOffice.Web.Identity;
-using BackOffice.Identity.Authentication;
+using BackOffice.Identity.Authentication.Jwt;
 using BackOffice.Identity.Grpc;
 using BackOffice.Tools.Grpc.Client;
 using FrontOffice.Web;
@@ -14,11 +14,11 @@ builder.Services.ConfigureHttpJsonOptions(options =>
 });
 
 builder.Services
-    .AddAuthorization()
-    .AddIdentityAuthentication(builder.Configuration);
+    .AddJwtAuthorizationServices()
+    .AddJwtAuthentication(builder.Configuration);
 
 builder.Services
-    .AddSingleton<GrpcChannelFactory>()
+    .AddSingleton<GrpcChannelFactory>() // todo vm: move this dirty code to other place
     .AddOptions<GrpcClientOptions>("Grpc:Identity")
         .Configure(options => builder.Configuration.GetSection("Grpc:Identity").Bind(options)).Services
     .AddSingleton(sp =>

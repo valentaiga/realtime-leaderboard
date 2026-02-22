@@ -1,14 +1,20 @@
-﻿using System.Text;
+﻿using System.IdentityModel.Tokens.Jwt;
+using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 
-namespace BackOffice.Identity.Authentication;
+namespace BackOffice.Identity.Authentication.Jwt;
 
 public static class AuthenticationExtensions
 {
-    public static IServiceCollection AddIdentityAuthentication(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddJwtAuthorizationServices(this IServiceCollection services) =>
+        services
+            .AddSingleton<JwtSecurityTokenHandler>()
+            .AddAuthorization();
+
+    public static IServiceCollection AddJwtAuthentication(this IServiceCollection services, IConfiguration configuration)
     {
         var jwtSettings = configuration.GetSection("Jwt");
         var secretKey = Encoding.ASCII.GetBytes(jwtSettings["SecretKey"] ?? throw new KeyNotFoundException("Secret key not configured"));
@@ -20,6 +26,8 @@ public static class AuthenticationExtensions
             })
             .AddJwtBearer(options =>
             {
+                options.Audience = jwtSettings["Audience"];
+                options.ClaimsIssuer = jwtSettings["Issuer"];
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuerSigningKey = true,
