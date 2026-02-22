@@ -4,17 +4,12 @@
 public interface IIdentityApi
 {
     [OperationContract]
-    Task<GrpcLoginResponse> LoginUser(GrpcLoginRequest request, CancellationToken ct);
+    Task<GrpcUserInfo> ChallengeUser(GrpcChallengeUserRequest request, CancellationToken ct);
 
     [OperationContract]
-    Task<GrpcRefreshUserTokenResponse> RefreshUserToken(GrpcRefreshUserTokenRequest request, CancellationToken ct);
-
-    [OperationContract]
-    Task LogoutUser(GrpcLogoutUserRequest request, CancellationToken ct);
+    Task<GrpcUserInfo> GetUserById(GetUserByIdRequest userId, CancellationToken ct);
 }
 
-public record GrpcLoginRequest(string Username, string Password);
-public record GrpcLoginResponse(ulong UserId, string Username, string JwtToken);
-public record GrpcRefreshUserTokenRequest(ulong UserId);
-public record GrpcRefreshUserTokenResponse(string JwtToken);
-public record GrpcLogoutUserRequest(ulong UserId);
+public record GrpcChallengeUserRequest(string Username, string Password);
+public record GrpcUserInfo(ulong UserId, string UserName);
+public record GetUserByIdRequest(ulong UserId);

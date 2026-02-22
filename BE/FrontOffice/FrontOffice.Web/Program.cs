@@ -1,8 +1,8 @@
 using FrontOffice.Web.Identity;
-using BackOffice.Identity.Authentication.Jwt;
 using BackOffice.Identity.Grpc;
 using BackOffice.Tools.Grpc.Client;
 using FrontOffice.Web;
+using FrontOffice.Web.Authentication;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi;
 
@@ -14,7 +14,6 @@ builder.Services.ConfigureHttpJsonOptions(options =>
 });
 
 builder.Services
-    .AddJwtAuthorizationServices()
     .AddJwtAuthentication(builder.Configuration);
 
 builder.Services

@@ -1,6 +1,5 @@
 ﻿<Solution>
   <Folder Name="/BackOffice/">
-    <Project Path="BackOffice\BackOffice.Identity.Authentication.Jwt\BackOffice.Identity.Authentication.Jwt.csproj" Type="Classic C#" />
     <Project Path="BackOffice\BackOffice.Identity.Grpc\BackOffice.Identity.Grpc.csproj" Type="Classic C#" />
     <Project Path="BackOffice\BackOffice.Identity\BackOffice.Identity.csproj" Type="Classic C#" />
     <Project Path="BackOffice\BackOffice.Tools.Grpc.Client\BackOffice.Tools.Grpc.Client.csproj" Type="Classic C#" />

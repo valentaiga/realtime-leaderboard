@@ -12,6 +12,7 @@
 
     <ItemGroup>
         <PackageReference Include="Grpc.AspNetCore" Version="2.76.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.3" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.3" />
         <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="10.1.4" />
     </ItemGroup>
@@ -23,9 +24,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\BackOffice\BackOffice.Identity.Authentication.Jwt\BackOffice.Identity.Authentication.Jwt.csproj" />
       <ProjectReference Include="..\..\BackOffice\BackOffice.Tools.Grpc.Client\BackOffice.Tools.Grpc.Client.csproj" />
-<!--      <ProjectReference Include="..\..\BackOffice\BackOffice.Identity.Grpc.Client\BackOffice.Identity.Grpc.Client.csproj" />-->
     </ItemGroup>
 
     <ItemGroup>

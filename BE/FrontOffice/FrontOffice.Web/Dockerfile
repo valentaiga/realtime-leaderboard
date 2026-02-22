@@ -11,7 +11,6 @@ RUN apt-get update
 RUN apt-get install -y --no-install-recommends clang zlib1g-dev
 
 COPY ["FrontOffice/FrontOffice.Web/", "FrontOffice/FrontOffice.Web/"]
-COPY ["BackOffice/BackOffice.Identity.Authentication.Jwt/", "BackOffice/BackOffice.Identity.Authentication.Jwt/"]
 COPY ["BackOffice/BackOffice.Tools.Grpc.Client/", "BackOffice/BackOffice.Tools.Grpc.Client/"]
 COPY ["BackOffice/ProtoFiles/", "BackOffice/ProtoFiles/"]
 
