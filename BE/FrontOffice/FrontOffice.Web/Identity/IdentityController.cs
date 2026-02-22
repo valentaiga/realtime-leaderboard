@@ -31,7 +31,7 @@ public static class IdentityController
     public static async Task<IResult> RefreshToken([FromBody] RefreshTokenRequest request, JwtSecurityTokenHandler tokenHandler, IOptionsMonitor<JwtBearerOptions> jwtOptionsMonitor, IdentityApi.IdentityApiClient identityClient, HttpContext context)
     {
         var options = jwtOptionsMonitor.Get(JwtBearerDefaults.AuthenticationScheme);
-        var validationResult = await tokenHandler.ValidateTokenAsync(request.JwtToken, new TokenValidationParameters
+        var validationResult = await tokenHandler.ValidateTokenAsync(request.JwtToken, new TokenValidationParameters // todo vm: reduce allocation with DI 
         {
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = options.TokenValidationParameters.IssuerSigningKey,
