@@ -1,0 +1,18 @@
+.userProfileContainer {
+  display: flex;
+  justify-content: end;
+  width: 100vw;
+}
+
+.userProfile {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  grid-gap: 10px;
+  align-items: center;
+  padding: 10px;
+
+  .username {
+    font-weight: bold;
+    cursor: pointer;
+  }
+}

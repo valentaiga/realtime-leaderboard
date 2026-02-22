@@ -1,0 +1,24 @@
+.authContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  width: 100vw;
+}
+
+.authForm {
+  padding: 30px;
+  background-color: #fff;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  display: grid;
+  grid-template-rows: auto 1fr 1fr auto;
+  align-items: center;
+  justify-content: center;
+  grid-gap: 30px;
+
+  //> :not(:last-child) {
+  //  margin-bottom: 20px;
+  //}
+}
