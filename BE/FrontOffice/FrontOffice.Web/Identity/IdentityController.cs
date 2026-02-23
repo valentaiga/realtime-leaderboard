@@ -40,6 +40,6 @@ public static class IdentityController
     }
 
     // logout should be on client side
-    public static Task<IResult> Logout(IdentityApi.IdentityApiClient identityClient, HttpContext context) =>
+    public static Task<IResult> Logout() =>
         Task.FromResult(Results.Ok(new LogoutResponse("Logged out successfully")));
 }

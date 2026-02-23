@@ -14,4 +14,10 @@
   <Folder Name="/Solution Items/">
     <File Path="..\docker-compose.yaml" />
   </Folder>
+  <Folder Name="/Tests/">
+    <Project Path="Tests\Tests.Common.BackOffice.Identity\Tests.Common.BackOffice.Identity.csproj" Type="Classic C#" />
+    <Project Path="Tests\Tests.Common.FrontOffice.Web\Tests.Common.FrontOffice.Web.csproj" Type="Classic C#" />
+    <Project Path="Tests\Tests.Common\Tests.Common.csproj" Type="Classic C#" />
+    <Project Path="Tests\Tests.UnitTests\Tests.UnitTests.csproj" Type="Classic C#" />
+  </Folder>
 </Solution>
