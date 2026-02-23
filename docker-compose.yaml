@@ -23,3 +23,12 @@
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       Kestrel__Endpoints__Localhost__Url: http://0.0.0.0:5010
+  #Frontend
+  frontend:
+    build: ./FE
+    container_name: frontend
+    ports:
+      - "5173:5173"
+    depends_on:
+      frontoffice.web:
+        condition: service_started

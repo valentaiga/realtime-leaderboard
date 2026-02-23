@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-import { profileService } from "../../../../shared/api/profile.service.ts";
+import { useEffect } from "react";
 import { useLeaderboardTable } from "../../../../shared/hooks/useLeaderboardTable.ts";
 import { Table } from "antd";
 import { RoutesPath } from "../../../../shared/router/routes.ts";
@@ -10,7 +9,10 @@ interface RelativeTableProps {
 }
 
 const RelativeTable = ({ username }: RelativeTableProps) => {
-  const { data, setData, columns } = useLeaderboardTable();
+  const {
+    data, //setData,
+    columns,
+  } = useLeaderboardTable();
   const navigate = useNavigate();
   useEffect(() => {
     // profileService.getRelativeTableData(username);

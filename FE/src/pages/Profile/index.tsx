@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+// import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Flex } from "antd";
 import PlayerInfo from "./components/PlayerInfo";
@@ -7,7 +7,7 @@ import { RoutesPath } from "../../shared/router/routes.ts";
 import { useNotification } from "../../shared/hooks/useNotification.tsx";
 import PlayerHistory from "./components/PlayerHistory";
 
-const Profile: React.FC = () => {
+const Profile = () => {
   const navigate = useNavigate();
   const { username } = useParams<{ username: string }>();
   const { showError } = useNotification();

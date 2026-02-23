@@ -1,5 +1,5 @@
-export enum RoutesPath {
-    Auth = 'auth',
-    Leaderboard = 'leaderboard',
-    Profile = 'profile',
-}
+export const RoutesPath = {
+  Auth: "auth",
+  Leaderboard: "leaderboard",
+  Profile: "profile",
+} as const;
