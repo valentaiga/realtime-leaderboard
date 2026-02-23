@@ -1,8 +1,13 @@
 export type DateRange = "daily" | "weekly" | "monthly";
 
+export interface Pagination {
+  page: number;
+  pageSize: number;
+  total: number;
+}
+
 export interface RefreshTokenResponse {
-  accessToken: string;
-  refreshToken?: string;
+  token: string;
 }
 
 export interface QueueItem {

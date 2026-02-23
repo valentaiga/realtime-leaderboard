@@ -14,6 +14,7 @@ export const authService = {
     );
 
     localStorage.setItem("token", data.token);
+    localStorage.setItem("user", JSON.stringify(data.user));
 
     return data;
   },
@@ -32,23 +33,23 @@ export const authService = {
   },
 
   async refreshToken(): Promise<RefreshTokenResponse> {
-    const refreshToken = localStorage.getItem("refreshToken");
+    const jwtToken = localStorage.getItem("token");
 
-    if (!refreshToken) {
+    if (!jwtToken) {
       throw new Error("No refresh token available");
     }
 
-    const response = await api.post<RefreshTokenResponse>("/auth/refresh", {
-      refreshToken,
+    const response = await api.post<RefreshTokenResponse>("/identity/refresh", {
+      jwtToken,
     });
     return response.data;
   },
 
-  getAccessToken(): string | null {
-    return localStorage.getItem("accessToken");
+  getToken(): string | null {
+    return localStorage.getItem("token");
   },
 
   isAuthenticated(): boolean {
-    return !!this.getAccessToken();
+    return !!this.getToken();
   },
 };

@@ -35,11 +35,6 @@ const processQueue = (
 const createApiClient = (baseURL: string): AxiosInstance => {
   const config: CreateAxiosDefaults = {
     baseURL,
-    withCredentials: true, // если используете httpOnly cookies
-    headers: {
-      "Content-Type": "application/json",
-      "Cross-Origin-Opener-Policy": "*",
-    },
   };
 
   const instance: AxiosInstance = axios.create(config);
@@ -47,7 +42,7 @@ const createApiClient = (baseURL: string): AxiosInstance => {
   // Request interceptor
   instance.interceptors.request.use(
     (config: InternalAxiosRequestConfig): InternalAxiosRequestConfig => {
-      const token: string | null = localStorage.getItem("accessToken");
+      const token: string | null = localStorage.getItem("token");
 
       if (token && config.headers) {
         config.headers.Authorization = `Bearer ${token}`;
@@ -78,8 +73,8 @@ const createApiClient = (baseURL: string): AxiosInstance => {
       // Если это запрос на обновление токена и он тоже вернул 401
       if (originalRequest.url === "/auth/refresh") {
         // Очищаем токены и перенаправляем на страницу логина
-        localStorage.removeItem("accessToken");
-        localStorage.removeItem("refreshToken");
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
         window.location.href = `/${RoutesPath.Auth}`;
         return Promise.reject(error);
       }
@@ -102,44 +97,38 @@ const createApiClient = (baseURL: string): AxiosInstance => {
       isRefreshing = true;
 
       try {
-        const refreshToken: string | null =
-          localStorage.getItem("refreshToken");
+        const jwtToken: string | null = localStorage.getItem("token");
 
-        if (!refreshToken) {
+        if (!jwtToken) {
           throw new Error("No refresh token available");
         }
 
         // Запрос на обновление токена
         const response = await axios.post<RefreshTokenResponse>(
           `${API_URL}/identity/refresh`,
-          { refreshToken },
+          { jwtToken },
         );
 
-        const { accessToken, refreshToken: newRefreshToken } = response.data;
+        const { token } = response.data;
 
         // Сохраняем новые токены
-        localStorage.setItem("accessToken", accessToken);
-        if (newRefreshToken) {
-          localStorage.setItem("refreshToken", newRefreshToken);
-        }
+        localStorage.setItem("token", token);
 
         // Обновляем заголовок авторизации
-        instance.defaults.headers.common["Authorization"] =
-          `Bearer ${accessToken}`;
+        instance.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 
         // Обрабатываем очередь ожидающих запросов
-        processQueue(null, accessToken);
+        processQueue(null, token);
 
         // Повторяем оригинальный запрос
-        originalRequest.headers.Authorization = `Bearer ${accessToken}`;
+        originalRequest.headers.Authorization = `Bearer ${token}`;
         return instance(originalRequest);
       } catch (refreshError) {
         // Ошибка обновления токена
         processQueue(refreshError as Error, null);
 
         // Очищаем токены
-        localStorage.removeItem("accessToken");
-        localStorage.removeItem("refreshToken");
+        localStorage.removeItem("token");
         localStorage.removeItem("user");
 
         // Перенаправляем на страницу логина

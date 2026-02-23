@@ -17,6 +17,27 @@
   --ant-btn-color-hover: #6c03ad !important
 }
 
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body, h1, h2, p, ul, ol, li {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  display: flex;
+  min-height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+
+#root{
+  width: 100%;
+  overflow: hidden;
+}
+
 a {
   font-weight: 500;
   color: #646cff;
@@ -26,12 +47,6 @@ a:hover {
   color: #535bf2;
 }
 
-body {
-  margin: 0;
-  display: flex;
-  min-width: 320px;
-  min-height: 100vh;
-}
 
 h1 {
   font-size: 3.2em;

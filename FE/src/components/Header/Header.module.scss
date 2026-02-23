@@ -1,0 +1,8 @@
+.headerContainer {
+  display: grid;
+  grid-template-columns: auto 1fr 250px auto;
+  width: 100%;
+  grid-gap: 30px;
+  padding: 10px 20px;
+  overflow: hidden;
+}

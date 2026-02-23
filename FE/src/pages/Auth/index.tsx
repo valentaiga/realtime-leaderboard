@@ -20,15 +20,8 @@ const Auth: React.FC = () => {
   const { contextHolder, showError } = useNotification();
   const handleLogin = async (values: LoginForm) => {
     setLoading(true);
-    //
     try {
-      const { user } = await authService.login(values);
-      // const user = {
-      //   id: "1",
-      //   username: "test",
-      // };
-
-      window.localStorage.setItem("user", JSON.stringify(user));
+      await authService.login(values);
 
       navigate(`/${RoutesPath.Leaderboard}`);
     } catch (error) {
@@ -49,7 +42,6 @@ const Auth: React.FC = () => {
       {contextHolder}
       <Form
         name="auth"
-        // style={{ maxWidth: 360 }}
         onFinish={handleLogin}
         clearOnDestroy
         className={styles.authForm}

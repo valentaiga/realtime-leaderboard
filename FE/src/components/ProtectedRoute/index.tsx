@@ -2,12 +2,12 @@ import React from "react";
 import { Navigate, Outlet } from "react-router-dom";
 import { authService } from "../../shared/api/auth.service.ts";
 import { RoutesPath } from "../../shared/router/routes.ts";
-import UserProfile from "../UserProfile";
+import Header from "../Header";
 
 const ProtectedRoute: React.FC = () => {
   return authService.isAuthenticated() ? (
     <>
-      <UserProfile />
+      <Header />
       <Outlet />
     </>
   ) : (
