@@ -1,6 +1,6 @@
 using FrontOffice.Web.Identity;
 using BackOffice.Identity.Grpc;
-using BackOffice.Tools.Grpc.Client;
+using Common.Grpc.Client;
 using FrontOffice.Web;
 using FrontOffice.Web.Authentication;
 using Microsoft.AspNetCore.Cors.Infrastructure;

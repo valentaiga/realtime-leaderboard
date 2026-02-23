@@ -1,4 +1,4 @@
-﻿namespace BackOffice.Tools.Grpc.Client;
+﻿namespace Common.Grpc.Client;
 
 public class GrpcClientOptions
 {

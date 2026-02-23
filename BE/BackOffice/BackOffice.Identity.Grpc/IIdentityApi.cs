@@ -4,12 +4,14 @@
 public interface IIdentityApi
 {
     [OperationContract]
-    Task<GrpcUserInfo> ChallengeUser(GrpcChallengeUserRequest request, CancellationToken ct);
+    Task<GrpcChallengeUserResponse> ChallengeUser(GrpcChallengeUserRequest request, CancellationToken ct);
 
     [OperationContract]
-    Task<GrpcUserInfo> GetUserById(GetUserByIdRequest userId, CancellationToken ct);
+    Task<GrpcGetUserByIdResponse> GetUserById(GrpcGetUserByIdRequest userId, CancellationToken ct);
 }
 
 public record GrpcChallengeUserRequest(string Username, string Password);
+public record GrpcChallengeUserResponse(GrpcUserInfo User);
 public record GrpcUserInfo(ulong UserId, string UserName);
-public record GetUserByIdRequest(ulong UserId);
+public record GrpcGetUserByIdRequest(ulong UserId);
+public record GrpcGetUserByIdResponse(GrpcUserInfo User);

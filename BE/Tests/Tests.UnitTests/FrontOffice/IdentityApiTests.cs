@@ -17,7 +17,7 @@ public class IdentityApiTests : FrontOfficeTestBase
         // arrange
         const ulong userId = 123;
         await using var identityHost = new IdentityGrpcTestHost(
-            grpc => grpc.ChallengeUserResult = req => new () { UserId = userId, UserName = req.Username});
+            grpc => grpc.ChallengeUserResult = req => new() { User = new() { UserId = userId, UserName = req.Username } });
         using var client = CreateClient();
         var loginRequest = new LoginRequest("username", "password");
 
@@ -25,15 +25,13 @@ public class IdentityApiTests : FrontOfficeTestBase
         var response = await client.PostAsync("api/identity/login", JsonContent.Create(loginRequest));
 
         // assert
-        response.IsSuccessStatusCode.Should().BeTrue();
-        var loginResponse = await response.Content.ReadFromJsonAsync<LoginResponse>();
-        loginResponse.Should().NotBeNull();
+        var loginResponse = await AssertSuccessResponseAsync<LoginResponse>(response);
         loginResponse.Token.Should().NotBeNullOrEmpty();
         loginResponse.User.Id.Should().Be(userId);
         loginResponse.User.Username.Should().Be(loginRequest.Username);
     }
 
-    [Fact(Skip = "Currently ChallengeUser call throws an error which considered as RpcError, it could be handled in future.")]
+    [Fact(Skip = "Currently ChallengeUser call throws an error which considered as RpcError, it could be handled in the future.")]
     public async Task Login_BadRequest()
     {
         // arrange
@@ -46,9 +44,7 @@ public class IdentityApiTests : FrontOfficeTestBase
         var response = await client.PostAsync("api/identity/login", JsonContent.Create(loginRequest));
 
         // assert
-        response.IsSuccessStatusCode.Should().BeFalse();
-        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-        response.ReasonPhrase.Should().Be("User not found or has incorrect password");
+        AssertErrorResponse(response, HttpStatusCode.BadRequest, "User not found or has incorrect password");
     }
 
     [Fact]
@@ -59,7 +55,7 @@ public class IdentityApiTests : FrontOfficeTestBase
         const string username = "some username";
         
         await using var identityHost = new IdentityGrpcTestHost(
-            grpc => grpc.GetUserByIdResult = req => new () { UserId = userId, UserName = username});
+            grpc => grpc.GetUserByIdResult = req => new() { User = new() { UserId = req.UserId, UserName = username } });
         using var client = CreateClient();
         var token = GetRequiredService<JwtTokenService>().GenerateJwtToken(userId, username);
         var refreshRequest = new RefreshTokenRequest(token);
@@ -68,9 +64,7 @@ public class IdentityApiTests : FrontOfficeTestBase
         var response = await client.PostAsync("api/identity/refresh", JsonContent.Create(refreshRequest));
 
         // assert
-        response.IsSuccessStatusCode.Should().BeTrue();
-        var refreshTokenResponse = await response.Content.ReadFromJsonAsync<RefreshTokenResponse>();
-        refreshTokenResponse.Should().NotBeNull();
+        var refreshTokenResponse = await AssertSuccessResponseAsync<RefreshTokenResponse>(response);
         refreshTokenResponse.Token.Should().NotBeNullOrEmpty();
     }
 
@@ -89,7 +83,7 @@ public class IdentityApiTests : FrontOfficeTestBase
         var response = await client.PostAsync("api/identity/logout", null);
 
         // assert
-        response.IsSuccessStatusCode.Should().BeTrue();
+        AssertSuccessResponse(response);
     }
 
     [Fact]
@@ -102,7 +96,6 @@ public class IdentityApiTests : FrontOfficeTestBase
         var response = await client.PostAsync("api/identity/logout", null);
 
         // assert
-        response.IsSuccessStatusCode.Should().BeFalse();
-        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+        AssertErrorResponse(response, HttpStatusCode.Unauthorized, "Unauthorized");
     }
 }

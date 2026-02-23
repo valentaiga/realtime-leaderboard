@@ -5,7 +5,7 @@
     ports:
       - "5110:5110"
     build:
-      context: "./BE/"
+      context: ./BE
       dockerfile: FrontOffice/FrontOffice.Web/Dockerfile
     environment:
       ASPNETCORE_ENVIRONMENT: Development
@@ -18,12 +18,12 @@
     ports:
       - "5010:5010"
     build:
-      context: "./BE/"
+      context: ./BE
       dockerfile: BackOffice/BackOffice.Identity/Dockerfile
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       Kestrel__Endpoints__Localhost__Url: http://0.0.0.0:5010
-  #Frontend
+
   frontend:
     build: ./FE
     container_name: frontend

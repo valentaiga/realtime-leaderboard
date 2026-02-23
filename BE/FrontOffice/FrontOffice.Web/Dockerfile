@@ -11,7 +11,7 @@ RUN apt-get update
 RUN apt-get install -y --no-install-recommends clang zlib1g-dev
 
 COPY ["FrontOffice/FrontOffice.Web/", "FrontOffice/FrontOffice.Web/"]
-COPY ["BackOffice/BackOffice.Tools.Grpc.Client/", "BackOffice/BackOffice.Tools.Grpc.Client/"]
+COPY ["Common/Common.Grpc.Client/", "Common/Common.Grpc.Client/"]
 COPY ["BackOffice/ProtoFiles/", "BackOffice/ProtoFiles/"]
 
 RUN dotnet restore "FrontOffice/FrontOffice.Web/FrontOffice.Web.csproj"

@@ -2,7 +2,7 @@
 using Grpc.Net.Client;
 using Microsoft.Extensions.Logging;
 
-namespace BackOffice.Tools.Grpc.Client;
+namespace Common.Grpc.Client;
 
 public sealed class GrpcChannelFactory(ILogger<GrpcChannelFactory> logger) : IDisposable
 {

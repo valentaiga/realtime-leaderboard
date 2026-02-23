@@ -6,23 +6,29 @@ namespace BackOffice.Identity;
 
 public class IdentityApiService(UserService userService) : IdentityApi.IdentityApiBase
 {
-    public override async Task<GrpcUserInfo> ChallengeUser(GrpcChallengeUserRequest request, ServerCallContext context)
+    public override async Task<GrpcChallengeUserResponse> ChallengeUser(GrpcChallengeUserRequest request, ServerCallContext context)
     {
         var loginResult = await userService.LoginUserAsync(request.Username, request.Password, context.CancellationToken);
-        return new GrpcUserInfo
+        return new()
         {
-            UserId = loginResult.UserId,
-            UserName = request.Username,
+            User = new()
+            {
+                UserId = loginResult.UserId,
+                UserName = request.Username,
+            }
         };
     }
 
-    public override async Task<GrpcUserInfo> GetUserById(GetUserByIdRequest request, ServerCallContext context)
+    public override async Task<GrpcGetUserByIdResponse> GetUserById(GrpcGetUserByIdRequest request, ServerCallContext context)
     {
         var userName = await userService.GetUserByIdAsync(request.UserId, context.CancellationToken);
-        return new GrpcUserInfo
+        return new()
         {
-            UserId = request.UserId,
-            UserName = userName
+            User = new()
+            {
+                UserId = request.UserId,
+                UserName = userName
+            }
         };
     }
 }

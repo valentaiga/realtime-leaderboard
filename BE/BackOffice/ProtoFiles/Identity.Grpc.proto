@@ -1,18 +1,24 @@
 syntax = "proto3";
 package BackOffice.Identity.Grpc;
 
-message GetUserByIdRequest {
-   uint64 UserId = 1;
-}
 message GrpcChallengeUserRequest {
    string Username = 1;
    string Password = 2;
+}
+message GrpcChallengeUserResponse {
+   GrpcUserInfo User = 1;
+}
+message GrpcGetUserByIdRequest {
+   uint64 UserId = 1;
+}
+message GrpcGetUserByIdResponse {
+   GrpcUserInfo User = 1;
 }
 message GrpcUserInfo {
    uint64 UserId = 1;
    string UserName = 2;
 }
 service IdentityApi {
-   rpc ChallengeUser (GrpcChallengeUserRequest) returns (GrpcUserInfo);
-   rpc GetUserById (GetUserByIdRequest) returns (GrpcUserInfo);
+   rpc ChallengeUser (GrpcChallengeUserRequest) returns (GrpcChallengeUserResponse);
+   rpc GetUserById (GrpcGetUserByIdRequest) returns (GrpcGetUserByIdResponse);
 }

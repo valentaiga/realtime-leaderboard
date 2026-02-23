@@ -24,7 +24,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\BackOffice\BackOffice.Tools.Grpc.Client\BackOffice.Tools.Grpc.Client.csproj" />
+      <ProjectReference Include="..\..\Common\Common.Grpc.Client\Common.Grpc.Client.csproj" />
     </ItemGroup>
 
     <ItemGroup>

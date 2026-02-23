@@ -1,23 +1,26 @@
 ﻿<Solution>
   <Folder Name="/BackOffice/">
-    <Project Path="BackOffice\BackOffice.Identity.Grpc\BackOffice.Identity.Grpc.csproj" Type="Classic C#" />
-    <Project Path="BackOffice\BackOffice.Identity\BackOffice.Identity.csproj" Type="Classic C#" />
-    <Project Path="BackOffice\BackOffice.Tools.Grpc.Client\BackOffice.Tools.Grpc.Client.csproj" Type="Classic C#" />
-    <Project Path="BackOffice\BackOffice.Tools.ProtoFilesGen\BackOffice.Tools.ProtoFilesGen.csproj" Type="Classic C#" />
+    <Project Path="BackOffice\BackOffice.Identity.Grpc\BackOffice.Identity.Grpc.csproj" />
+    <Project Path="BackOffice\BackOffice.Identity\BackOffice.Identity.csproj" />
   </Folder>
   <Folder Name="/BackOffice/ProtoFiles/">
     <File Path="BackOffice\ProtoFiles\Identity.Grpc.proto" />
   </Folder>
+  <Folder Name="/Common/">
+    <Project Path="Common\Common.Grpc.Client\Common.Grpc.Client.csproj" />
+    <Project Path="Common\Common.Tools.ProtoFilesGenerator\Common.Tools.ProtoFilesGenerator.csproj" />
+    <Project Path="Common\Common.Primitives\Common.Primitives.csproj" />
+  </Folder>
   <Folder Name="/FrontOffice/">
-    <Project Path="FrontOffice\FrontOffice.Web\FrontOffice.Web.csproj" Type="Classic C#" />
+    <Project Path="FrontOffice\FrontOffice.Web\FrontOffice.Web.csproj" />
   </Folder>
   <Folder Name="/Solution Items/">
     <File Path="..\docker-compose.yaml" />
   </Folder>
   <Folder Name="/Tests/">
-    <Project Path="Tests\Tests.Common.BackOffice.Identity\Tests.Common.BackOffice.Identity.csproj" Type="Classic C#" />
-    <Project Path="Tests\Tests.Common.FrontOffice.Web\Tests.Common.FrontOffice.Web.csproj" Type="Classic C#" />
-    <Project Path="Tests\Tests.Common\Tests.Common.csproj" Type="Classic C#" />
-    <Project Path="Tests\Tests.UnitTests\Tests.UnitTests.csproj" Type="Classic C#" />
+    <Project Path="Tests\Tests.Common.BackOffice.Identity\Tests.Common.BackOffice.Identity.csproj" />
+    <Project Path="Tests\Tests.Common.FrontOffice.Web\Tests.Common.FrontOffice.Web.csproj" />
+    <Project Path="Tests\Tests.Common\Tests.Common.csproj" />
+    <Project Path="Tests\Tests.UnitTests\Tests.UnitTests.csproj" />
   </Folder>
 </Solution>

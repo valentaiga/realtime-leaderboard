@@ -17,12 +17,12 @@ public static class IdentityController
         };
 
         var resp = await identityClient.ChallengeUserAsync(req, cancellationToken: ct);
-        var jwtToken = jwtTokenService.GenerateJwtToken(resp.UserId, resp.UserName);
+        var jwtToken = jwtTokenService.GenerateJwtToken(resp.User.UserId, resp.User.UserName);
 
         return Results.Ok(
             new LoginResponse(
                 jwtToken,
-                new UserShortInfo(resp.UserId, resp.UserName)));
+                new UserShortInfo(resp.User.UserId, resp.User.UserName)));
     }
 
     public static async Task<IResult> RefreshToken([FromBody] RefreshTokenRequest request, JwtTokenService jwtTokenService, IdentityApi.IdentityApiClient identityClient, HttpContext context)

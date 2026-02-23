@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
 
-namespace BackOffice.Tools.Grpc.Client;
+namespace Common.Grpc.Client;
 
 public static class GrpcClientDiExtensions
 {

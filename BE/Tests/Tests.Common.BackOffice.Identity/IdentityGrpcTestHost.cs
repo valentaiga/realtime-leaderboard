@@ -7,20 +7,22 @@ public class IdentityGrpcTestHost(Action<IdentityApiMockBehaviour>? configureBeh
 
 public class IdentityApiMock(IdentityApiMockBehaviour behaviour) : IdentityApi.IdentityApiBase
 {
-    
-    public override Task<GrpcUserInfo> ChallengeUser(GrpcChallengeUserRequest request, ServerCallContext context) =>
-        behaviour.ChallengeUserResult is null
-            ? throw new Exception($"{nameof(behaviour.ChallengeUserResult)} not set for a test")
-            : Task.FromResult(behaviour.ChallengeUserResult.Invoke(request));
+    public override async Task<GrpcChallengeUserResponse> ChallengeUser(GrpcChallengeUserRequest request, ServerCallContext context)
+    {
+        return behaviour.ChallengeUserResult.Invoke(request);
+    }
 
-    public override Task<GrpcUserInfo> GetUserById(GetUserByIdRequest request, ServerCallContext context) =>
-        behaviour.GetUserByIdResult is null
-            ? throw new Exception($"{nameof(behaviour.GetUserByIdResult)} not set for a test")
-            : Task.FromResult(behaviour.GetUserByIdResult.Invoke(request));
+    public override async Task<GrpcGetUserByIdResponse> GetUserById(GrpcGetUserByIdRequest request, ServerCallContext context)
+    {
+        return behaviour.GetUserByIdResult.Invoke(request);
+    }
 }
 
 public class IdentityApiMockBehaviour
 {
-    public Func<GrpcChallengeUserRequest, GrpcUserInfo>? ChallengeUserResult { get; set; }
-    public Func<GetUserByIdRequest, GrpcUserInfo>? GetUserByIdResult { get; set; }
+    public Func<GrpcChallengeUserRequest, GrpcChallengeUserResponse> ChallengeUserResult { get; set; } =
+        _ => throw new NotImplementedException($"{nameof(IdentityApiMockBehaviour)}.{nameof(ChallengeUserResult)} not implemented");
+
+    public Func<GrpcGetUserByIdRequest, GrpcGetUserByIdResponse> GetUserByIdResult { get; set; } =
+        _ => throw new NotImplementedException($"{nameof(IdentityApiMockBehaviour)}.{nameof(GetUserByIdResult)} not implemented");
 }
