@@ -1,5 +1,6 @@
-﻿using Grpc.Core;
-using Grpc.Net.Client;
+﻿using Common.Grpc.Client.Interceptors;
+using Grpc.Core;
+using Grpc.Core.Interceptors;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -9,26 +10,22 @@ namespace Common.Grpc.Client;
 
 public static class GrpcClientDiExtensions
 {
-    public static IServiceCollection AddClient<TGrpcService>(this IServiceCollection services, string configSectionPath, Func<GrpcChannel, TGrpcService> factory) where TGrpcService : ClientBase
+    public static IServiceCollection AddGrpcClient<TGrpcService>(this IServiceCollection services, IConfiguration configuration, string configSectionPath, Func<CallInvoker, TGrpcService> factory) where TGrpcService : ClientBase
     {
         services.TryAddSingleton<GrpcChannelFactory>();
-        services.AddOptions<GrpcClientOptions>()
-            .Configure<IConfiguration>((opts, config) =>
+        services.AddOptions<GrpcClientOptions>(configSectionPath)
+            .Configure(options => configuration.GetSection(configSectionPath).Bind(options)).Services
+            .AddSingleton(sp =>
             {
-                var section = string.Equals("", configSectionPath, StringComparison.OrdinalIgnoreCase)
-                    ? config
-                    : config.GetSection(configSectionPath);
-                section.Bind(opts);
-            })
-            .ValidateOnStart();
+                var optionsMonitor = sp.GetRequiredService<IOptionsMonitor<GrpcClientOptions>>();
+                var options = optionsMonitor.Get(configSectionPath);
+                var channelFactory = sp.GetRequiredService<GrpcChannelFactory>();
+                var channel = channelFactory.Get(options.Endpoint);
+                var invoker = channel
+                    .Intercept(new ClientErrorHandlerInterceptor());
+                return factory.Invoke(invoker);
+            });
 
-        services.AddSingleton<TGrpcService>(sp =>
-        {
-            var options = sp.GetRequiredService<IOptions<GrpcClientOptions>>();
-            var channelFactory = sp.GetRequiredService<GrpcChannelFactory>();
-            var channel = channelFactory.Get(options.Value.Endpoint);
-            return factory.Invoke(channel);
-        });
         return services;
     }
 }

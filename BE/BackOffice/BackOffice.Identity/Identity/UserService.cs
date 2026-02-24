@@ -12,7 +12,7 @@ public sealed class UserService
     {
         ct.ThrowIfCancellationRequested();
         if (password.Equals("incorrect", StringComparison.OrdinalIgnoreCase))
-            throw new BusinessException("User not found or has incorrect password", BusinessErrorCode.NotFound); // todo vm: for tests
+            throw new BusinessException("User not found or has incorrect password", BusinessErrorCode.NotFound);
 
         if (_users.TryGetValue(username, out var id))
             return Task.FromResult(new LoginUserResult(id));
