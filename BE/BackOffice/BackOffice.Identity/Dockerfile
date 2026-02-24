@@ -11,6 +11,8 @@ RUN apt-get update
 RUN apt-get install -y --no-install-recommends clang zlib1g-dev
 
 COPY ["BackOffice/BackOffice.Identity/", "BackOffice/BackOffice.Identity/"]
+COPY ["Common/Common.Grpc.Server/", "Common/Common.Grpc.Server/"]
+COPY ["Common/Common.Primitives/", "Common/Common.Primitives/"]
 COPY ["BackOffice/ProtoFiles/", "BackOffice/ProtoFiles/"]
 
 RUN dotnet restore "BackOffice/BackOffice.Identity/BackOffice.Identity.csproj"

@@ -7,6 +7,7 @@
     <File Path="BackOffice\ProtoFiles\Identity.Grpc.proto" />
   </Folder>
   <Folder Name="/Common/">
+    <Project Path="Common/Common.Grpc.Server/Common.Grpc.Server.csproj" />
     <Project Path="Common\Common.Grpc.Client\Common.Grpc.Client.csproj" />
     <Project Path="Common\Common.Tools.ProtoFilesGenerator\Common.Tools.ProtoFilesGenerator.csproj" />
     <Project Path="Common\Common.Primitives\Common.Primitives.csproj" />

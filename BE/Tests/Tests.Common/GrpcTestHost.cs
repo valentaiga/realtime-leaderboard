@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Common.Grpc.Server.Interceptors;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.DependencyInjection;
@@ -25,7 +26,8 @@ public class GrpcTestHost<TGrpcService, TServiceBehaviour> : IDisposable, IAsync
         configureBehaviour?.Invoke(behaviour);
         builder.Services.AddSingleton(behaviour);
 
-        builder.Services.AddGrpc();
+        builder.Services.AddGrpc(options =>
+            options.Interceptors.Add<ServerErrorHandlerInterceptor>());
 
         _app = builder.Build();
         _app.MapGrpcService<TGrpcService>();

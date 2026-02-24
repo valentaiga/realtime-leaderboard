@@ -1,8 +1,11 @@
-using FrontOffice.Web.Identity;
 using BackOffice.Identity.Grpc;
 using Common.Grpc.Client;
+using Common.Grpc.Client.Interceptors;
 using FrontOffice.Web;
+using FrontOffice.Web.Api.Identity;
 using FrontOffice.Web.Authentication;
+using FrontOffice.Web.Middleware;
+using Grpc.Core.Interceptors;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi;
@@ -15,6 +18,7 @@ builder.Services.ConfigureHttpJsonOptions(options =>
 });
 
 builder.Services
+    .AddSingleton<ExceptionHandleMiddleware>()
     .AddJwtAuthentication(builder.Configuration)
     .AddCors(options =>
     {
@@ -34,7 +38,9 @@ builder.Services
         var options = optionsMonitor.Get("Grpc:Identity");
         var channelFactory = sp.GetRequiredService<GrpcChannelFactory>();
         var channel = channelFactory.Get(options.Endpoint);
-        return new IdentityApi.IdentityApiClient(channel);
+        var invoker = channel
+            .Intercept(new ClientErrorHandlerInterceptor());
+        return new IdentityApi.IdentityApiClient(invoker);
     });
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
@@ -42,6 +48,8 @@ builder.Services.AddOpenApi(options => options.OpenApiVersion = OpenApiSpecVersi
 
 var app = builder.Build();
 
+app.UseAuthorization();
+app.UseMiddleware<ExceptionHandleMiddleware>();
 if (app.Environment.IsDevelopment())
 {
     app.UseCors(corsBuilder => corsBuilder

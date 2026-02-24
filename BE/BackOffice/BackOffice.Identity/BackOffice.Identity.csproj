@@ -24,4 +24,8 @@
       </Content>
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\..\Common\Common.Grpc.Server\Common.Grpc.Server.csproj" />
+    </ItemGroup>
+
 </Project>

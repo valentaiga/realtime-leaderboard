@@ -2,7 +2,7 @@
 using FrontOffice.Web.Authentication;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FrontOffice.Web.Identity;
+namespace FrontOffice.Web.Api.Identity;
 
 public static class IdentityController
 {
@@ -30,7 +30,7 @@ public static class IdentityController
         var validationResult = await jwtTokenService.ValidateRefreshTokenAsync(request.JwtToken);
 
         if (!validationResult.IsValid)
-            return Results.BadRequest("Invalid token");
+            return Results.BadRequest(new ApiError("Invalid token"));
 
         var userId = validationResult.ClaimsIdentity.Claims.GetUserId();
         var username = validationResult.ClaimsIdentity.Claims.GetUsername();

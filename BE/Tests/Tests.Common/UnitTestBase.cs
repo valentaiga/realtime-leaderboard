@@ -38,11 +38,18 @@ public abstract class UnitTestBase<TEntryPoint, THost> : IAsyncLifetime
     protected TService GetRequiredService<TService>() where TService : notnull =>
         _host.Services.GetRequiredService<TService>();
 
-    protected void AssertErrorResponse(HttpResponseMessage response, HttpStatusCode statusCode, string errorMessage)
+    protected void AssertErrorResponse(HttpResponseMessage response, HttpStatusCode statusCode)
     {
-        response.ReasonPhrase.Should().Be(errorMessage);
         response.IsSuccessStatusCode.Should().BeFalse();
         response.StatusCode.Should().Be(statusCode);
+    }
+
+    protected async Task<TErrorResponse> AssertErrorResponseAsync<TErrorResponse>(HttpResponseMessage response, HttpStatusCode statusCode)
+    {
+        AssertErrorResponse(response, statusCode);
+        var error = await response.Content.ReadFromJsonAsync<TErrorResponse>();
+        error.Should().NotBeNull();
+        return error;
     }
 
     protected void AssertSuccessResponse(HttpResponseMessage response)

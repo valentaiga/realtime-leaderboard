@@ -1,17 +1,18 @@
 ﻿using System.Collections.Concurrent;
+using Common.Primitives;
 
 namespace BackOffice.Identity.Identity;
 
 public sealed class UserService
 {
-    private ConcurrentDictionary<string, ulong> _users = new(10, 1_000); // todo vm: use db, fast solution is a dictionary 
+    private readonly ConcurrentDictionary<string, ulong> _users = new(10, 1_000); // todo vm: use db, fast solution is a dictionary 
     private ulong _incrementingId;
     
     public Task<LoginUserResult> LoginUserAsync(string username, string password, CancellationToken ct)
     {
         ct.ThrowIfCancellationRequested();
         if (password.Equals("incorrect", StringComparison.OrdinalIgnoreCase))
-            throw new KeyNotFoundException("User not found or has incorrect password"); // todo vm: for tests
+            throw new BusinessException("User not found or has incorrect password", BusinessErrorCode.NotFound); // todo vm: for tests
 
         if (_users.TryGetValue(username, out var id))
             return Task.FromResult(new LoginUserResult(id));

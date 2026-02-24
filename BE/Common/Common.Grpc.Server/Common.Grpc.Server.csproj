@@ -8,13 +8,10 @@
 
     <ItemGroup>
         <PackageReference Include="Grpc.AspNetCore" Version="2.76.0" />
-        <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="10.0.3"/>
-        <PackageReference Include="AwesomeAssertions" Version="9.4.0"/>
-        <PackageReference Include="xunit.extensibility.core" Version="2.9.3" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\Common\Common.Grpc.Server\Common.Grpc.Server.csproj" />
+      <ProjectReference Include="..\Common.Primitives\Common.Primitives.csproj" />
     </ItemGroup>
 
 </Project>

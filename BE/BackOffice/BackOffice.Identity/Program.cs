@@ -1,9 +1,11 @@
 using BackOffice.Identity;
 using BackOffice.Identity.Identity;
+using Common.Grpc.Server.Interceptors;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddGrpc();
+builder.Services.AddGrpc(options => 
+    options.Interceptors.Add<ServerErrorHandlerInterceptor>());
 
 builder.Services
     .AddSingleton<UserService>();

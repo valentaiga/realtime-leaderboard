@@ -2,8 +2,11 @@
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using AwesomeAssertions;
+using Common.Primitives;
+using FrontOffice.Web.Api;
+using FrontOffice.Web.Api.Identity;
 using FrontOffice.Web.Authentication;
-using FrontOffice.Web.Identity;
+using Grpc.Core;
 using Tests.Common.BackOffice.Identity;
 using Tests.Common.FrontOffice.Web;
 
@@ -31,12 +34,12 @@ public class IdentityApiTests : FrontOfficeTestBase
         loginResponse.User.Username.Should().Be(loginRequest.Username);
     }
 
-    [Fact(Skip = "Currently ChallengeUser call throws an error which considered as RpcError, it could be handled in the future.")]
+    [Fact]
     public async Task Login_BadRequest()
     {
         // arrange
         await using var identityHost = new IdentityGrpcTestHost(
-            grpc => grpc.ChallengeUserResult = _ => throw new KeyNotFoundException("User not found or has incorrect password"));
+            grpc => grpc.ChallengeUserResult = _ => throw new BusinessException("User not found or has incorrect password", (int)StatusCode.NotFound));
         using var client = CreateClient();
         var loginRequest = new LoginRequest("username", "password");
 
@@ -44,7 +47,8 @@ public class IdentityApiTests : FrontOfficeTestBase
         var response = await client.PostAsync("api/identity/login", JsonContent.Create(loginRequest));
 
         // assert
-        AssertErrorResponse(response, HttpStatusCode.BadRequest, "User not found or has incorrect password");
+        var error = await AssertErrorResponseAsync<ApiError>(response, HttpStatusCode.BadRequest);
+        error.Message.Should().Be("User not found or has incorrect password");
     }
 
     [Fact]
@@ -69,6 +73,22 @@ public class IdentityApiTests : FrontOfficeTestBase
     }
 
     [Fact]
+    public async Task RefreshToken_InvalidToken()
+    {
+        // arrange
+        using var client = CreateClient();
+        const string invalidToken = "doasjkmfopsajptgoj3wqwapotpoa2.dawspdfhawoihfgoawifhoiawfoi23ro13n9f8";
+        var refreshRequest = new RefreshTokenRequest(invalidToken);
+
+        // act
+        var response = await client.PostAsync("api/identity/refresh", JsonContent.Create(refreshRequest));
+
+        // assert
+        var error = await AssertErrorResponseAsync<ApiError>(response, HttpStatusCode.BadRequest);
+        error.Message.Should().Be("Invalid token");
+    }
+
+    [Fact]
     public async Task Logout_Ok()
     {
         // arrange
@@ -87,7 +107,22 @@ public class IdentityApiTests : FrontOfficeTestBase
     }
 
     [Fact]
-    public async Task Logout_Unauthorized()
+    public async Task Logout_InvalidToken_Unauthorized()
+    {
+        // arrange
+        using var client = CreateClient();
+        const string invalidToken = "doasjkmfopsajptgoj3wqwapotpoa2.dawspdfhawoihfgoawifhoiawfoi23ro13n9f8";
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", invalidToken);
+
+        // act
+        var response = await client.PostAsync("api/identity/logout", null);
+
+        // assert
+        AssertErrorResponse(response, HttpStatusCode.Unauthorized);
+    }
+
+    [Fact]
+    public async Task Logout_NoToken_Unauthorized()
     {
         // arrange
         using var client = CreateClient();
@@ -96,6 +131,6 @@ public class IdentityApiTests : FrontOfficeTestBase
         var response = await client.PostAsync("api/identity/logout", null);
 
         // assert
-        AssertErrorResponse(response, HttpStatusCode.Unauthorized, "Unauthorized");
+        AssertErrorResponse(response, HttpStatusCode.Unauthorized);
     }
 }

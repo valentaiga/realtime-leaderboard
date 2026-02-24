@@ -1,7 +1,8 @@
 ﻿using System.Text.Json.Serialization;
 using Common.Grpc.Client;
+using FrontOffice.Web.Api;
+using FrontOffice.Web.Api.Identity;
 using FrontOffice.Web.Authentication;
-using FrontOffice.Web.Identity;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 
 namespace FrontOffice.Web;
@@ -15,6 +16,7 @@ namespace FrontOffice.Web;
 [JsonSerializable(typeof(GrpcClientOptions))]
 [JsonSerializable(typeof(JwtOptions))]
 [JsonSerializable(typeof(CorsPolicy))]
+[JsonSerializable(typeof(ApiError))]
 internal partial class AppJsonSerializerContext : JsonSerializerContext
 {
 }

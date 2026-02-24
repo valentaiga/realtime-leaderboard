@@ -16,4 +16,8 @@
     <PackageReference Include="Microsoft.Extensions.Options" Version="10.0.3" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Common.Primitives\Common.Primitives.csproj" />
+  </ItemGroup>
+
 </Project>
