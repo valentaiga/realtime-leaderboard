@@ -1,5 +1,6 @@
 ﻿<Solution>
   <Folder Name="/BackOffice/">
+    <Project Path="BackOffice/BackOffice.Matchmaker/BackOffice.Matchmaker.csproj" />
     <Project Path="BackOffice\BackOffice.Identity.Grpc\BackOffice.Identity.Grpc.csproj" />
     <Project Path="BackOffice\BackOffice.Identity\BackOffice.Identity.csproj" />
   </Folder>
@@ -8,6 +9,7 @@
   </Folder>
   <Folder Name="/Common/">
     <Project Path="Common/Common.Grpc.Server/Common.Grpc.Server.csproj" />
+    <Project Path="Common/Common.MQ/Common.MQ.csproj" />
     <Project Path="Common\Common.Grpc.Client\Common.Grpc.Client.csproj" />
     <Project Path="Common\Common.Tools.ProtoFilesGenerator\Common.Tools.ProtoFilesGenerator.csproj" />
     <Project Path="Common\Common.Primitives\Common.Primitives.csproj" />

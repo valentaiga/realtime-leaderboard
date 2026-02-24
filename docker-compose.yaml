@@ -24,6 +24,15 @@
       ASPNETCORE_ENVIRONMENT: Development
       Kestrel__Endpoints__Localhost__Url: http://0.0.0.0:5010
 
+  backoffice.matchmaker:
+    container_name: leaderboard.backoffice.matchmaker
+    image: leaderboard.backoffice.matchmaker
+    build:
+      context: ./BE
+      dockerfile: BackOffice/BackOffice.Matchmaker/Dockerfile
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+
   frontend:
     build: ./FE
     container_name: frontend
