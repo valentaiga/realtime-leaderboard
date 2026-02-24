@@ -1,4 +1,6 @@
-﻿namespace BackOffice.Identity.Grpc;
+﻿using System.ServiceModel;
+
+namespace BackOffice.Identity.Grpc;
 
 [ServiceContract]
 public interface IIdentityApi

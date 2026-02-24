@@ -11,8 +11,8 @@
         <PackageReference Include="System.ServiceModel.Primitives" Version="10.0.652802" />
     </ItemGroup>
 
-<!--    <Target Name="GenerateProtoFile" BeforeTargets="BeforeBuild" Condition="'$(Configuration)'=='Debug'">-->
-<!--        <Exec Command="dotnet run &#45;&#45;project ..\BackOffice.Tools.ProtoFilesGen\BackOffice.Tools.ProtoFilesGen.csproj &#45;&#45;Identity.Grpc" />-->
-<!--    </Target>-->
+    <Target Name="GenerateProtoFile" BeforeTargets="BeforeBuild" Condition="'$(Configuration)'=='Debug'">
+        <Exec Command="dotnet run -c Release --project $(ProjectDir)..\..\Common\Common.Tools.ProtoFilesGenerator\Common.Tools.ProtoFilesGenerator.csproj --Identity.Grpc" />
+    </Target>
 
 </Project>
