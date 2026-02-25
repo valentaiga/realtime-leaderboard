@@ -4,7 +4,7 @@ using Microsoft.Extensions.Options;
 
 namespace BackOffice.Matchmaker.Fake;
 
-public class FakePlayerActivityService(MatchService matchService, IOptions<FakePlayerActivityOptions> options) : BackgroundService
+public class FakePlayerActivityService(MatchService matchService, IOptions<FakePlayerActivityOptions> options, ILogger<FakePlayerActivityService> logger) : BackgroundService
 {
     private const int MatchPlayersCount = 10;
     private readonly TimeSpan _second = TimeSpan.FromSeconds(1);
@@ -16,12 +16,20 @@ public class FakePlayerActivityService(MatchService matchService, IOptions<FakeP
     /// </remarks>
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
+        if (!options.Value.IsEnabled)
+        {
+            logger.LogInformation($"{nameof(FakePlayerActivityService)} is disabled");
+            return;
+        }
+
         var matchesToCreate = 0d;
         var matchesPerSecond = (double)options.Value.PlayersConnectedPerMinute / 60 / MatchPlayersCount;
         var matchPlayersBuffer = new ulong[MatchPlayersCount];
 
         while (!stoppingToken.IsCancellationRequested)
         {
+            if (logger.IsEnabled(LogLevel.Debug) && matchesToCreate > 0)
+                logger.LogDebug("Starting {MatchesCount} matches", Math.Ceiling(matchesToCreate));
             var ts = Stopwatch.GetTimestamp();
             for (;matchesToCreate > 0;matchesToCreate--)
             {

@@ -17,8 +17,16 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\Common\Common.MQ.Kafka.Configurator\Common.MQ.Kafka.Configurator.csproj" />
+      <ProjectReference Include="..\..\Common\Common.MQ.Kafka.Serializer.MessagePack\Common.MQ.Kafka.Serializer.MessagePack.csproj" />
+      <ProjectReference Include="..\..\Common\Common.MQ.Kafka\Common.MQ.Kafka.csproj" />
       <ProjectReference Include="..\..\Common\Common.MQ\Common.MQ.csproj" />
       <ProjectReference Include="..\..\Common\Common.Primitives\Common.Primitives.csproj" />
+      <ProjectReference Include="..\BackOffice.MQ.Messages\BackOffice.MQ.Messages.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="MessagePack" Version="3.1.4" />
     </ItemGroup>
 
 </Project>

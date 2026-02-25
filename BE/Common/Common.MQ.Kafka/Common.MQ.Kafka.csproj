@@ -8,4 +8,12 @@
         <EnableConfigurationBindingGenerator>true</EnableConfigurationBindingGenerator>
     </PropertyGroup>
 
+    <ItemGroup>
+      <PackageReference Include="Confluent.Kafka" Version="2.13.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Common.Primitives\Common.Primitives.csproj" />
+    </ItemGroup>
+
 </Project>

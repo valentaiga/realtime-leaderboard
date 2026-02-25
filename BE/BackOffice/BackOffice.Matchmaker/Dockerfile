@@ -11,8 +11,12 @@ RUN apt-get update
 RUN apt-get install -y --no-install-recommends clang zlib1g-dev
 
 COPY ["BackOffice/BackOffice.Matchmaker/", "BackOffice/BackOffice.Matchmaker/"]
+COPY ["Common/Common.MQ.Kafka.Configurator/", "Common/Common.MQ.Kafka.Configurator/"]
+COPY ["Common/Common.MQ.Kafka.Serializer.MessagePack/", "Common/Common.MQ.Kafka.Serializer.MessagePack/"]
+COPY ["Common/Common.MQ.Kafka/", "Common/Common.MQ.Kafka/"]
 COPY ["Common/Common.MQ/", "Common/Common.MQ/"]
 COPY ["Common/Common.Primitives/", "Common/Common.Primitives/"]
+COPY ["BackOffice/BackOffice.MQ.Messages/", "BackOffice/BackOffice.MQ.Messages/"]
 
 RUN dotnet restore "BackOffice/BackOffice.Matchmaker/BackOffice.Matchmaker.csproj"
 
@@ -20,7 +24,7 @@ RUN dotnet build "BackOffice/BackOffice.Matchmaker/BackOffice.Matchmaker.csproj"
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "BackOffice/BackOffice.Matchmaker/BackOffice.Matchmaker.csproj" -c $BUILD_CONFIGURATION /p:UseAppHost=false --self-contained true -o /app/publish
+RUN dotnet publish "BackOffice/BackOffice.Matchmaker/BackOffice.Matchmaker.csproj" -c $BUILD_CONFIGURATION /p:UseAppHost=false /p:TrimMode=partial --self-contained true -o /app/publish
 
 FROM base AS final
 WORKDIR /app

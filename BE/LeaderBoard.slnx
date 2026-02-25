@@ -3,12 +3,16 @@
     <Project Path="BackOffice/BackOffice.Matchmaker/BackOffice.Matchmaker.csproj" />
     <Project Path="BackOffice\BackOffice.Identity.Grpc\BackOffice.Identity.Grpc.csproj" />
     <Project Path="BackOffice\BackOffice.Identity\BackOffice.Identity.csproj" />
+    <Project Path="BackOffice/BackOffice.MQ.Messages/BackOffice.MQ.Messages.csproj" />
   </Folder>
   <Folder Name="/BackOffice/ProtoFiles/">
     <File Path="BackOffice\ProtoFiles\Identity.Grpc.proto" />
   </Folder>
   <Folder Name="/Common/">
     <Project Path="Common/Common.Grpc.Server/Common.Grpc.Server.csproj" />
+    <Project Path="Common/Common.MQ.Kafka.Configurator/Common.MQ.Kafka.Configurator.csproj" />
+    <Project Path="Common/Common.MQ.Kafka.Serializer.MessagePack/Common.MQ.Kafka.Serializer.MessagePack.csproj" />
+    <Project Path="Common/Common.MQ.Kafka/Common.MQ.Kafka.csproj" />
     <Project Path="Common/Common.MQ/Common.MQ.csproj" />
     <Project Path="Common\Common.Grpc.Client\Common.Grpc.Client.csproj" />
     <Project Path="Common\Common.Tools.ProtoFilesGenerator\Common.Tools.ProtoFilesGenerator.csproj" />
