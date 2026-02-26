@@ -159,8 +159,9 @@
       POSTGRES_PASSWORD: "P@$$Sw0Rd1245"
 
   frontend:
+    container_name: leaderboard.frontend
+    image: leaderboard.backoffice.matchmaker
     build: ./FE
-    container_name: frontend
     ports:
       - "5173:5173"
     depends_on:
