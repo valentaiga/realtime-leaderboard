@@ -24,11 +24,14 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\Common\Common.Filtering\Common.Filtering.csproj" />
+      <ProjectReference Include="..\..\Common\Common.Filtering.Generator\Common.Filtering.Generator.csproj" OutputItemType="Analyzer" />
       <ProjectReference Include="..\..\Common\Common.Grpc.Client\Common.Grpc.Client.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-        <Protobuf Include="..\..\BackOffice\ProtoFiles\Identity.Grpc.proto" GrpcServices="Client" Link="Identity\Proto\Identity.Grpc.proto"/>
+        <Protobuf Include="..\..\BackOffice\ProtoFiles\Identity.Grpc.proto" GrpcServices="Client" Link="ProtoFiles\Identity.Grpc.proto"/>
+        <Protobuf Include="..\..\BackOffice\ProtoFiles\Chronicle.Grpc.proto" GrpcServices="Client" Link="ProtoFiles\Chronicle.Grpc.proto"/>
     </ItemGroup>
 
 </Project>

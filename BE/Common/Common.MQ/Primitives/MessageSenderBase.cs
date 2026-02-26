@@ -27,6 +27,10 @@ public abstract class MessageSenderBase<TMessage>(IOptionsMonitor<MessageSenderO
         while (true)
             try
             {
+#if DEBUG
+                // if debug is enabled, messages drop is fine
+                _.ThrowIfCancellationRequested();
+#endif
                 var message = await ReadMessageAsync();
                 await SendMessageUntilSuccessAsync(message);
             }

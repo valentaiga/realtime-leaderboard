@@ -1,0 +1,46 @@
+syntax = "proto3";
+package BackOffice.Chronicle.Grpc;
+import "google/protobuf/timestamp.proto";
+
+enum FilterOperator {
+   Equals = 0;
+   NotEquals = 1;
+   GreaterThan = 2;
+   GreaterThanOrEqual = 3;
+   LessThan = 4;
+   LessThanOrEqual = 5;
+   Contains = 6;
+   NotContains = 7;
+   In = 8;
+   NotIn = 9;
+   Between = 10;
+   StartsWith = 11;
+   EndsWith = 12;
+}
+message FilterResult_MatchInfo {
+   repeated MatchInfo Data = 1;
+   uint64 Total = 2;
+}
+message GetPlayerMatchesFilter {
+   GrpcFilterDescriptor_Guid PlayerId = 1;
+   GrpcFilterDescriptor_DateTime StartedAt = 2;
+   GrpcFilterDescriptor_DateTime FinishedAt = 3;
+}
+message GrpcFilterDescriptor_DateTime {
+   .google.protobuf.Timestamp Value = 1;
+   FilterOperator Operator = 2;
+}
+message GrpcFilterDescriptor_Guid {
+   string Value = 1; // default value could not be applied: 00000000-0000-0000-0000-000000000000
+   FilterOperator Operator = 2;
+}
+message MatchInfo {
+   string MatchId = 1; // default value could not be applied: 00000000-0000-0000-0000-000000000000
+   repeated uint64 Winners = 2 [packed = false];
+   repeated uint64 Losers = 3 [packed = false];
+   .google.protobuf.Timestamp StartedAt = 4;
+   .google.protobuf.Timestamp FinishedAt = 5;
+}
+service ChronicleApi {
+   rpc GetPlayerMatches (GetPlayerMatchesFilter) returns (FilterResult_MatchInfo);
+}

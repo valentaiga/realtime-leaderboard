@@ -1,4 +1,5 @@
-﻿using BackOffice.Identity.Grpc;
+﻿using BackOffice.Chronicle.Grpc;
+using BackOffice.Identity.Grpc;
 using Common.Tools.ProtoFilesGenerator;
 
 Console.WriteLine("ProtoFilesGen: Args [" + string.Join(",", args) + "]");
@@ -7,7 +8,8 @@ Console.WriteLine("ProtoFilesGen: Args [" + string.Join(",", args) + "]");
 
 var grpcInterfaces = new Dictionary<string, Type>
 {
-    { "Identity.Grpc", typeof(IIdentityApi) }
+    { "Identity.Grpc", typeof(IIdentityApi) },
+    { "Chronicle.Grpc", typeof(IChronicleApi)}
 };
 
 // ====================== do not update below ======================

@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\BackOffice\BackOffice.Chronicle.Grpc\BackOffice.Chronicle.Grpc.csproj" />
     <ProjectReference Include="..\..\BackOffice\BackOffice.Identity.Grpc\BackOffice.Identity.Grpc.csproj" />
   </ItemGroup>
 

@@ -1,7 +1,9 @@
+using BackOffice.Chronicle.Grpc;
 using BackOffice.Identity.Grpc;
 using Common.Grpc.Client;
 using FrontOffice.Web;
 using FrontOffice.Web.Api.Identity;
+using FrontOffice.Web.Api.Player;
 using FrontOffice.Web.Authentication;
 using FrontOffice.Web.Middleware;
 using Microsoft.AspNetCore.Cors.Infrastructure;
@@ -26,7 +28,8 @@ builder.Services
     });
 
 builder.Services
-    .AddGrpcClient(builder.Configuration, "Grpc:Identity", invoker => new IdentityApi.IdentityApiClient(invoker));
+    .AddGrpcClient(builder.Configuration, "Grpc:Identity", invoker => new IdentityApi.IdentityApiClient(invoker))
+    .AddGrpcClient(builder.Configuration, "Grpc:Chronicle", invoker => new ChronicleApi.ChronicleApiClient(invoker));
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi(options => options.OpenApiVersion = OpenApiSpecVersion.OpenApi3_0);
@@ -54,5 +57,8 @@ var identityGroup = app.MapGroup("/api/identity");
 identityGroup.MapPost("login", IdentityController.Login).AllowAnonymous();
 identityGroup.MapPost("refresh", IdentityController.RefreshToken).AllowAnonymous();
 identityGroup.MapPost("logout", IdentityController.Logout).RequireAuthorization();
+
+var playerGroup = app.MapGroup("/api/player");
+playerGroup.MapPost("history", PlayerController.GetPlayerHistory).AllowAnonymous();
 
 app.Run();

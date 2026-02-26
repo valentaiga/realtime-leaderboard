@@ -3,7 +3,7 @@
 namespace BackOffice.Identity.Grpc;
 
 [ServiceContract]
-public interface IIdentityApi
+public interface IIdentityApi // todo vm: update models with [ProtoContract] and other attributes for code consistency
 {
     [OperationContract]
     Task<GrpcChallengeUserResponse> ChallengeUser(GrpcChallengeUserRequest request, CancellationToken ct);
