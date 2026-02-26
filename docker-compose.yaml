@@ -10,10 +10,11 @@
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       Kestrel__Endpoints__Localhost__Url: http://0.0.0.0:5110
-      Grpc__Identity__Endpoint: http://backoffice.identity:5010
+      Grpc__Identity__Endpoint: http://identity:5010
 
   backoffice.identity:
     container_name: leaderboard.backoffice.identity
+    hostname: identity
     image: leaderboard.backoffice.identity
     ports:
       - "5010:5010"
@@ -26,6 +27,7 @@
 
   backoffice.matchmaker:
     container_name: leaderboard.backoffice.matchmaker
+    hostname: matchmaker
     image: leaderboard.backoffice.matchmaker
     build:
       context: ./BE
@@ -122,45 +124,36 @@
     image: conduktor/conduktor-console
     ports:
       - "8080:8080"
-    volumes:
-      - conduktor_data:/var/conduktor
-      - type: bind
-        source: "./platform-config.yaml"
-        target: /opt/conduktor/platform-config.yaml
-        read_only: true
     environment:
       CDK_DATABASE_HOSTS_0_HOST: postgresql
       CDK_DATABASE_HOSTS_0_PORT: 5432
       CDK_DATABASE_NAME: conduktor
-      CDK_DATABASE_USERNAME: "super-user"
-      CDK_DATABASE_PASSWORD: "P@$$Sw0Rd1245"
+      CDK_DATABASE_USERNAME: "conduktor"
+      CDK_DATABASE_PASSWORD: "conduktor-5zx%2fksaf@9xxs"
       CDK_AUTH_LOCALUSERS_0_EMAIL: "admin@conduktor.io"
       CDK_AUTH_LOCALUSERS_0_PASSWORD: "Password1234!"
     depends_on:
       - postgresql
-    healthcheck:
-      test: curl -f http://localhost:8080/platform/api/modules/health/live || exit 1
-      interval: 10s
-      start_period: 10s
-      timeout: 5s
-      retries: 3
+    volumes:
+      - conduktor_data:/var/conduktor
 
   postgresql:
     container_name: leaderboard.postgresql
-    image: postgres:14
+    image: postgres:18
     hostname: postgresql
     ports:
       - "5432:5432"
-    volumes:
-      - pg_data:/var/lib/postgresql/data
     environment:
-      POSTGRES_DB: "conduktor"
-      POSTGRES_USER: "super-user"
-      POSTGRES_PASSWORD: "P@$$Sw0Rd1245"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres-Wkd@saf2kf!Gf2%"
+      POSTGRES_HOST_AUTH_METHOD: password
+    volumes:
+      - pg_data:/var/lib/postgresql
+      - .env/Postgres/01-init-users.sql:/docker-entrypoint-initdb.d/01-init-users.sql
 
   frontend:
     container_name: leaderboard.frontend
-    image: leaderboard.backoffice.matchmaker
+    image: leaderboard.frontend
     build: ./FE
     ports:
       - "5173:5173"
@@ -168,7 +161,6 @@
       - frontoffice.web
 
 volumes:
-  kafka-magic_data: {}
   kafka1_data: {}
   kafka2_data: {}
   kafka3_data: {}
