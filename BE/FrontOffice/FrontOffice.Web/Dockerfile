@@ -12,6 +12,8 @@ RUN apt-get install -y --no-install-recommends clang zlib1g-dev
 
 COPY ["FrontOffice/FrontOffice.Web/", "FrontOffice/FrontOffice.Web/"]
 COPY ["Common/Common.Grpc.Client/", "Common/Common.Grpc.Client/"]
+COPY ["Common/Common.Filtering/", "Common/Common.Filtering/"]
+COPY ["Common/Common.Filtering.Generator/", "Common/Common.Filtering.Generator/"]
 COPY ["Common/Common.Primitives/", "Common/Common.Primitives/"]
 COPY ["BackOffice/ProtoFiles/", "BackOffice/ProtoFiles/"]
 

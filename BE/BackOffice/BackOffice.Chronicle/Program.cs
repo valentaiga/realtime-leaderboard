@@ -1,5 +1,7 @@
 using System.Net;
 using BackOffice.Chronicle;
+using BackOffice.Chronicle.Database;
+using BackOffice.Chronicle.Database.Pgsql;
 using BackOffice.MQ.Messages;
 using BackOffice.MQ.Messages.MatchStatus;
 using Common.Grpc.Server;
@@ -10,6 +12,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddGrpcServices();
 builder.Services.AddSingleton<MatchService>();
+builder.Services
+    .AddSingleton<IMatchRepository, PgsqlMatchRepository>()
+    .AddSingleton<DbConnectionFactory>();
 builder.Services
     .AddKafkaConsumer<MatchStatusConsumer, Guid, MatchStatusMessage>(builder.Configuration, "Kafka:Consumer:MatchStatusMessage", config => config.ClientId = Dns.GetHostName())
     .AddMemoryPackKafkaDeserializer(MessagesMessagePackResolver.Instance)

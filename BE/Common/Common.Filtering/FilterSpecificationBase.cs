@@ -20,6 +20,7 @@ public abstract class FilterSpecificationBase<T> : IFilterSpecification<T>
     {
         public FilterCriteria()
         {
+            FieldName = null!;
         }
 
         public FilterCriteria(string fieldName, FilterOperator @operator, string? value)

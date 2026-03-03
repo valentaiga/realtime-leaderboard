@@ -3,7 +3,7 @@ using Microsoft.Extensions.ObjectPool;
 
 namespace Common.Primitives;
 
-public sealed class ObjectRingBuffer<T> : ObjectPool<T> where T : class, new()
+public sealed class ObjectRingBuffer<T> : ObjectPool<T> where T : class, IClearable, new()
 {
     private readonly ConcurrentBag<T> _ring;
 
@@ -21,5 +21,14 @@ public sealed class ObjectRingBuffer<T> : ObjectPool<T> where T : class, new()
 
     public override T Get() => _ring.TryTake(out var obj) ? obj : new T();
 
-    public override void Return(T obj) => _ring.Add(obj);
+    public override void Return(T obj)
+    {
+        obj.Clear();
+        _ring.Add(obj);
+    }
+}
+
+public interface IClearable
+{
+    void Clear();
 }

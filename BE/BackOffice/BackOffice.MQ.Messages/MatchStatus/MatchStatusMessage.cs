@@ -1,9 +1,10 @@
-﻿using MessagePack;
+﻿using Common.Primitives;
+using MessagePack;
 
 namespace BackOffice.MQ.Messages.MatchStatus;
 
 [MessagePackObject]
-public class MatchStatusMessage
+public class MatchStatusMessage : IClearable
 {
     [Key(0)]
     public Guid MatchId { get; set; }
@@ -13,4 +14,11 @@ public class MatchStatusMessage
 
     [Key(2)]
     public MatchFinishedEvent? MatchFinishedEvent { get; set; }
+
+    public void Clear()
+    {
+        MatchId = Guid.Empty;
+        MatchStartedEvent = null;
+        MatchFinishedEvent = null;
+    }
 }

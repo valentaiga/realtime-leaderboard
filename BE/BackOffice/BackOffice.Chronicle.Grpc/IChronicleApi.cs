@@ -17,13 +17,19 @@ public interface IChronicleApi
 public class GetPlayerMatchesFilter
 {
     [DataMember(Order = 1)]
-    public GrpcFilterDescriptor<Guid>? PlayerId { get; set; }
+    public GrpcFilterDescriptor<ulong>? PlayerId { get; set; }
     
     [DataMember(Order = 2)]
     public GrpcFilterDescriptor<DateTime>? StartedAt { get; set; }
     
     [DataMember(Order = 3)]
     public GrpcFilterDescriptor<DateTime>? FinishedAt { get; set; }
+
+    [DataMember(Order = 4)]
+    public uint Limit { get; set; }
+
+    [DataMember(Order = 5)]
+    public uint Offset { get; set; }
 }
 
 [DataContract]

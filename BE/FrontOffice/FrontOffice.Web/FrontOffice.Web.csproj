@@ -25,7 +25,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\Common\Common.Filtering\Common.Filtering.csproj" />
-      <ProjectReference Include="..\..\Common\Common.Filtering.Generator\Common.Filtering.Generator.csproj" OutputItemType="Analyzer" />
+      <ProjectReference Include="..\..\Common\Common.Filtering.Generator\Common.Filtering.Generator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
       <ProjectReference Include="..\..\Common\Common.Grpc.Client\Common.Grpc.Client.csproj" />
     </ItemGroup>
 

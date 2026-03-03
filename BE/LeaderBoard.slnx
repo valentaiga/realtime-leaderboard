@@ -1,6 +1,8 @@
 ﻿<Solution>
   <Folder Name="/BackOffice/">
+    <Project Path="BackOffice/BackOffice.Chronicle.Data/BackOffice.Chronicle.Data.csproj" />
     <Project Path="BackOffice/BackOffice.Chronicle.Grpc/BackOffice.Chronicle.Grpc.csproj" />
+    <Project Path="BackOffice/BackOffice.Chronicle.Migrations/BackOffice.Chronicle.Migrations.csproj" />
     <Project Path="BackOffice/BackOffice.Chronicle/BackOffice.Chronicle.csproj" />
     <Project Path="BackOffice/BackOffice.Matchmaker/BackOffice.Matchmaker.csproj" />
     <Project Path="BackOffice\BackOffice.Identity.Grpc\BackOffice.Identity.Grpc.csproj" />
@@ -27,6 +29,7 @@
     <Project Path="FrontOffice\FrontOffice.Web\FrontOffice.Web.csproj" />
   </Folder>
   <Folder Name="/Solution Items/">
+    <File Path="../.env/Postgres/01-init-users.sql" />
     <File Path="..\docker-compose.yaml" />
   </Folder>
   <Folder Name="/Tests/">

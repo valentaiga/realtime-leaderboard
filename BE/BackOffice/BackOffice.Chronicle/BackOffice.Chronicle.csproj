@@ -8,6 +8,7 @@
         <PublishAot>true</PublishAot>
         <EnableConfigurationBindingGenerator>true</EnableConfigurationBindingGenerator>
         <RuntimeIdentifiers>win-x64;linux-x64;osx-x64</RuntimeIdentifiers>
+        <InterceptorsPreviewNamespaces>$(InterceptorsPreviewNamespaces);Dapper.AOT</InterceptorsPreviewNamespaces>
     </PropertyGroup>
 
     <ItemGroup>
@@ -15,7 +16,10 @@
     </ItemGroup>
 
     <ItemGroup>
+        <PackageReference Include="Dapper" Version="2.1.66" />
+        <PackageReference Include="Dapper.AOT" Version="1.0.48" />
         <PackageReference Include="Grpc.AspNetCore" Version="2.76.0"/>
+        <PackageReference Include="Npgsql" Version="10.0.1" />
     </ItemGroup>
 
     <ItemGroup>
@@ -28,6 +32,7 @@
       <ProjectReference Include="..\..\Common\Common.Grpc.Server\Common.Grpc.Server.csproj" />
       <ProjectReference Include="..\..\Common\Common.MQ.Kafka.Serializer.MessagePack\Common.MQ.Kafka.Serializer.MessagePack.csproj" />
       <ProjectReference Include="..\..\Common\Common.MQ.Kafka\Common.MQ.Kafka.csproj" />
+      <ProjectReference Include="..\BackOffice.Chronicle.Data\BackOffice.Chronicle.Data.csproj" />
       <ProjectReference Include="..\BackOffice.MQ.Messages\BackOffice.MQ.Messages.csproj" />
     </ItemGroup>
 

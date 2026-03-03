@@ -10,10 +10,10 @@ public class FilterRequest
     public List<FilterCriterion> Criteria { get; set; } = [];
 
     [DataMember(Order = 2)]
-    public uint Offset { get; set; }
+    public uint Limit { get; set; } = 50;
 
     [DataMember(Order = 3)]
-    public uint Limit { get; set; } = 50;
+    public uint Offset { get; set; }
 }
 
 /// <summary> Single filter criterion from request. </summary>

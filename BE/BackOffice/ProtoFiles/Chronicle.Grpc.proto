@@ -22,16 +22,18 @@ message FilterResult_MatchInfo {
    uint64 Total = 2;
 }
 message GetPlayerMatchesFilter {
-   GrpcFilterDescriptor_Guid PlayerId = 1;
+   GrpcFilterDescriptor_UInt64 PlayerId = 1;
    GrpcFilterDescriptor_DateTime StartedAt = 2;
    GrpcFilterDescriptor_DateTime FinishedAt = 3;
+   uint32 Limit = 4;
+   uint32 Offset = 5;
 }
 message GrpcFilterDescriptor_DateTime {
    .google.protobuf.Timestamp Value = 1;
    FilterOperator Operator = 2;
 }
-message GrpcFilterDescriptor_Guid {
-   string Value = 1; // default value could not be applied: 00000000-0000-0000-0000-000000000000
+message GrpcFilterDescriptor_UInt64 {
+   uint64 Value = 1;
    FilterOperator Operator = 2;
 }
 message MatchInfo {

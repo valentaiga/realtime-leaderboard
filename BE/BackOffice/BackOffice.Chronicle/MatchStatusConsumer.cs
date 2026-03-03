@@ -36,6 +36,8 @@ public class MatchStatusConsumer(
                     logger.LogWarning(exc, "Failed to commit offset {Offset} for partition {Partition}", result.Offset, result.Partition);
                     throw;
                 }
+
+                break;
             }
             catch (OperationCanceledException)
             {

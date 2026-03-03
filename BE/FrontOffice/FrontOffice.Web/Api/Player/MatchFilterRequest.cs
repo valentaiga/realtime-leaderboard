@@ -6,7 +6,7 @@ namespace FrontOffice.Web.Api.Player;
 public sealed class MatchFilterRequest : FilterRequest
 {
     [FilterCriteria(FilterOperator.Equals)]
-    public Guid PlayerId { get; set; }
+    public ulong PlayerId { get; set; }
 
     [FilterCriteria(FilterOperator.GreaterThan, FilterOperator.LessThan)]
     public DateTime StartedAt { get; set; }

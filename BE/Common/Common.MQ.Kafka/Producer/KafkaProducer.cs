@@ -6,7 +6,7 @@ namespace Common.MQ.Kafka.Producer;
 
 public sealed class KafkaProducer<TKey, TMessage> : IKafkaProducer<TKey, TMessage>, IDisposable
 {
-    private readonly ObjectRingBuffer<Message<TKey, TMessage>> _ringBuffer = new();
+    private readonly ObjectRingBuffer<MessageProxy<TKey, TMessage>> _ringBuffer = new();
     private readonly string _topic;
     private readonly IProducer<TKey, TMessage> _producer;
 

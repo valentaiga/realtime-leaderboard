@@ -8,10 +8,10 @@ namespace FrontOffice.Web.Api.Player;
 
 public static class ChronicleGrpcExtensions
 {
-    public static GrpcFilterDescriptor_Guid ToGrpcFilterDescriptor(this FilterDescriptor<Guid> descriptor) =>
+    public static GrpcFilterDescriptor_UInt64 ToGrpcFilterDescriptor(this FilterDescriptor<ulong> descriptor) =>
         new()
         {
-            Value = descriptor.Value.ToString(),
+            Value = descriptor.Value,
             Operator = (FilterOperator)(byte)descriptor.Operator,
         };
 
