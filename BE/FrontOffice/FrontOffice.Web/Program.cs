@@ -16,6 +16,11 @@ builder.Services.ConfigureHttpJsonOptions(options =>
     options.SerializerOptions.TypeInfoResolverChain.Insert(0, AppJsonSerializerContext.Default);
 });
 
+// todo vm: nginx should handle user requests, not frontoffice directly
+// todo vm: set nugets in single file, provide PackageReference only (without version)
+// todo vm: add service with user search via nickname for FE 'search input'
+// todo vm: add remote cache (redis) for idempotent endpoints
+
 builder.Services
     .AddSingleton<ExceptionHandleMiddleware>()
     .AddJwtAuthentication(builder.Configuration)
@@ -60,5 +65,6 @@ identityGroup.MapPost("logout", IdentityController.Logout).RequireAuthorization(
 
 var playerGroup = app.MapGroup("/api/player");
 playerGroup.MapPost("history", PlayerController.GetPlayerHistory).AllowAnonymous();
+
 
 app.Run();

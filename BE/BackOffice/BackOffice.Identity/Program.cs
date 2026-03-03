@@ -2,6 +2,8 @@ using BackOffice.Identity;
 using BackOffice.Identity.Identity;
 using Common.Grpc.Server;
 
+// todo vm: user registration/login though database
+// todo vm: user event on registration
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddGrpcServices();

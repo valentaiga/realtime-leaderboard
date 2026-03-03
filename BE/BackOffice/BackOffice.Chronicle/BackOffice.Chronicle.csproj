@@ -15,13 +15,20 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Grpc.AspNetCore" Version="2.64.0"/>
+        <PackageReference Include="Grpc.AspNetCore" Version="2.76.0"/>
     </ItemGroup>
 
     <ItemGroup>
       <Content Include="..\..\.dockerignore">
         <Link>.dockerignore</Link>
       </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\Common\Common.Grpc.Server\Common.Grpc.Server.csproj" />
+      <ProjectReference Include="..\..\Common\Common.MQ.Kafka.Serializer.MessagePack\Common.MQ.Kafka.Serializer.MessagePack.csproj" />
+      <ProjectReference Include="..\..\Common\Common.MQ.Kafka\Common.MQ.Kafka.csproj" />
+      <ProjectReference Include="..\BackOffice.MQ.Messages\BackOffice.MQ.Messages.csproj" />
     </ItemGroup>
 
 </Project>

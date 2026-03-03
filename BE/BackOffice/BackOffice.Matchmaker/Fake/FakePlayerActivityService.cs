@@ -33,6 +33,7 @@ public class FakePlayerActivityService(MatchService matchService, IOptions<FakeP
             var ts = Stopwatch.GetTimestamp();
             for (;matchesToCreate > 0;matchesToCreate--)
             {
+                stoppingToken.ThrowIfCancellationRequested();
                 GetPlayersForMatch(options.Value, ref matchPlayersBuffer);
                 await matchService.StartMatchAsync(matchPlayersBuffer, stoppingToken);
             }

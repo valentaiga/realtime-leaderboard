@@ -1,9 +1,19 @@
+using System.Net;
 using BackOffice.Chronicle;
+using BackOffice.MQ.Messages;
+using BackOffice.MQ.Messages.MatchStatus;
+using Common.Grpc.Server;
+using Common.MQ.Kafka;
+using Common.MQ.Kafka.Serializer.MessagePack;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddGrpc();
+builder.Services.AddGrpcServices();
+builder.Services.AddSingleton<MatchService>();
+builder.Services
+    .AddKafkaConsumer<MatchStatusConsumer, Guid, MatchStatusMessage>(builder.Configuration, "Kafka:Consumer:MatchStatusMessage", config => config.ClientId = Dns.GetHostName())
+    .AddMemoryPackKafkaDeserializer(MessagesMessagePackResolver.Instance)
+    .OverrideKafkaDeserializer<KafkaMemoryPackDeserializer<Guid>, Guid>();
 
 var app = builder.Build();
 
