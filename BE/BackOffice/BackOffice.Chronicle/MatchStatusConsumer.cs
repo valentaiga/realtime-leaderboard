@@ -5,6 +5,7 @@ using Microsoft.Extensions.Options;
 
 namespace BackOffice.Chronicle;
 
+// todo vm: add kafka DLQ
 public class MatchStatusConsumer(
     MatchService matchService,
     IDeserializer<Guid> keyDeserializer,
