@@ -33,6 +33,8 @@
     <File Path="..\docker-compose.yaml" />
   </Folder>
   <Folder Name="/Tests/">
+    <Project Path="Tests/Tests.Common.BackOffice.Chronicle/Tests.Common.BackOffice.Chronicle.csproj" />
+    <Project Path="Tests/Tests.IntegrationTests/Tests.IntegrationTests.csproj" />
     <Project Path="Tests\Tests.Common.BackOffice.Identity\Tests.Common.BackOffice.Identity.csproj" />
     <Project Path="Tests\Tests.Common.FrontOffice.Web\Tests.Common.FrontOffice.Web.csproj" />
     <Project Path="Tests\Tests.Common\Tests.Common.csproj" />

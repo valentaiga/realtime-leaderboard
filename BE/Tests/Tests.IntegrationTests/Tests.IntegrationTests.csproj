@@ -24,9 +24,4 @@
         <Using Include="Xunit"/>
     </ItemGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\Tests.Common.BackOffice.Identity\Tests.Common.BackOffice.Identity.csproj" />
-      <ProjectReference Include="..\Tests.Common.FrontOffice.Web\Tests.Common.FrontOffice.Web.csproj" />
-    </ItemGroup>
-
 </Project>

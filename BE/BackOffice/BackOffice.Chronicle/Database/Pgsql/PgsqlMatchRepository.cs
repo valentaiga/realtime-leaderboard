@@ -44,13 +44,24 @@ public class PgsqlMatchRepository(DbConnectionFactory dbConnectionFactory, ILogg
         CancellationToken ct)
     {
         var queryBuilder = new StringBuilder();
-        queryBuilder.AppendLine("SELECT id, match_id, started_at, finished_at");
+        queryBuilder.AppendLine("SELECT id, match_id, started_at, finished_at, COUNT(*) OVER() AS total_count");
         queryBuilder.AppendLine("FROM matches");
 
+        var whereClauseUsed = false;
+
         if (startedAtFilter is not null)
-            queryBuilder.Append("WHERE started_at ").Append(InterpolateCondition(startedAtFilter)).AppendLine(" >= @StartedAt");
+        {
+            queryBuilder.Append(whereClauseUsed ? "AND " : "WHERE ");
+            whereClauseUsed = true;
+            queryBuilder.Append("started_at ").Append(InterpolateCondition(startedAtFilter)).AppendLine(" @startedAt");
+        }
+
         if (finishedAtFilter is not null)
-            queryBuilder.Append("WHERE finished_at ").Append(InterpolateCondition(finishedAtFilter)).AppendLine(" >= @FinishedAt");
+        {
+            queryBuilder.Append(whereClauseUsed ? "AND " : "WHERE ");
+            whereClauseUsed = true;
+            queryBuilder.Append("finished_at ").Append(InterpolateCondition(finishedAtFilter)).AppendLine(" @finishedAt");
+        }
 
         queryBuilder.AppendLine("ORDER BY started_at DESC");
         queryBuilder.Append("LIMIT ").AppendLine(limit.ToString());
@@ -65,14 +76,16 @@ public class PgsqlMatchRepository(DbConnectionFactory dbConnectionFactory, ILogg
             await using var conn = dbConnectionFactory.GetConnection("ChronicleDb");
             await conn.OpenAsync(ct);
 
-            result.Data = await conn.QueryAsync<MatchDto>(
+            var data = (await conn.QueryAsync<MatchDtoExtended>(
                 query,
                 new
                 {
                     PlayerId = playerFilter?.Value,
                     StartedAt = startedAtFilter?.Value,
                     FinishedAt = finishedAtFilter?.Value
-                }).WaitAsync(ct);
+                }).WaitAsync(ct)).ToArray();
+            result.Data = data;
+            result.Total = data.Length > 0 ? data[0].TotalCount : 0;
         }
         catch (Exception ex)
         {
@@ -80,7 +93,6 @@ public class PgsqlMatchRepository(DbConnectionFactory dbConnectionFactory, ILogg
             throw;
         }
 
-        // todo vm: somehow load total value
         return result;
     }
 
@@ -94,4 +106,9 @@ public class PgsqlMatchRepository(DbConnectionFactory dbConnectionFactory, ILogg
         FilterOperator.LessThanOrEqual => "<=",
         _ => throw new ArgumentOutOfRangeException(nameof(filterDescriptor.Operator), filterDescriptor.Operator, "Probably operator shouldnt be interpolated")
     };
+
+    public class MatchDtoExtended : MatchDto
+    {
+        public ulong TotalCount { get; set; }
+    }
 }
