@@ -14,7 +14,7 @@ public class FakePlayerActivityService(MatchService matchService, IOptions<FakeP
     /// In real life player connects to matchmaker, matchmaker matches players in match based on individual ELO. <br/>
     /// Since project is created for education purpose only, we're assuming players activity based on requirement numbers. 
     /// </remarks>
-    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    protected override async Task ExecuteAsync(CancellationToken ct)
     {
         if (!options.Value.IsEnabled)
         {
@@ -26,20 +26,20 @@ public class FakePlayerActivityService(MatchService matchService, IOptions<FakeP
         var matchesPerSecond = (double)options.Value.PlayersConnectedPerMinute / 60 / MatchPlayersCount;
         var matchPlayersBuffer = new ulong[MatchPlayersCount];
 
-        while (!stoppingToken.IsCancellationRequested)
+        while (!ct.IsCancellationRequested)
         {
             if (logger.IsEnabled(LogLevel.Debug) && matchesToCreate > 0)
                 logger.LogDebug("Starting {MatchesCount} matches", Math.Ceiling(matchesToCreate));
             var ts = Stopwatch.GetTimestamp();
             for (;matchesToCreate > 0;matchesToCreate--)
             {
-                stoppingToken.ThrowIfCancellationRequested();
+                ct.ThrowIfCancellationRequested();
                 GetPlayersForMatch(options.Value, ref matchPlayersBuffer);
-                await matchService.StartMatchAsync(matchPlayersBuffer, stoppingToken);
+                await matchService.StartMatchAsync(matchPlayersBuffer, ct);
             }
 
             var spentTime = Stopwatch.GetElapsedTime(ts);
-            await Task.Delay(_second, stoppingToken);
+            await Task.Delay(_second, ct);
             matchesToCreate += matchesPerSecond * (_second + spentTime).TotalSeconds;
         }
     }

@@ -14,9 +14,10 @@ builder.Services.AddGrpcServices();
 builder.Services.AddSingleton<MatchService>();
 builder.Services
     .AddSingleton<IMatchRepository, PgsqlMatchRepository>()
+    .AddHostedService<MatchStatusHandler>()
     .AddSingleton<DbConnectionFactory>();
 builder.Services
-    .AddKafkaConsumer<MatchStatusConsumer, Guid, MatchStatusMessage>(builder.Configuration, "Kafka:Consumer:MatchStatusMessage", config => config.ClientId = Dns.GetHostName())
+    .AddKafkaConsumer<Guid, MatchStatusMessage>(builder.Configuration, "Kafka:Consumer:MatchStatusMessage", config => config.ClientId = Dns.GetHostName())
     .AddMemoryPackKafkaDeserializer(MessagesMessagePackResolver.Instance)
     .OverrideKafkaDeserializer<KafkaMemoryPackDeserializer<Guid>, Guid>();
 

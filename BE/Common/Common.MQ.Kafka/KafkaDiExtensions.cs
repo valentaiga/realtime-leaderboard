@@ -28,12 +28,11 @@ public static class KafkaDiExtensions
         return services;
     }
 
-    public static IServiceCollection AddKafkaConsumer<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TConsumer, TKey, TMessage>(
+    public static IServiceCollection AddKafkaConsumer<TKey, TMessage>(
         this IServiceCollection services,
         IConfiguration configuration,
         string configSectionPath,
         Action<KafkaConsumerConfig>? configure = null)
-        where TConsumer : KafkaConsumerBase<TKey, TMessage>
     {
         services.AddOptions<KafkaConsumerConfig>(nameof(TMessage))
             .Configure(options =>
@@ -47,7 +46,7 @@ public static class KafkaDiExtensions
                     throw new KeyNotFoundException($"{nameof(options.Topic)} not set from configuration ({configSectionPath}).");
             });
 
-        services.AddHostedService<TConsumer>();
+        services.AddSingleton<IKafkaConsumer<TKey, TMessage>, KafkaConsumer<TKey, TMessage>>();
         return services;
     }
 }

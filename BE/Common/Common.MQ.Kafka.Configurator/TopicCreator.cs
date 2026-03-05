@@ -4,7 +4,7 @@ namespace Common.MQ.Kafka.Configurator;
 
 internal class TopicCreator(IEnumerable<TopicConfiguration> options, ILogger<TopicCreator> logger) : BackgroundService
 {
-    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    protected override async Task ExecuteAsync(CancellationToken ct)
     {
         var groups = options.GroupBy(x => x.BootstrapServers);
         foreach (var configurationGroup in groups)
