@@ -49,5 +49,6 @@ public class FakePlayerActivityService(MatchService matchService, IOptions<FakeP
         var availablePlayerIds = options.AvailablePlayerIds.AsSpan();
         var startIndex = Random.Shared.Next(0, availablePlayerIds.Length - MatchPlayersCount);
         availablePlayerIds.Slice(startIndex, MatchPlayersCount).CopyTo(playersBuffer);
+        Random.Shared.Shuffle(playersBuffer);
     }
 }
