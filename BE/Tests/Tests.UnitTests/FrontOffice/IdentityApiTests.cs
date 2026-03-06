@@ -8,6 +8,7 @@ using FrontOffice.Web.Api.Identity;
 using FrontOffice.Web.Authentication;
 using Grpc.Core;
 using Tests.Common.BackOffice.Identity;
+using Tests.Common.Extensions;
 using Tests.Common.FrontOffice.Web;
 
 namespace Tests.UnitTests.FrontOffice;
@@ -18,7 +19,7 @@ public class IdentityApiTests : FrontOfficeTestBase
     public async Task Login_Ok()
     {
         // arrange
-        const ulong userId = 123;
+        const long userId = 123;
         await using var identityHost = new IdentityGrpcTestHost(
             grpc => grpc.ChallengeUserResult = req => new() { User = new() { UserId = userId, UserName = req.Username } });
         using var client = CreateClient();
@@ -28,7 +29,7 @@ public class IdentityApiTests : FrontOfficeTestBase
         var response = await client.PostAsync("api/identity/login", JsonContent.Create(loginRequest));
 
         // assert
-        var loginResponse = await AssertSuccessResponseAsync<LoginResponse>(response);
+        var loginResponse = await response.AssertSuccessResponseAsync<LoginResponse>();
         loginResponse.Token.Should().NotBeNullOrEmpty();
         loginResponse.User.Id.Should().Be(userId);
         loginResponse.User.Username.Should().Be(loginRequest.Username);
@@ -47,7 +48,7 @@ public class IdentityApiTests : FrontOfficeTestBase
         var response = await client.PostAsync("api/identity/login", JsonContent.Create(loginRequest));
 
         // assert
-        var error = await AssertErrorResponseAsync<ApiError>(response, HttpStatusCode.BadRequest);
+        var error = await response.AssertErrorResponseAsync<ApiError>(HttpStatusCode.BadRequest);
         error.Message.Should().Be("User not found or has incorrect password");
     }
 
@@ -55,7 +56,7 @@ public class IdentityApiTests : FrontOfficeTestBase
     public async Task RefreshToken_Ok()
     {
         // arrange
-        const ulong userId = 123;
+        const long userId = 123;
         const string username = "some username";
         
         await using var identityHost = new IdentityGrpcTestHost(
@@ -68,7 +69,7 @@ public class IdentityApiTests : FrontOfficeTestBase
         var response = await client.PostAsync("api/identity/refresh", JsonContent.Create(refreshRequest));
 
         // assert
-        var refreshTokenResponse = await AssertSuccessResponseAsync<RefreshTokenResponse>(response);
+        var refreshTokenResponse = await response.AssertSuccessResponseAsync<RefreshTokenResponse>();
         refreshTokenResponse.Token.Should().NotBeNullOrEmpty();
     }
 
@@ -84,7 +85,7 @@ public class IdentityApiTests : FrontOfficeTestBase
         var response = await client.PostAsync("api/identity/refresh", JsonContent.Create(refreshRequest));
 
         // assert
-        var error = await AssertErrorResponseAsync<ApiError>(response, HttpStatusCode.BadRequest);
+        var error = await response.AssertErrorResponseAsync<ApiError>(HttpStatusCode.BadRequest);
         error.Message.Should().Be("Invalid token");
     }
 
@@ -92,7 +93,7 @@ public class IdentityApiTests : FrontOfficeTestBase
     public async Task Logout_Ok()
     {
         // arrange
-        const ulong userId = 123;
+        const long userId = 123;
         const string username = "some username";
 
         var token = GetRequiredService<JwtTokenService>().GenerateJwtToken(userId, username);
@@ -103,7 +104,7 @@ public class IdentityApiTests : FrontOfficeTestBase
         var response = await client.PostAsync("api/identity/logout", null);
 
         // assert
-        AssertSuccessResponse(response);
+        response.AssertSuccessResponse();
     }
 
     [Fact]
@@ -118,7 +119,7 @@ public class IdentityApiTests : FrontOfficeTestBase
         var response = await client.PostAsync("api/identity/logout", null);
 
         // assert
-        AssertErrorResponse(response, HttpStatusCode.Unauthorized);
+        response.AssertErrorResponse(HttpStatusCode.Unauthorized);
     }
 
     [Fact]
@@ -131,6 +132,6 @@ public class IdentityApiTests : FrontOfficeTestBase
         var response = await client.PostAsync("api/identity/logout", null);
 
         // assert
-        AssertErrorResponse(response, HttpStatusCode.Unauthorized);
+        response.AssertErrorResponse(HttpStatusCode.Unauthorized);
     }
 }

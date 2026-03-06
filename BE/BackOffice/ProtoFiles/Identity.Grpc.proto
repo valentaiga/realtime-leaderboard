@@ -9,13 +9,13 @@ message GrpcChallengeUserResponse {
    GrpcUserInfo User = 1;
 }
 message GrpcGetUserByIdRequest {
-   uint64 UserId = 1;
+   int64 UserId = 1;
 }
 message GrpcGetUserByIdResponse {
    GrpcUserInfo User = 1;
 }
 message GrpcUserInfo {
-   uint64 UserId = 1;
+   int64 UserId = 1;
    string UserName = 2;
 }
 service IdentityApi {

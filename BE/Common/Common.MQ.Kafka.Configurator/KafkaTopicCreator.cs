@@ -2,11 +2,16 @@
 
 namespace Common.MQ.Kafka.Configurator;
 
-internal class TopicCreator(IEnumerable<TopicConfiguration> options, ILogger<TopicCreator> logger) : BackgroundService
+public interface IKafkaTopicCreator
 {
-    protected override async Task ExecuteAsync(CancellationToken ct)
+    Task CreateTopicsAsync(IEnumerable<TopicConfiguration> configurations);
+}
+
+internal class KafkaTopicCreator(ILogger<KafkaTopicCreator> logger) : IKafkaTopicCreator
+{
+    public async Task CreateTopicsAsync(IEnumerable<TopicConfiguration> configurations)
     {
-        var groups = options.GroupBy(x => x.BootstrapServers);
+        var groups = configurations.GroupBy(x => x.BootstrapServers);
         foreach (var configurationGroup in groups)
         {
             var bootstrapServers = configurationGroup.Key;

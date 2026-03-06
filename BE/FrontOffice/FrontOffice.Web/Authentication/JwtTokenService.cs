@@ -31,7 +31,7 @@ public class JwtTokenService
         };
     }
 
-    public string GenerateJwtToken(ulong userId, string username)
+    public string GenerateJwtToken(long userId, string username)
     {
         var tokenDescriptor = new SecurityTokenDescriptor
         {

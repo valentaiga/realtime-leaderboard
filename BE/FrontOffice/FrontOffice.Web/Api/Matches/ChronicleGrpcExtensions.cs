@@ -4,11 +4,11 @@ using Google.Protobuf.Collections;
 using Google.Protobuf.WellKnownTypes;
 using FilterOperator = BackOffice.Chronicle.Grpc.FilterOperator;
 
-namespace FrontOffice.Web.Api.Player;
+namespace FrontOffice.Web.Api.Matches;
 
 public static class ChronicleGrpcExtensions
 {
-    public static GrpcFilterDescriptor_UInt64 ToGrpcFilterDescriptor(this FilterDescriptor<ulong> descriptor) =>
+    public static GrpcFilterDescriptor_Int64 ToGrpcFilterDescriptor(this FilterDescriptor<long> descriptor) =>
         new()
         {
             Value = descriptor.Value,
@@ -22,13 +22,26 @@ public static class ChronicleGrpcExtensions
             Operator = (FilterOperator)(byte)descriptor.Operator,
         };
 
-    public static IEnumerable<Match> FromRepeatedField(this RepeatedField<MatchInfo> matches) =>
+    public static GrpcFilterDescriptor_Boolean ToGrpcFilterDescriptor(this bool value) =>
+        new()
+        {
+            Value = value,
+            Operator = FilterOperator.Equals,
+        };
+
+    public static IEnumerable<Match> FromRepeatedField(this RepeatedField<GrpcMatchInfo> matches) =>
         matches.Select(x => new Match
         {
+            MatchId = x.MatchId,
             StartedAt = x.StartedAt.ToDateTime(),
             FinishedAt = x.FinishedAt.ToDateTime(),
-            Losers = x.Losers.ToArray(),
-            Winners = x.Winners.ToArray()
+            Players = x.Players.Select(FromGrpc)
         });
 
+    private static MatchPlayer FromGrpc(this GrpcMatchPlayer player) =>
+        new()
+    {
+        PlayerId = player.PlayerId,
+        IsWin = player.IsWin
+    };
 }

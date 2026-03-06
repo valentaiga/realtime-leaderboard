@@ -27,9 +27,10 @@ public class KafkaConfigurator
 
     internal IServiceCollection Build()
     {
-        _services.AddHostedService(sp => new TopicCreator(
-            _topics,
-            sp.GetRequiredService<ILogger<TopicCreator>>()));
-        return _services;
+        foreach (var topic in _topics)
+            _services.AddSingleton(topic);
+        return _services
+            .AddSingleton<IKafkaTopicCreator, KafkaTopicCreator>()
+            .AddHostedService<KafkaInitializationService>();
     }
 }

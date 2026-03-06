@@ -1,8 +1,21 @@
-﻿namespace Common.Filtering;
+﻿using System.Text.Json.Serialization;
 
-public sealed class FilterDescriptor<TValue>(TValue? value, FilterOperator filterOperator)
+namespace Common.Filtering;
+
+public sealed class FilterDescriptor<TValue>
 {
-    public TValue? Value { get; set; } = value;
+    [JsonConstructor]
+    public FilterDescriptor()
+    {
+    }
 
-    public FilterOperator Operator { get; set; } = filterOperator;
+    public FilterDescriptor(TValue? value, FilterOperator filterOperator)
+    {
+        Value = value;
+        Operator = filterOperator;
+    }
+
+    public TValue? Value { get; set; }
+
+    public FilterOperator Operator { get; set; }
 }

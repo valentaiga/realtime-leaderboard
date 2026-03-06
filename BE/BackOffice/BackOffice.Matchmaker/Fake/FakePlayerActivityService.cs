@@ -24,7 +24,7 @@ public class FakePlayerActivityService(MatchService matchService, IOptions<FakeP
 
         var matchesToCreate = 0d;
         var matchesPerSecond = (double)options.Value.PlayersConnectedPerMinute / 60 / MatchPlayersCount;
-        var matchPlayersBuffer = new ulong[MatchPlayersCount];
+        var matchPlayersBuffer = new long[MatchPlayersCount];
 
         while (!ct.IsCancellationRequested)
         {
@@ -44,7 +44,7 @@ public class FakePlayerActivityService(MatchService matchService, IOptions<FakeP
         }
     }
 
-    private static void GetPlayersForMatch(FakePlayerActivityOptions options, ref ulong[] playersBuffer)
+    private static void GetPlayersForMatch(FakePlayerActivityOptions options, ref long[] playersBuffer)
     {
         var availablePlayerIds = options.AvailablePlayerIds.AsSpan();
         var startIndex = Random.Shared.Next(0, availablePlayerIds.Length - MatchPlayersCount);

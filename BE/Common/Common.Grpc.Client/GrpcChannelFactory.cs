@@ -4,7 +4,12 @@ using Microsoft.Extensions.Logging;
 
 namespace Common.Grpc.Client;
 
-public sealed class GrpcChannelFactory(ILogger<GrpcChannelFactory> logger) : IDisposable
+public interface IGrpcChannelFactory
+{
+    GrpcChannel Get(string endpoint);
+}
+
+internal sealed class GrpcChannelFactory(ILogger<GrpcChannelFactory> logger) : IGrpcChannelFactory, IDisposable
 {
     private readonly ConcurrentDictionary<string, GrpcChannel> _channels = new(concurrencyLevel: 2, capacity: 4);
 

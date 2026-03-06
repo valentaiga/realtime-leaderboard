@@ -10,7 +10,7 @@ namespace Tests.UnitTests.FrontOffice.Authentication;
 
 public class JwtTokenServiceTests : FrontOfficeTestBase
 {
-    private const ulong UserId = 1001;
+    private const long UserId = 1001;
     private const string Username = "username";
 
     private JwtTokenService JwtTokenService => GetRequiredService<JwtTokenService>();

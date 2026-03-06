@@ -8,7 +8,7 @@ public class MatchService(
     ObjectRingBuffer<MatchStatusMessage> ringBuffer,
     ChannelWriter<MatchStatusMessage> channel)
 {
-    public async Task StartMatchAsync(ulong[] players, CancellationToken ct)
+    public async Task StartMatchAsync(long[] players, CancellationToken ct)
     {
         // business logic simplifying: we don't have a GameServer
         // therefore we assume match has finished right after it started with random duration (less than 1h)

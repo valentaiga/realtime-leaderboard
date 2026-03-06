@@ -13,17 +13,25 @@ public class MatchService(IMatchRepository matchRepository)
         {
             MatchId = matchId,
             StartedAt = @event.StartedAt,
-            FinishedAt = @event.FinishedAt
+            FinishedAt = @event.FinishedAt,
+            Players = new List<MatchPlayerDto>(11)
         };
+
+        // fill players section
+        foreach (var playerId in @event.Winners.AsSpan())
+            dto.Players.Add(new MatchPlayerDto { PlayerId =  playerId, IsWin = true });
+        foreach (var playerId in @event.Losers.AsSpan())
+            dto.Players.Add(new MatchPlayerDto { PlayerId =  playerId, IsWin = false });
 
         return matchRepository.AddAsync(dto, ct);
     }
 
     public Task<FilterResult<MatchDto>> GetByFilterAsync(
-        FilterDescriptor<ulong>? playerFilter,
+        FilterDescriptor<long>? playerFilter,
+        bool? playerWonFilter,
         FilterDescriptor<DateTime>? startedAtFilter,
         FilterDescriptor<DateTime>? finishedAtFilter,
-        uint limit,
-        uint offset,
-        CancellationToken ct) => matchRepository.GetByFilterAsync(playerFilter, startedAtFilter, finishedAtFilter, limit, offset, ct);
+        long limit,
+        long offset,
+        CancellationToken ct) => matchRepository.GetByFilterAsync(playerFilter, playerWonFilter, startedAtFilter, finishedAtFilter, limit, offset, ct);
 }

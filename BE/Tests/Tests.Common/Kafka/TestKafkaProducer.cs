@@ -1,104 +1,22 @@
-﻿using Confluent.Kafka;
+﻿using Common.MQ.Kafka.Producer;
+using Confluent.Kafka;
+using Microsoft.Extensions.Options;
 
 namespace Tests.Common.Kafka;
 
-public class TestKafkaProducer<TKey, TValue>(MemoryMessageQueue<ConsumeResult<TKey, TValue>> memoryQueue) : IProducer<TKey, TValue>
+public class TestKafkaProducer<TKey, TMessage>(IOptionsMonitor<KafkaProducerConfig> optionsMonitor, MemoryMessageQueue<ConsumeResult<TKey, TMessage>> memoryQueue) : IKafkaProducer<TKey, TMessage>
 {
-    public async Task<DeliveryResult<TKey, TValue>> ProduceAsync(string topic, Message<TKey, TValue> message, CancellationToken cancellationToken = default)
+    private long _offset = 0;
+    private readonly string _topic = optionsMonitor.Get(nameof(TMessage)).Topic
+        ?? throw new Exception("Configuration for producer is incorrect");
+
+    public Task ProduceAsync(TKey key, TMessage message, CancellationToken ct)
     {
-        await memoryQueue.WriteAsync(new ConsumeResult<TKey, TValue>()
+        return memoryQueue.WriteAsync(new ConsumeResult<TKey, TMessage>
         {
-            Message = message,
-            Topic = topic,
-        }, cancellationToken);
-
-        return new DeliveryResult<TKey, TValue>
-        {
-            Value = message.Value,
-            Key =  message.Key,
-        };
-    }
-
-    public void Dispose()
-    {
-        throw new NotImplementedException();
-    }
-
-    public int AddBrokers(string brokers)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void SetSaslCredentials(string username, string password)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Handle Handle { get; }
-    public string Name { get; }
-
-    public Task<DeliveryResult<TKey, TValue>> ProduceAsync(TopicPartition topicPartition, Message<TKey, TValue> message, CancellationToken cancellationToken = new CancellationToken())
-    {
-        throw new NotImplementedException();
-    }
-
-    public void Produce(string topic, Message<TKey, TValue> message, Action<DeliveryReport<TKey, TValue>> deliveryHandler = null)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void Produce(TopicPartition topicPartition, Message<TKey, TValue> message, Action<DeliveryReport<TKey, TValue>> deliveryHandler = null)
-    {
-        throw new NotImplementedException();
-    }
-
-    public int Poll(TimeSpan timeout)
-    {
-        throw new NotImplementedException();
-    }
-
-    public int Flush(TimeSpan timeout)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void Flush(CancellationToken cancellationToken = new CancellationToken())
-    {
-        throw new NotImplementedException();
-    }
-
-    public void InitTransactions(TimeSpan timeout)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void BeginTransaction()
-    {
-        throw new NotImplementedException();
-    }
-
-    public void CommitTransaction(TimeSpan timeout)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void CommitTransaction()
-    {
-        throw new NotImplementedException();
-    }
-
-    public void AbortTransaction(TimeSpan timeout)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void AbortTransaction()
-    {
-        throw new NotImplementedException();
-    }
-
-    public void SendOffsetsToTransaction(IEnumerable<TopicPartitionOffset> offsets, IConsumerGroupMetadata groupMetadata, TimeSpan timeout)
-    {
-        throw new NotImplementedException();
+            Offset = new Offset(Interlocked.Increment(ref _offset)),
+            Message = new Message<TKey, TMessage> { Key = key, Value = message },
+            Topic = _topic,
+        }, ct);
     }
 }

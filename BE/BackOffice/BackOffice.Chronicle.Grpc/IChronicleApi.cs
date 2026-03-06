@@ -10,26 +10,29 @@ namespace BackOffice.Chronicle.Grpc;
 public interface IChronicleApi
 {
     [OperationContract]
-    Task<FilterResult<MatchInfo>> GetPlayerMatches(GetPlayerMatchesFilter request, CancellationToken ct);
+    Task<FilterResult<GrpcMatchInfo>> GetPlayerMatches(GetPlayerMatchesFilter request, CancellationToken ct);
 }
 
 [DataContract]
 public class GetPlayerMatchesFilter
 {
     [DataMember(Order = 1)]
-    public GrpcFilterDescriptor<ulong>? PlayerId { get; set; }
-    
+    public GrpcFilterDescriptor<long>? PlayerId { get; set; }
+
     [DataMember(Order = 2)]
     public GrpcFilterDescriptor<DateTime>? StartedAt { get; set; }
-    
+
     [DataMember(Order = 3)]
     public GrpcFilterDescriptor<DateTime>? FinishedAt { get; set; }
 
     [DataMember(Order = 4)]
-    public uint Limit { get; set; }
+    public GrpcFilterDescriptor<bool>? PlayerWon { get; set; }
 
     [DataMember(Order = 5)]
-    public uint Offset { get; set; }
+    public long Limit { get; set; }
+
+    [DataMember(Order = 6)]
+    public long Offset { get; set; }
 }
 
 [DataContract]
@@ -43,20 +46,27 @@ public class GrpcFilterDescriptor<TValue>
 }
 
 [DataContract]
-public class MatchInfo
+public class GrpcMatchInfo
 {
     [DataMember(Order = 1)]
     public Guid MatchId { get; set; }
     
     [DataMember(Order = 2)]
-    public ulong[] Winners { get; set; } = null!;
-    
+    public List<GrpcMatchPlayer> Players { get; set; } = [];
+
     [DataMember(Order = 3)]
-    public ulong[] Losers { get; set; } = null!;
-    
-    [DataMember(Order = 4)]
     public DateTime StartedAt { get; set; }
-    
-    [DataMember(Order = 5)]
+
+    [DataMember(Order = 4)]
     public DateTime FinishedAt { get; set; }
+}
+
+[DataContract]
+public class GrpcMatchPlayer
+{
+    [DataMember(Order = 1)]
+    public long PlayerId { get; set; }
+
+    [DataMember(Order = 2)]
+    public bool IsWin { get; set; }
 }

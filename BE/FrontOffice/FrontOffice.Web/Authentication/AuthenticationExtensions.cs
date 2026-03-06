@@ -40,9 +40,9 @@ public static class AuthenticationExtensions
         return services;
     }
 
-    public static ulong GetUserId(this ClaimsPrincipal principal) => principal.Claims.GetUserId();
+    public static long GetUserId(this ClaimsPrincipal principal) => principal.Claims.GetUserId();
 
-    public static ulong GetUserId(this IEnumerable<Claim> claims) => ulong.Parse(claims.First(x => x.Type == ClaimTypes.NameIdentifier).Value);
+    public static long GetUserId(this IEnumerable<Claim> claims) => long.Parse(claims.First(x => x.Type == ClaimTypes.NameIdentifier).Value);
 
     public static string GetUsername(this IEnumerable<Claim> claims) => claims.First(x => x.Type == ClaimTypes.Name).Value;
 }

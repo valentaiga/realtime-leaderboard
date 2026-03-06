@@ -8,17 +8,28 @@ namespace BackOffice.Chronicle;
 
 public static class ChronicleGrpcExtensions
 {
-    public static FilterDescriptor<ulong> FromGrpcFilterDescriptor(this GrpcFilterDescriptor_UInt64 descriptor) =>
+    public static FilterDescriptor<long> FromGrpcFilterDescriptor(this GrpcFilterDescriptor_Int64 descriptor) =>
         new(descriptor.Value, (FilterOperator)(byte)descriptor.Operator);
 
     public static FilterDescriptor<DateTime> FromGrpcFilterDescriptor(this GrpcFilterDescriptor_DateTime descriptor) =>
         new(descriptor.Value.ToDateTime(), (FilterOperator)(byte)descriptor.Operator);
 
-    public static IEnumerable<MatchInfo> ToGrpc(this IEnumerable<MatchDto> dtos) =>
-        dtos.Select(x => new MatchInfo
+    public static IEnumerable<GrpcMatchInfo> ToGrpc(this IEnumerable<MatchDto> matches) =>
+        matches.Select(x => new GrpcMatchInfo
         {
             MatchId = x.MatchId.ToString(),
             StartedAt = x.StartedAt.ToTimestamp(),
-            FinishedAt = x.FinishedAt.ToTimestamp()
+            FinishedAt = x.FinishedAt.ToTimestamp(),
+            Players =
+            {
+                x.Players.Select(ToGrpc)
+            }
         });
+
+    private static GrpcMatchPlayer ToGrpc(this MatchPlayerDto player) =>
+        new()
+        {
+            PlayerId = player.PlayerId,
+            IsWin = player.IsWin
+        };
 }

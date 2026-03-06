@@ -34,4 +34,8 @@
         <Protobuf Include="..\..\BackOffice\ProtoFiles\Chronicle.Grpc.proto" GrpcServices="Client" Link="ProtoFiles\Chronicle.Grpc.proto"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Api\Player\" />
+    </ItemGroup>
+
 </Project>

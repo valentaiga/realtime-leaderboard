@@ -9,7 +9,7 @@ public class FilterResult<TData>
     {
     }
 
-    public FilterResult(TData[] data, ulong total)
+    public FilterResult(TData[] data, long total)
     {
         Data = data;
         Total = total;
@@ -19,5 +19,5 @@ public class FilterResult<TData>
     public IEnumerable<TData> Data { get; set; } = [];
 
     [DataMember(Order = 2)]
-    public ulong Total { get; set; }
+    public long Total { get; set; }
 }

@@ -24,9 +24,8 @@ namespace BackOffice.Chronicle.Migrations.Migrations
 
             modelBuilder.Entity("BackOffice.Chronicle.Data.Models.MatchDto", b =>
                 {
-                    b.Property<decimal>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("numeric(20,0)")
+                    b.Property<long>("Id")
+                        .HasColumnType("bigint")
                         .HasColumnName("id");
 
                     b.Property<DateTime>("FinishedAt")
@@ -50,6 +49,45 @@ namespace BackOffice.Chronicle.Migrations.Migrations
                     b.HasIndex("StartedAt");
 
                     b.ToTable("matches", (string)null);
+                });
+
+            modelBuilder.Entity("BackOffice.Chronicle.Data.Models.MatchPlayer", b =>
+                {
+                    b.Property<long>("PlayerId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("player_id");
+
+                    b.Property<long>("MatchId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("match_id");
+
+                    b.Property<bool>("IsWin")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_win");
+
+                    b.HasKey("PlayerId", "MatchId");
+
+                    b.HasIndex("MatchId");
+
+                    b.HasIndex("PlayerId");
+
+                    b.HasIndex("PlayerId", "IsWin");
+
+                    b.ToTable("match_players", (string)null);
+                });
+
+            modelBuilder.Entity("BackOffice.Chronicle.Data.Models.MatchPlayer", b =>
+                {
+                    b.HasOne("BackOffice.Chronicle.Data.Models.MatchDto", null)
+                        .WithMany("Players")
+                        .HasForeignKey("MatchId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("BackOffice.Chronicle.Data.Models.MatchDto", b =>
+                {
+                    b.Navigation("Players");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,6 +1,6 @@
 ﻿namespace BackOffice.Identity.Identity;
 
-public readonly struct LoginUserResult(ulong userId)
+public readonly struct LoginUserResult(long userId)
 {
-    public ulong UserId { get; } = userId;
+    public long UserId { get; } = userId;
 }

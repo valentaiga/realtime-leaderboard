@@ -3,7 +3,7 @@ using BackOffice.Identity.Grpc;
 using Common.Grpc.Client;
 using FrontOffice.Web;
 using FrontOffice.Web.Api.Identity;
-using FrontOffice.Web.Api.Player;
+using FrontOffice.Web.Api.Matches;
 using FrontOffice.Web.Authentication;
 using FrontOffice.Web.Middleware;
 using Microsoft.AspNetCore.Cors.Infrastructure;
@@ -64,8 +64,8 @@ identityGroup.MapPost("login", IdentityController.Login).AllowAnonymous();
 identityGroup.MapPost("refresh", IdentityController.RefreshToken).AllowAnonymous();
 identityGroup.MapPost("logout", IdentityController.Logout).RequireAuthorization();
 
-var playerGroup = app.MapGroup("/api/player");
-playerGroup.MapPost("history", PlayerController.GetPlayerHistory).AllowAnonymous();
+var matchesGroup = app.MapGroup("api/matches");
+matchesGroup.MapPost("/", PlayerController.GetMatches).AllowAnonymous();
 
 
 app.Run();

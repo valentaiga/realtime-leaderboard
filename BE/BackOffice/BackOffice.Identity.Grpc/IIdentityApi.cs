@@ -14,6 +14,6 @@ public interface IIdentityApi // todo vm: update models with [ProtoContract] and
 
 public record GrpcChallengeUserRequest(string Username, string Password);
 public record GrpcChallengeUserResponse(GrpcUserInfo User);
-public record GrpcUserInfo(ulong UserId, string UserName);
-public record GrpcGetUserByIdRequest(ulong UserId);
+public record GrpcUserInfo(long UserId, string UserName);
+public record GrpcGetUserByIdRequest(long UserId);
 public record GrpcGetUserByIdResponse(GrpcUserInfo User);

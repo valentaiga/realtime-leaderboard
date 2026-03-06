@@ -3,7 +3,7 @@ using Common.Filtering;
 using Common.Grpc.Client;
 using FrontOffice.Web.Api;
 using FrontOffice.Web.Api.Identity;
-using FrontOffice.Web.Api.Player;
+using FrontOffice.Web.Api.Matches;
 using FrontOffice.Web.Authentication;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 
@@ -20,8 +20,11 @@ namespace FrontOffice.Web;
 [JsonSerializable(typeof(CorsPolicy))]
 [JsonSerializable(typeof(ApiError))]
 [JsonSerializable(typeof(FilterRequest))]
-[JsonSerializable(typeof(MatchFilterRequest))]
+[JsonSerializable(typeof(GetMatchesRequest))]
+[JsonSerializable(typeof(FilterDescriptor<Guid>))]
+[JsonSerializable(typeof(FilterDescriptor<long>))]
+[JsonSerializable(typeof(FilterDescriptor<DateTime>))]
 [JsonSerializable(typeof(FilterResult<Match>))]
-internal partial class AppJsonSerializerContext : JsonSerializerContext
+public partial class AppJsonSerializerContext : JsonSerializerContext
 {
 }

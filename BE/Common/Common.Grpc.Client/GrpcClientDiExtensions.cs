@@ -12,14 +12,14 @@ public static class GrpcClientDiExtensions
 {
     public static IServiceCollection AddGrpcClient<TGrpcService>(this IServiceCollection services, IConfiguration configuration, string configSectionPath, Func<CallInvoker, TGrpcService> factory) where TGrpcService : ClientBase
     {
-        services.TryAddSingleton<GrpcChannelFactory>();
+        services.TryAddSingleton<IGrpcChannelFactory, GrpcChannelFactory>();
         services.AddOptions<GrpcClientOptions>(configSectionPath)
             .Configure(options => configuration.GetSection(configSectionPath).Bind(options)).Services
             .AddSingleton(sp =>
             {
                 var optionsMonitor = sp.GetRequiredService<IOptionsMonitor<GrpcClientOptions>>();
                 var options = optionsMonitor.Get(configSectionPath);
-                var channelFactory = sp.GetRequiredService<GrpcChannelFactory>();
+                var channelFactory = sp.GetRequiredService<IGrpcChannelFactory>();
                 var channel = channelFactory.Get(options.Endpoint);
                 var invoker = channel
                     .Intercept(new ClientErrorHandlerInterceptor());

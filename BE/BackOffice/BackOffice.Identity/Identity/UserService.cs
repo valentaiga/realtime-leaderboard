@@ -5,8 +5,8 @@ namespace BackOffice.Identity.Identity;
 
 public sealed class UserService
 {
-    private readonly ConcurrentDictionary<string, ulong> _users = new(10, 1_000); // todo vm: use db, fast solution is a dictionary 
-    private ulong _incrementingId;
+    private readonly ConcurrentDictionary<string, long> _users = new(10, 1_000); // todo vm: use db, fast solution is a dictionary 
+    private long _incrementingId;
     
     public Task<LoginUserResult> LoginUserAsync(string username, string password, CancellationToken ct)
     {
@@ -22,7 +22,7 @@ public sealed class UserService
         return Task.FromResult(new LoginUserResult(id));
     }
 
-    public Task<string> GetUserByIdAsync(ulong userId, CancellationToken ct)
+    public Task<string> GetUserByIdAsync(long userId, CancellationToken ct)
     {
         ct.ThrowIfCancellationRequested();
 

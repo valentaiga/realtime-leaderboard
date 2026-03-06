@@ -3,7 +3,7 @@ using Grpc.Core;
 
 namespace Tests.Common.BackOffice.Identity;
 
-public class IdentityGrpcTestHost(Action<IdentityApiMockBehaviour>? configureBehaviour = null) : GrpcTestHost<IdentityApiMock, IdentityApiMockBehaviour>(5010, configureBehaviour);
+public class IdentityGrpcTestHost(Action<IdentityApiMockBehaviour>? configureBehaviour = null) : GrpcTestHost<IdentityApiMock, IdentityApiMockBehaviour>(2021, configureBehaviour);
 
 public class IdentityApiMock(IdentityApiMockBehaviour behaviour) : IdentityApi.IdentityApiBase
 {

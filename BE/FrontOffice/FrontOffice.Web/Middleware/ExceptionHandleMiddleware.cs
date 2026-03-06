@@ -23,12 +23,18 @@ public class ExceptionHandleMiddleware(IOptions<JsonOptions> jsonOptions, ILogge
             context.Response.StatusCode = GetHttpStatusCode(exc);
             await context.Response.WriteAsJsonAsync(new ApiError(exc.Message), _apiErrorTypeInfo, "application/json", context.RequestAborted);
         }
+        catch (InvalidOperationException exc) // request parameters internal cast exception
+        {
+            context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+            await context.Response.WriteAsJsonAsync(new ApiError(exc.Message), _apiErrorTypeInfo, "application/json", context.RequestAborted);
+        }
         catch (OperationCanceledException)
         {
         }
         catch (Exception exc)
         {
             logger.LogError(exc, "Unhandled exception");
+            context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
             await context.Response.WriteAsJsonAsync(new ApiError(exc.Message), _apiErrorTypeInfo, "application/json", context.RequestAborted);
         }
     }

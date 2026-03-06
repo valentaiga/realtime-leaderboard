@@ -13,7 +13,7 @@ public abstract class MessageSenderBase<TMessage>(IOptionsMonitor<MessageSenderO
     
     /// <summary> Read a message. </summary>
     /// <remarks> Should call a <see cref="OperationCanceledException"/> to finish sending. </remarks>
-    protected abstract Task<TMessage> ReadMessageAsync();
+    protected abstract Task<TMessage> ReadMessageAsync(CancellationToken ct);
 
     /// <summary> Triggered on <see cref="ReadMessageAsync"/> error. </summary>
     protected virtual Task OnReadMessageErrorAsync(Exception exception) => Task.CompletedTask;
@@ -22,16 +22,16 @@ public abstract class MessageSenderBase<TMessage>(IOptionsMonitor<MessageSenderO
     /// Reads message then sends it to the MQ. <br/>
     /// Cancellation token should be ignored because everything 
     /// </summary>
-    protected override async Task ExecuteAsync(CancellationToken _)
+    protected override async Task ExecuteAsync(CancellationToken ct)
     {
         while (true)
             try
             {
 #if DEBUG
                 // if debug is enabled, messages drop is fine
-                _.ThrowIfCancellationRequested();
+                ct.ThrowIfCancellationRequested();
 #endif
-                var message = await ReadMessageAsync();
+                var message = await ReadMessageAsync(ct);
                 await SendMessageUntilSuccessAsync(message);
             }
             catch (OperationCanceledException)

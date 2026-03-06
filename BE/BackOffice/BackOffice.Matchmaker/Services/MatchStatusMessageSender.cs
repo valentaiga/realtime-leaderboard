@@ -14,7 +14,7 @@ public class MatchStatusMessageSender(
     IOptionsMonitor<MessageSenderOptions> optionsMonitor,
     ILogger<MatchStatusMessageSender> logger) : MessageSenderBase<MatchStatusMessage>(optionsMonitor)
 {
-    protected override async Task<MatchStatusMessage> ReadMessageAsync() => await channel.ReadAsync();
+    protected override async Task<MatchStatusMessage> ReadMessageAsync(CancellationToken ct) => await channel.ReadAsync(ct);
 
     protected override async Task SendMessageAsync(MatchStatusMessage message)
     {

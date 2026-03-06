@@ -17,32 +17,40 @@ enum FilterOperator {
    StartsWith = 11;
    EndsWith = 12;
 }
-message FilterResult_MatchInfo {
-   repeated MatchInfo Data = 1;
-   uint64 Total = 2;
+message FilterResult_GrpcMatchInfo {
+   repeated GrpcMatchInfo Data = 1;
+   int64 Total = 2;
 }
 message GetPlayerMatchesFilter {
-   GrpcFilterDescriptor_UInt64 PlayerId = 1;
+   GrpcFilterDescriptor_Int64 PlayerId = 1;
    GrpcFilterDescriptor_DateTime StartedAt = 2;
    GrpcFilterDescriptor_DateTime FinishedAt = 3;
-   uint32 Limit = 4;
-   uint32 Offset = 5;
+   GrpcFilterDescriptor_Boolean PlayerWon = 4;
+   int64 Limit = 5;
+   int64 Offset = 6;
+}
+message GrpcFilterDescriptor_Boolean {
+   bool Value = 1;
+   FilterOperator Operator = 2;
 }
 message GrpcFilterDescriptor_DateTime {
    .google.protobuf.Timestamp Value = 1;
    FilterOperator Operator = 2;
 }
-message GrpcFilterDescriptor_UInt64 {
-   uint64 Value = 1;
+message GrpcFilterDescriptor_Int64 {
+   int64 Value = 1;
    FilterOperator Operator = 2;
 }
-message MatchInfo {
+message GrpcMatchInfo {
    string MatchId = 1; // default value could not be applied: 00000000-0000-0000-0000-000000000000
-   repeated uint64 Winners = 2 [packed = false];
-   repeated uint64 Losers = 3 [packed = false];
-   .google.protobuf.Timestamp StartedAt = 4;
-   .google.protobuf.Timestamp FinishedAt = 5;
+   repeated GrpcMatchPlayer Players = 2;
+   .google.protobuf.Timestamp StartedAt = 3;
+   .google.protobuf.Timestamp FinishedAt = 4;
+}
+message GrpcMatchPlayer {
+   int64 PlayerId = 1;
+   bool IsWin = 2;
 }
 service ChronicleApi {
-   rpc GetPlayerMatches (GetPlayerMatchesFilter) returns (FilterResult_MatchInfo);
+   rpc GetPlayerMatches (GetPlayerMatchesFilter) returns (FilterResult_GrpcMatchInfo);
 }
