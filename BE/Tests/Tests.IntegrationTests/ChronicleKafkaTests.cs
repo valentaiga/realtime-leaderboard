@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Tests.IntegrationTests;
 
-[Collection("Uses real database")]
+[Collection("Depends on database results")]
 public class ChronicleKafkaTests(IntegrationTestFixture fixture) : IntegrationTestBase(fixture), IDisposable
 {
     [Fact]

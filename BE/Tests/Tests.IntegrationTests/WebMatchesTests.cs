@@ -68,7 +68,7 @@ public class WebMatchesFixture : IDisposable
     }
 }
 
-[Collection("Uses real database")]
+[Collection("Depends on database results")]
 public class WebMatchesTests : IntegrationTestBase, IClassFixture<WebMatchesFixture>
 {
     private readonly WebMatchesFixture _localTestsFixture;
