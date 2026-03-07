@@ -1,9 +1,10 @@
-﻿using System.ServiceModel;
+﻿using System.Runtime.Serialization;
+using System.ServiceModel;
 
 namespace BackOffice.Identity.Grpc;
 
 [ServiceContract]
-public interface IIdentityApi // todo vm: update models with [ProtoContract] and other attributes for code consistency
+public interface IIdentityApi
 {
     [OperationContract]
     Task<GrpcChallengeUserResponse> ChallengeUser(GrpcChallengeUserRequest request, CancellationToken ct);
@@ -12,8 +13,43 @@ public interface IIdentityApi // todo vm: update models with [ProtoContract] and
     Task<GrpcGetUserByIdResponse> GetUserById(GrpcGetUserByIdRequest userId, CancellationToken ct);
 }
 
-public record GrpcChallengeUserRequest(string Username, string Password);
-public record GrpcChallengeUserResponse(GrpcUserInfo User);
-public record GrpcUserInfo(long UserId, string UserName);
-public record GrpcGetUserByIdRequest(long UserId);
-public record GrpcGetUserByIdResponse(GrpcUserInfo User);
+[DataContract]
+public class GrpcChallengeUserRequest
+{
+    [DataMember(Order = 1)]
+    public string Username { get; set; } = null!;
+
+    [DataMember(Order = 2)]
+    public string Password { get; set; } = null!;
+}
+
+[DataContract]
+public class GrpcChallengeUserResponse(GrpcUserInfo User)
+{
+    [DataMember(Order = 1)]
+    public GrpcUserInfo User { get; set; } = null!;
+}
+
+[DataContract]
+public class GrpcUserInfo
+{
+    [DataMember(Order = 1)]
+    public long UserId { get; set; }
+
+    [DataMember(Order = 2)]
+    public string UserName { get; set; } = null!;
+}
+
+[DataContract]
+public class GrpcGetUserByIdRequest
+{
+    [DataMember(Order = 1)]
+    public long UserId { get; set; }
+}
+
+[DataContract]
+public class GrpcGetUserByIdResponse
+{
+    [DataMember(Order = 1)]
+    public GrpcUserInfo User { get; set; } = null!;
+}
