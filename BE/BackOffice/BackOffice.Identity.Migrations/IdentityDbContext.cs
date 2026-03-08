@@ -15,6 +15,7 @@ public class IdentityDbContext(DbContextOptions<IdentityDbContext> options) : Db
         {
             e.ToTable(UserDto.TableName);
             e.HasKey(x => x.Id);
+            e.HasIndex(x => x.Username);
 
             e.Property(x => x.Id).HasColumnName("id").IsRequired().ValueGeneratedNever();
             e.Property(x => x.Username).HasColumnName("username").HasMaxLength(256).IsRequired();

@@ -69,12 +69,12 @@ public class WebMatchesFixture : IDisposable
 }
 
 [Collection("Depends on database results")]
-public class WebMatchesTests : IntegrationTestBase, IClassFixture<WebMatchesFixture>
+public class GetMatchesTests : IntegrationTestBase, IClassFixture<WebMatchesFixture>
 {
     private readonly WebMatchesFixture _localTestsFixture;
     private readonly HttpClient _client;
 
-    public WebMatchesTests(IntegrationTestFixture fixture, WebMatchesFixture localTestsFixture) : base(fixture)
+    public GetMatchesTests(IntegrationTestFixture fixture, WebMatchesFixture localTestsFixture) : base(fixture)
     {
         _localTestsFixture = localTestsFixture;
         _client = fixture.Web.CreateClient();

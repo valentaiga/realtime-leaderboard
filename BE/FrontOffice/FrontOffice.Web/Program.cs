@@ -60,6 +60,7 @@ else
 
 var identityGroup = app.MapGroup("/api/identity");
 identityGroup.MapPost("login", IdentityController.Login).AllowAnonymous();
+identityGroup.MapPost("register", IdentityController.Register).AllowAnonymous();
 identityGroup.MapPost("refresh", IdentityController.RefreshToken).AllowAnonymous();
 identityGroup.MapPost("logout", IdentityController.Logout).RequireAuthorization();
 

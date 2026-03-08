@@ -23,4 +23,15 @@ public sealed class UserService(IUserRepository userRepository, IPasswordHasher<
 
         return user;
     }
+
+    public Task RegisterUserAsync(long id, string username, string password, CancellationToken ct)
+    {
+        var user = new UserDto
+        {
+            Id = id,
+            Username = username,
+        };
+        user.PasswordHash = passwordHasher.HashPassword(user, password);
+        return userRepository.Add(user, ct);
+    }
 }

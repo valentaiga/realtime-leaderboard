@@ -16,7 +16,7 @@ public class ChronicleApiService(MatchService matchService) : ChronicleApi.Chron
             request.Offset,
             context.CancellationToken);
 
-        return new FilterResult_GrpcMatchInfo()
+        return new FilterResult_GrpcMatchInfo
         {
             Data = { result.Data.ToGrpc() },
             Total = result.Total

@@ -1,5 +1,6 @@
 ﻿using BackOffice.Identity.Grpc;
 using BackOffice.Identity.Identity;
+using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 
 namespace BackOffice.Identity;
@@ -30,5 +31,15 @@ public class IdentityApiService(UserService userService) : IdentityApi.IdentityA
                 UserName = user.Username
             }
         };
+    }
+
+    public override async Task<Empty> RegisterUser(GrpcRegisterUserRequest request, ServerCallContext context)
+    {
+        await userService.RegisterUserAsync(
+            request.Id,
+            request.Username,
+            request.Password,
+            context.CancellationToken);
+        return new();
     }
 }

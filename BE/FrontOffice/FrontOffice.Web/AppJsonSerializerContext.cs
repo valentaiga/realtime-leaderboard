@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Cors.Infrastructure;
 namespace FrontOffice.Web;
 
 [JsonSerializable(typeof(LoginRequest))]
+[JsonSerializable(typeof(RegisterRequest))]
 [JsonSerializable(typeof(LoginResponse))]
 [JsonSerializable(typeof(LogoutResponse))]
 [JsonSerializable(typeof(RefreshTokenRequest))]

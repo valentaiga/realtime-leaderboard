@@ -25,6 +25,20 @@ public static class IdentityController
                 new UserShortInfo(resp.User.UserId, resp.User.UserName)));
     }
 
+    public static async Task<IResult> Register([FromBody] RegisterRequest request, IdentityApi.IdentityApiClient identityClient, JwtTokenService jwtTokenService, CancellationToken ct)
+    {
+        var req = new GrpcRegisterUserRequest
+        {
+            Id = (long)request.Id,
+            Username = request.Username,
+            Password = request.Password
+        };
+
+        await identityClient.RegisterUserAsync(req, cancellationToken: ct);
+
+        return Results.Ok();
+    }
+
     public static async Task<IResult> RefreshToken([FromBody] RefreshTokenRequest request, JwtTokenService jwtTokenService, IdentityApi.IdentityApiClient identityClient, HttpContext context)
     {
         var validationResult = await jwtTokenService.ValidateRefreshTokenAsync(request.JwtToken);
