@@ -1,5 +1,6 @@
 ﻿<Solution>
-  <Folder Name="/BackOffice/">
+  <Folder Name="/Src/" />
+  <Folder Name="/Src/BackOffice/">
     <Project Path="BackOffice/BackOffice.Chronicle.Data/BackOffice.Chronicle.Data.csproj" />
     <Project Path="BackOffice/BackOffice.Chronicle.Grpc/BackOffice.Chronicle.Grpc.csproj" />
     <Project Path="BackOffice/BackOffice.Chronicle.Migrations/BackOffice.Chronicle.Migrations.csproj" />
@@ -9,11 +10,11 @@
     <Project Path="BackOffice\BackOffice.Identity\BackOffice.Identity.csproj" />
     <Project Path="BackOffice/BackOffice.MQ.Messages/BackOffice.MQ.Messages.csproj" />
   </Folder>
-  <Folder Name="/BackOffice/ProtoFiles/">
+  <Folder Name="/Src/BackOffice/ProtoFiles/">
     <File Path="BackOffice/ProtoFiles/Chronicle.Grpc.proto" />
     <File Path="BackOffice\ProtoFiles\Identity.Grpc.proto" />
   </Folder>
-  <Folder Name="/Common/">
+  <Folder Name="/Src/Common/">
     <Project Path="Common/Common.Filtering.Generator/Common.Filtering.Generator.csproj" />
     <Project Path="Common/Common.Filtering/Common.Filtering.csproj" />
     <Project Path="Common/Common.Grpc.Server/Common.Grpc.Server.csproj" />
@@ -25,21 +26,24 @@
     <Project Path="Common\Common.Tools.ProtoFilesGenerator\Common.Tools.ProtoFilesGenerator.csproj" />
     <Project Path="Common\Common.Primitives\Common.Primitives.csproj" />
   </Folder>
-  <Folder Name="/FrontOffice/">
+  <Folder Name="/Src/FrontOffice/">
     <Project Path="FrontOffice\FrontOffice.Web\FrontOffice.Web.csproj" />
   </Folder>
   <Folder Name="/Solution Items/">
     <File Path="../.env/Postgres/01-init-users.sql" />
     <File Path="..\docker-compose.yaml" />
+    <File Path="README.md" />
   </Folder>
   <Folder Name="/Tests/">
+    <Project Path="Tests/Tests.IntegrationTests/Tests.IntegrationTests.csproj" />
+    <Project Path="Tests\Tests.Common\Tests.Common.csproj" />
+    <Project Path="Tests\Tests.UnitTests\Tests.UnitTests.csproj" />
+  </Folder>
+  <Folder Name="/Tests/TestHosts/">
     <Project Path="Tests/Tests.Common.BackOffice.Chronicle.Migrations/Tests.Common.BackOffice.Chronicle.Migrations.csproj" />
     <Project Path="Tests/Tests.Common.BackOffice.Chronicle/Tests.Common.BackOffice.Chronicle.csproj" />
     <Project Path="Tests/Tests.Common.BackOffice.Matchmaker/Tests.Common.BackOffice.Matchmaker.csproj" />
-    <Project Path="Tests/Tests.IntegrationTests/Tests.IntegrationTests.csproj" />
     <Project Path="Tests\Tests.Common.BackOffice.Identity\Tests.Common.BackOffice.Identity.csproj" />
     <Project Path="Tests\Tests.Common.FrontOffice.Web\Tests.Common.FrontOffice.Web.csproj" />
-    <Project Path="Tests\Tests.Common\Tests.Common.csproj" />
-    <Project Path="Tests\Tests.UnitTests\Tests.UnitTests.csproj" />
   </Folder>
 </Solution>

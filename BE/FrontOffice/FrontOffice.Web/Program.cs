@@ -18,7 +18,6 @@ builder.Services.ConfigureHttpJsonOptions(options =>
 
 // todo vm: use logger and distributed traces (opentelemetry?)
 // todo vm: nginx should handle user requests, not frontoffice directly
-// todo vm: set nugets in single file, provide PackageReference only (without version)
 // todo vm: add service with user search via nickname for FE 'search input'
 // todo vm: add remote cache (redis) for idempotent endpoints
 
