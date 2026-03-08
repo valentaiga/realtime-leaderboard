@@ -15,6 +15,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\Common\Common.Grpc.Client\Common.Grpc.Client.csproj" />
       <ProjectReference Include="..\..\Common\Common.Grpc.Server\Common.Grpc.Server.csproj" />
       <ProjectReference Include="..\..\Common\Common.MQ.Kafka.Configurator\Common.MQ.Kafka.Configurator.csproj" />
       <ProjectReference Include="..\..\Common\Common.MQ.Kafka\Common.MQ.Kafka.csproj" />

@@ -60,12 +60,12 @@ public class GetMatchesFixture : IDisposable
 
     public void Dispose()
     {
-        IntegrationTestFixture.CleanDb();
+        IntegrationTestFixture.CleanChronicleDb();
         GC.SuppressFinalize(this);
     }
 }
 
-[Collection(TestConstants.TestCollections.UsesChronicleDb)]
+[Collection(TestConstants.TestCollections.IntegrationTests)]
 public class GetMatchesTests : IntegrationTestBase, IClassFixture<GetMatchesFixture>
 {
     private readonly GetMatchesFixture _localTestsFixture;

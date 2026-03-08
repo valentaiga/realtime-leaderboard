@@ -6,9 +6,14 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Tests.IntegrationTests.Chronicle;
 
-[Collection(TestConstants.TestCollections.UsesChronicleDb)]
-public class ChronicleKafkaTests(IntegrationTestFixture fixture) : IntegrationTestBase(fixture), IDisposable
+[Collection(TestConstants.TestCollections.IntegrationTests)]
+public class ChronicleKafkaTests : IntegrationTestBase
 {
+    public ChronicleKafkaTests(IntegrationTestFixture fixture) : base(fixture)
+    {
+        IntegrationTestFixture.CleanChronicleDb();
+    }
+
     [Fact]
     public async Task MatchStatus_MatchStartedEvent_MatchSkipped()
     {
@@ -25,8 +30,7 @@ public class ChronicleKafkaTests(IntegrationTestFixture fixture) : IntegrationTe
         await producer.ProduceAsync(matchId, message, CancellationToken.None);
 
         // assert
-        SpinWait.SpinUntil(() => Fixture.Chronicle.MatchStatusConsumer.CommitedOffset == offset + 1, 1_000)
-            .Should().BeTrue("Chronicle should have consume MatchStatus");
+        SpinWait.SpinUntil(() => Fixture.Chronicle.MatchStatusConsumer.CommitedOffset == offset + 1, 1_000);
         await using var scope = Fixture.ChronicleMigrations.Services.CreateAsyncScope();
         await using var dbContext = scope.ServiceProvider.GetRequiredService<ChronicleDbContext>();
         var entities = await dbContext.Matches
@@ -51,8 +55,7 @@ public class ChronicleKafkaTests(IntegrationTestFixture fixture) : IntegrationTe
         await producer.ProduceAsync(matchId, message, CancellationToken.None);
 
         // assert
-        SpinWait.SpinUntil(() => Fixture.Chronicle.MatchStatusConsumer.CommitedOffset == offset + 1, 1_000)
-            .Should().BeTrue("Chronicle didnt consume MatchStatus");
+        SpinWait.SpinUntil(() => Fixture.Chronicle.MatchStatusConsumer.CommitedOffset == offset + 1, 1_000);
         await using var scope = Fixture.ChronicleMigrations.Services.CreateAsyncScope();
         await using var dbContext = scope.ServiceProvider.GetRequiredService<ChronicleDbContext>();
         var entities = await dbContext.Matches
@@ -75,11 +78,5 @@ public class ChronicleKafkaTests(IntegrationTestFixture fixture) : IntegrationTe
                 message.MatchFinishedEvent.Losers.Should().Contain(player.PlayerId);
                 message.MatchFinishedEvent.Winners.Should().NotContain(player.PlayerId);
             }
-    }
-
-    public void Dispose()
-    {
-        IntegrationTestFixture.CleanDb();
-        GC.SuppressFinalize(this);
     }
 }

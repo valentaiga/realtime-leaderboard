@@ -4,18 +4,20 @@ using AwesomeAssertions;
 using FrontOffice.Web.Authentication;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Tests.Common;
 using Tests.Common.FrontOffice.Web;
 
 namespace Tests.UnitTests.FrontOffice.Authentication;
 
-public class JwtTokenServiceTests : FrontOfficeTestBase
+[Collection(TestConstants.TestCollections.FrontOfficeUnitTests)]
+public class JwtTokenServiceTests(FrontOfficeUnitTestFixture fixture) : IClassFixture<FrontOfficeUnitTestFixture>
 {
     private const long UserId = 1001;
     private const string Username = "username";
 
-    private JwtTokenService JwtTokenService => GetRequiredService<JwtTokenService>();
-    private JwtSecurityTokenHandler JwtSecurityTokenHandler => GetRequiredService<JwtSecurityTokenHandler>();
-    private JwtOptions JwtOptions => GetRequiredService<IOptions<JwtOptions>>().Value;
+    private JwtTokenService JwtTokenService => fixture.Host.GetRequiredService<JwtTokenService>();
+    private JwtSecurityTokenHandler JwtSecurityTokenHandler => fixture.Host.GetRequiredService<JwtSecurityTokenHandler>();
+    private JwtOptions JwtOptions => fixture.Host.GetRequiredService<IOptions<JwtOptions>>().Value;
 
     [Fact]
     public async Task GenerateJwtToken_TokenIsValid()

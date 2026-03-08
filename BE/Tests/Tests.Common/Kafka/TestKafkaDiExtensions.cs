@@ -13,7 +13,7 @@ public static class TestKafkaDiExtensions
         provider
             .RemoveAll<IKafkaConsumer<TKey, TValue>>()
             .AddSingleton<IKafkaConsumer<TKey, TValue>, TestKafkaConsumer<TKey, TValue>>()
-            .TryAddSingleton<MemoryMessageQueue<ConsumeResult<TKey, TValue>>>();
+            .TryAddSingleton<IMessageQueue<ConsumeResult<TKey, TValue>>, SharedMessageQueue<ConsumeResult<TKey, TValue>>>();
         return provider;
     }
 
@@ -22,7 +22,7 @@ public static class TestKafkaDiExtensions
         provider
             .RemoveAll<IKafkaProducer<TKey, TValue>>()
             .AddSingleton<IKafkaProducer<TKey, TValue>, TestKafkaProducer<TKey, TValue>>()
-            .TryAddSingleton<MemoryMessageQueue<ConsumeResult<TKey, TValue>>>();
+            .TryAddSingleton<IMessageQueue<ConsumeResult<TKey, TValue>>, SharedMessageQueue<ConsumeResult<TKey, TValue>>>();
         return provider;
     }
 }

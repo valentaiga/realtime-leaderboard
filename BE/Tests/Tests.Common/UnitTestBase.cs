@@ -1,6 +1,10 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using Common.Grpc.Client;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Tests.Common.Grpc;
 using Xunit;
 
 namespace Tests.Common;
@@ -9,29 +13,34 @@ public abstract class UnitTestBase<TEntryPoint, THost> : IAsyncLifetime
     where THost: WebApplicationFactory<TEntryPoint>, new()
     where TEntryPoint : class
 {
-    private THost _host = null!;
+    public THost Host { get; private set; } = null!;
 
     public Task InitializeAsync()
     {
-        _host = new THost();
-        _host.WithWebHostBuilder(ConfigureTestHost);
-        _host.StartServer();
+        Host = new THost();
+        Host.WithWebHostBuilder(ConfigureTestHost);
+        Host.StartServer();
         return Task.CompletedTask;
     }
 
     public Task DisposeAsync()
     {
-        _host.Dispose();
+        Host.Dispose();
         return Task.CompletedTask;
     }
 
     protected virtual void ConfigureTestHost(IWebHostBuilder builder)
     {
+        builder.ConfigureTestServices(services =>
+        {
+            services.RemoveAll(typeof(IGrpcChannelFactory));
+            services.TryAddSingleton<IGrpcChannelFactory, TestGrpcChannelFactory>();
+        });
     }
 
     protected HttpClient CreateClient(WebApplicationFactoryClientOptions? options = null) =>
-        options is null ? _host.CreateClient() : _host.CreateClient(options);
+        options is null ? Host.CreateClient() : Host.CreateClient(options);
 
     protected TService GetRequiredService<TService>() where TService : notnull =>
-        _host.Services.GetRequiredService<TService>();
+        Host.Services.GetRequiredService<TService>();
 }

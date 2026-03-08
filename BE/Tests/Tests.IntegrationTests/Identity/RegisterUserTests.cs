@@ -2,7 +2,7 @@
 
 namespace Tests.IntegrationTests.Identity;
 
-[Collection(TestConstants.TestCollections.UsesIdentityDb)]
+[Collection(TestConstants.TestCollections.IntegrationTests)]
 public class RegisterUserTests : IntegrationTestBase
 {
     private readonly HttpClient _client;
@@ -10,7 +10,7 @@ public class RegisterUserTests : IntegrationTestBase
     public RegisterUserTests(IntegrationTestFixture fixture) : base(fixture)
     {
         _client = fixture.Web.CreateClient();
-        IntegrationTestFixture.CleanDb();
+        IntegrationTestFixture.CleanIdentityDb();
     }
 
     [Fact]

@@ -1,6 +1,5 @@
 ﻿using Dapper;
 using Npgsql;
-using Tests.Common;
 using Tests.Common.BackOffice.Chronicle;
 using Tests.Common.BackOffice.Chronicle.Migrations;
 using Tests.Common.BackOffice.Identity;
@@ -43,10 +42,8 @@ public class IntegrationTestFixture : IDisposable
         _identity = new IdentityTestHost();
         _chronicle = new ChronicleTestHost();
         
-        _web.UseKestrel(TestConstants.BaseUri.FrontOfficeTestHostUri.Port);
-        _mm.UseKestrel(TestConstants.BaseUri.MatchmakerTestHostUri.Port);
-        _identity.UseKestrel(TestConstants.BaseUri.IdentityTestHostUri.Port);
-        _chronicle.UseKestrel(TestConstants.BaseUri.ChronicleTestHostUri.Port);
+        _web.ConnectGrpc(TestConstants.BaseUri.IdentityTestHostUri.AbsoluteUri, _identity.CreateClient());
+        _web.ConnectGrpc(TestConstants.BaseUri.ChronicleTestHostUri.AbsoluteUri, _chronicle.CreateClient());
 
         _web.StartServer();
         _mm.StartServer();
@@ -64,15 +61,21 @@ public class IntegrationTestFixture : IDisposable
         _identityMigrations.Dispose();
     }
 
-    public static void CleanDb()
+
+    public static void CleanChronicleDb()
     {
         using var conn = new NpgsqlConnection(TestConstants.TestsConnectionString);
         conn.Open();
-        
-        // chronicle db
-        conn.Execute("delete from migrations_history");
+
         conn.Execute("delete from match_players");
         conn.Execute("delete from matches");
+    }
+
+    public static void CleanIdentityDb()
+    {
+        using var conn = new NpgsqlConnection(TestConstants.TestsConnectionString);
+        conn.Open();
+
         conn.Execute("delete from users");
     }
 

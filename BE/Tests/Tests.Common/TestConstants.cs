@@ -7,8 +7,8 @@ public static class TestConstants
 
     public static class TestCollections
     {
-        public const string UsesChronicleDb = "UsesChronicleDb";
-        public const string UsesIdentityDb = "UsesIdentityDb";
+        public const string IntegrationTests = "IntegrationTests";
+        public const string FrontOfficeUnitTests = "FrontOfficeUnitTests";
     }
 
     public static class BaseUri

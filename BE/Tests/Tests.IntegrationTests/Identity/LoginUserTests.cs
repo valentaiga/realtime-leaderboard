@@ -19,12 +19,12 @@ public class LoginUserFixture : IDisposable
     
     public void Dispose()
     {
-        IntegrationTestFixture.CleanDb();
+        IntegrationTestFixture.CleanIdentityDb();
         GC.SuppressFinalize(this);
     }
 }
 
-[Collection(TestConstants.TestCollections.UsesIdentityDb)]
+[Collection(TestConstants.TestCollections.IntegrationTests)]
 public class LoginUserTests : IntegrationTestBase, IClassFixture<LoginUserFixture>
 {
     private readonly string _username;

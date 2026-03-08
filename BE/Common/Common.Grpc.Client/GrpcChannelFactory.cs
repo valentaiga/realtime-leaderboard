@@ -14,7 +14,7 @@ internal sealed class GrpcChannelFactory(ILogger<GrpcChannelFactory> logger) : I
     private readonly ConcurrentDictionary<string, GrpcChannel> _channels = new(concurrencyLevel: 2, capacity: 4);
 
     public GrpcChannel Get(string endpoint) =>
-        _channels.GetOrAdd(endpoint, s =>
+        _channels.GetOrAdd(endpoint, (s) =>
         {
             logger.LogInformation("Grpc channel for {GrpcEndpoint} created", endpoint);
             return GrpcChannel.ForAddress(s, new GrpcChannelOptions
