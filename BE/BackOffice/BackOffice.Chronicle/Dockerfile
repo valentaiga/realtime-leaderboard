@@ -24,6 +24,7 @@ COPY ["BackOffice/ProtoFiles/", "BackOffice/ProtoFiles/"]
 # docker migrations
 COPY ["BackOffice/BackOffice.Chronicle.Migrations/appsettings.Docker.json", "/app/migrations/appsettings.json"]
 COPY ["BackOffice/BackOffice.Chronicle.Migrations/", "BackOffice/BackOffice.Chronicle.Migrations/"]
+COPY ["Common/Common.Migrations.Postgres/", "Common/Common.Migrations.Postgres/"]
 
 RUN dotnet restore "BackOffice/BackOffice.Chronicle/BackOffice.Chronicle.csproj"
 RUN dotnet build "BackOffice/BackOffice.Chronicle/BackOffice.Chronicle.csproj" -c $BUILD_CONFIGURATION
