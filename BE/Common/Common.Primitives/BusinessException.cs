@@ -17,6 +17,7 @@ public class BusinessException : Exception
 
 public enum BusinessErrorCode
 {
+    InvalidArgument = 3,
     NotFound = 5,
     PermissionDenied = 7,
     Unauthenticated = 10,

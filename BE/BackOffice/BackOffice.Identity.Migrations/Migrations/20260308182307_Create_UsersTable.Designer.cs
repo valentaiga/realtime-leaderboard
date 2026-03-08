@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BackOffice.Identity.Migrations.Migrations
 {
     [DbContext(typeof(IdentityDbContext))]
-    [Migration("20260308123934_Create_UsersTable")]
+    [Migration("20260308182307_Create_UsersTable")]
     partial class Create_UsersTable
     {
         /// <inheritdoc />
@@ -32,8 +32,8 @@ namespace BackOffice.Identity.Migrations.Migrations
 
                     b.Property<string>("PasswordHash")
                         .IsRequired()
-                        .HasMaxLength(32)
-                        .HasColumnType("character varying(32)")
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)")
                         .HasColumnName("password_hash");
 
                     b.Property<string>("Username")
@@ -43,6 +43,8 @@ namespace BackOffice.Identity.Migrations.Migrations
                         .HasColumnName("username");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Username");
 
                     b.ToTable("users", (string)null);
                 });

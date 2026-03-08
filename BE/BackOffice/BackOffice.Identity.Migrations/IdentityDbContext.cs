@@ -19,7 +19,7 @@ public class IdentityDbContext(DbContextOptions<IdentityDbContext> options) : Db
 
             e.Property(x => x.Id).HasColumnName("id").IsRequired().ValueGeneratedNever();
             e.Property(x => x.Username).HasColumnName("username").HasMaxLength(256).IsRequired();
-            e.Property(x => x.PasswordHash).HasColumnName("password_hash").HasMaxLength(32).IsRequired();
+            e.Property(x => x.PasswordHash).HasColumnName("password_hash").HasMaxLength(128).IsRequired();
         });
     }
 }

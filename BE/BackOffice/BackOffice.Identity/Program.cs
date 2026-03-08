@@ -1,8 +1,10 @@
 using BackOffice.Identity;
+using BackOffice.Identity.Data;
 using BackOffice.Identity.Database;
 using BackOffice.Identity.Database.Pgsql;
 using BackOffice.Identity.Identity;
 using Common.Grpc.Server;
+using Microsoft.AspNetCore.Identity;
 
 // todo vm: user event on registration
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +14,7 @@ builder.Services.AddGrpcServices();
 builder.Services
     .AddSingleton<UserService>()
     .AddSingleton<IUserRepository, PgsqlUserRepository>()
+    .AddSingleton<IPasswordHasher<UserDto>, PasswordHasher<UserDto>>()
     .AddSingleton<DbConnectionFactory>();
 
 var app = builder.Build();

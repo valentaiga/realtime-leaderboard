@@ -1,5 +1,7 @@
 ﻿using BackOffice.Identity.Data;
+using Common.Primitives;
 using Dapper;
+using Npgsql;
 
 namespace BackOffice.Identity.Database.Pgsql;
 
@@ -77,7 +79,11 @@ public class PgsqlUserRepository(DbConnectionFactory dbConnectionFactory, ILogge
                     user.PasswordHash
                 }).WaitAsync(ct);
         }
-        catch (Exception ex) // todo vm: handle 'id duplicate' as business exception
+        catch (PostgresException ex) when (ex.SqlState == "23505") // duplicate key value violates unique constraint "PK_users"
+        {
+            throw new BusinessException("User with same id already exists", BusinessErrorCode.InvalidArgument);
+        }
+        catch (Exception ex)
         {
             logger.LogError(ex, "Error adding user");
             throw;
