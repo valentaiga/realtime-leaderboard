@@ -1,4 +1,6 @@
 using BackOffice.Identity;
+using BackOffice.Identity.Database;
+using BackOffice.Identity.Database.Pgsql;
 using BackOffice.Identity.Identity;
 using Common.Grpc.Server;
 
@@ -9,7 +11,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddGrpcServices();
 
 builder.Services
-    .AddSingleton<UserService>();
+    .AddSingleton<UserService>()
+    .AddSingleton<IUserRepository, PgsqlUserRepository>()
+    .AddSingleton<DbConnectionFactory>();
 
 var app = builder.Build();
 

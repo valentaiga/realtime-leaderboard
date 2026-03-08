@@ -15,7 +15,10 @@
     </ItemGroup>
 
     <ItemGroup>
+        <PackageReference Include="Dapper" Version="2.1.66" />
+        <PackageReference Include="Dapper.AOT" Version="1.0.48" />
         <PackageReference Include="Grpc.AspNetCore" Version="2.76.0" />
+        <PackageReference Include="Npgsql" Version="10.0.1" />
     </ItemGroup>
 
     <ItemGroup>
@@ -26,6 +29,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\Common\Common.Grpc.Server\Common.Grpc.Server.csproj" />
+      <ProjectReference Include="..\BackOffice.Identity.Data\BackOffice.Identity.Data.csproj" />
     </ItemGroup>
 
 </Project>

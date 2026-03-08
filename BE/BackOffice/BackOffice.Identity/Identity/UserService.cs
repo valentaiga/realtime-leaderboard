@@ -1,33 +1,26 @@
-﻿using System.Collections.Concurrent;
+﻿using BackOffice.Identity.Data;
+using BackOffice.Identity.Database;
 using Common.Primitives;
+using Microsoft.AspNetCore.Identity;
 
 namespace BackOffice.Identity.Identity;
 
-public sealed class UserService
+public sealed class UserService(IUserRepository userRepository, IPasswordHasher<UserDto> passwordHasher)
 {
-    private readonly ConcurrentDictionary<string, long> _users = new(10, 1_000); // todo vm: use db, fast solution is a dictionary 
-    private long _incrementingId;
-    
-    public Task<LoginUserResult> LoginUserAsync(string username, string password, CancellationToken ct)
+    public async Task<LoginUserResult> LoginUserAsync(string username, string password, CancellationToken ct)
     {
-        ct.ThrowIfCancellationRequested();
-        if (password.Equals("incorrect", StringComparison.OrdinalIgnoreCase))
+        var user = await userRepository.GetByUsernameAsync(username, ct);
+        if (user is null || passwordHasher.VerifyHashedPassword(user, user.PasswordHash, password) is not PasswordVerificationResult.Success)
             throw new BusinessException("User not found or has incorrect password", BusinessErrorCode.NotFound);
 
-        if (_users.TryGetValue(username, out var id))
-            return Task.FromResult(new LoginUserResult(id));
-
-        id = Interlocked.Increment(ref _incrementingId);
-        _users[username] = id;
-        return Task.FromResult(new LoginUserResult(id));
+        return new LoginUserResult(user.Id);
     }
 
-    public Task<string> GetUserByIdAsync(long userId, CancellationToken ct)
+    public async Task<UserDto> GetUserByIdAsync(long userId, CancellationToken ct)
     {
-        ct.ThrowIfCancellationRequested();
+        var user = await userRepository.GetByIdAsync(userId, ct)
+            ?? throw new BusinessException("User not found or has incorrect password", BusinessErrorCode.NotFound);
 
-        var result = _users.FirstOrDefault(x => x.Value == userId).Key;
-
-        return Task.FromResult(result);
+        return user;
     }
 }

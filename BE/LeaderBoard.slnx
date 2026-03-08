@@ -6,7 +6,9 @@
     <Project Path="BackOffice/BackOffice.Chronicle.Migrations/BackOffice.Chronicle.Migrations.csproj" />
     <Project Path="BackOffice/BackOffice.Chronicle/BackOffice.Chronicle.csproj" />
     <Project Path="BackOffice/BackOffice.Matchmaker/BackOffice.Matchmaker.csproj" />
+    <Project Path="BackOffice/BackOffice.Identity.Data/BackOffice.Identity.Data.csproj" />
     <Project Path="BackOffice/BackOffice.Identity.Grpc/BackOffice.Identity.Grpc.csproj" />
+    <Project Path="BackOffice/BackOffice.Identity.Migrations/BackOffice.Identity.Migrations.csproj" />
     <Project Path="BackOffice/BackOffice.Identity/BackOffice.Identity.csproj" />
     <Project Path="BackOffice/BackOffice.MQ.Messages/BackOffice.MQ.Messages.csproj" />
   </Folder>

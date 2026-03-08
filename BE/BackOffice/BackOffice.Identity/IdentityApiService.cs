@@ -21,13 +21,13 @@ public class IdentityApiService(UserService userService) : IdentityApi.IdentityA
 
     public override async Task<GrpcGetUserByIdResponse> GetUserById(GrpcGetUserByIdRequest request, ServerCallContext context)
     {
-        var userName = await userService.GetUserByIdAsync(request.UserId, context.CancellationToken);
+        var user = await userService.GetUserByIdAsync(request.UserId, context.CancellationToken);
         return new()
         {
             User = new()
             {
-                UserId = request.UserId,
-                UserName = userName
+                UserId = user.Id,
+                UserName = user.Username
             }
         };
     }
