@@ -1,13 +1,12 @@
-﻿using AwesomeAssertions;
-using BackOffice.Chronicle.Migrations;
+﻿using BackOffice.Chronicle.Migrations;
 using BackOffice.MQ.Messages.MatchStatus;
 using Common.MQ.Kafka.Producer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Tests.IntegrationTests;
+namespace Tests.IntegrationTests.Chronicle;
 
-[Collection("Depends on database results")]
+[Collection(TestConstants.TestCollections.UsesChronicleDb)]
 public class ChronicleKafkaTests(IntegrationTestFixture fixture) : IntegrationTestBase(fixture), IDisposable
 {
     [Fact]

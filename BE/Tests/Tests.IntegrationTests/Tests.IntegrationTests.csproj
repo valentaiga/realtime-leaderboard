@@ -27,6 +27,7 @@
     <ItemGroup>
       <ProjectReference Include="..\Tests.Common.BackOffice.Chronicle.Migrations\Tests.Common.BackOffice.Chronicle.Migrations.csproj" />
       <ProjectReference Include="..\Tests.Common.BackOffice.Chronicle\Tests.Common.BackOffice.Chronicle.csproj" />
+      <ProjectReference Include="..\Tests.Common.BackOffice.Identity.Migrations\Tests.Common.BackOffice.Identity.Migrations.csproj" />
       <ProjectReference Include="..\Tests.Common.BackOffice.Identity\Tests.Common.BackOffice.Identity.csproj" />
       <ProjectReference Include="..\Tests.Common.BackOffice.Matchmaker\Tests.Common.BackOffice.Matchmaker.csproj" />
       <ProjectReference Include="..\Tests.Common.FrontOffice.Web\Tests.Common.FrontOffice.Web.csproj" />

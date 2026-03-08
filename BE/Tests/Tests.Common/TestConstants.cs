@@ -5,6 +5,12 @@ public static class TestConstants
     public const string TestsConnectionString =
         "Host=localhost;Port=5432;Database=postgres;Username=postgres;Password=postgres-Wkd@saf2kf!Gf2%;Pooling=true;Minimum Pool Size=5;Maximum Pool Size=20;Include Error Detail=true";
 
+    public static class TestCollections
+    {
+        public const string UsesChronicleDb = "UsesChronicleDb";
+        public const string UsesIdentityDb = "UsesIdentityDb";
+    }
+
     public static class BaseUri
     {
         public static readonly Uri FrontOfficeTestHostUri = new("http://localhost:2020");

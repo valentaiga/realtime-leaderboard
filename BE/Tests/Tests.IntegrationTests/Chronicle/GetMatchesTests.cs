@@ -1,15 +1,12 @@
-﻿using System.Net.Http.Json;
-using AwesomeAssertions;
-using BackOffice.Chronicle.Data.Models;
+﻿using BackOffice.Chronicle.Data.Models;
 using BackOffice.Chronicle.Database;
 using Common.Filtering;
 using FrontOffice.Web.Api.Matches;
 using Microsoft.Extensions.DependencyInjection;
-using Tests.Common.Extensions;
 
-namespace Tests.IntegrationTests;
+namespace Tests.IntegrationTests.Chronicle;
 
-public class WebMatchesFixture : IDisposable
+public class GetMatchesFixture : IDisposable
 {
     public long[] Winners { get; } = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
     public long[] Losers { get; } = [11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23];
@@ -17,7 +14,7 @@ public class WebMatchesFixture : IDisposable
 
     private bool _isSeeded;
 
-    public WebMatchesFixture()
+    public GetMatchesFixture()
     {
         AddMatches(40, new DateTime(2000, 1, 1, 12, 0, 0, DateTimeKind.Utc));
         AddMatches(40, new DateTime(2000, 1, 2, 12, 0, 0, DateTimeKind.Utc));
@@ -68,13 +65,13 @@ public class WebMatchesFixture : IDisposable
     }
 }
 
-[Collection("Depends on database results")]
-public class GetMatchesTests : IntegrationTestBase, IClassFixture<WebMatchesFixture>
+[Collection(TestConstants.TestCollections.UsesChronicleDb)]
+public class GetMatchesTests : IntegrationTestBase, IClassFixture<GetMatchesFixture>
 {
-    private readonly WebMatchesFixture _localTestsFixture;
+    private readonly GetMatchesFixture _localTestsFixture;
     private readonly HttpClient _client;
 
-    public GetMatchesTests(IntegrationTestFixture fixture, WebMatchesFixture localTestsFixture) : base(fixture)
+    public GetMatchesTests(IntegrationTestFixture fixture, GetMatchesFixture localTestsFixture) : base(fixture)
     {
         _localTestsFixture = localTestsFixture;
         _client = fixture.Web.CreateClient();

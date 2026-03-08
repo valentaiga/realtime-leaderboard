@@ -17,6 +17,7 @@ public class ChronicleMigrationsTestHost : WebApplicationFactory<Program>
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
+        base.ConfigureWebHost(builder);
         builder.UseSetting("ConnectionStrings:ChronicleDb", TestConstants.TestsConnectionString);
     }
 }

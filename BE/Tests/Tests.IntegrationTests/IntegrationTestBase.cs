@@ -4,6 +4,7 @@ using Tests.Common;
 using Tests.Common.BackOffice.Chronicle;
 using Tests.Common.BackOffice.Chronicle.Migrations;
 using Tests.Common.BackOffice.Identity;
+using Tests.Common.BackOffice.Identity.Migrations;
 using Tests.Common.BackOffice.Matchmaker;
 using Tests.Common.FrontOffice.Web;
 
@@ -25,6 +26,7 @@ public class IntegrationTestFixture : IDisposable
     private readonly FrontOfficeTestHost _web;
     private readonly MatchmakerTestHost _mm;
     private readonly IdentityTestHost _identity;
+    private readonly IdentityMigrationsTestHost _identityMigrations;
     private readonly ChronicleTestHost _chronicle;
     private readonly ChronicleMigrationsTestHost _chronicleMigrations;
 
@@ -33,6 +35,8 @@ public class IntegrationTestFixture : IDisposable
         DropDb();
         _chronicleMigrations = new ChronicleMigrationsTestHost();
         _chronicleMigrations.StartServer();
+        _identityMigrations = new IdentityMigrationsTestHost();
+        _identityMigrations.StartServer();
 
         _web = new FrontOfficeTestHost();
         _mm = new MatchmakerTestHost();
@@ -57,6 +61,7 @@ public class IntegrationTestFixture : IDisposable
         _identity.Dispose();
         _chronicle.Dispose();
         _chronicleMigrations.Dispose();
+        _identityMigrations.Dispose();
     }
 
     public static void CleanDb()
@@ -68,6 +73,7 @@ public class IntegrationTestFixture : IDisposable
         conn.Execute("delete from migrations_history");
         conn.Execute("delete from match_players");
         conn.Execute("delete from matches");
+        conn.Execute("delete from users");
     }
 
     private static void DropDb()
@@ -80,5 +86,6 @@ public class IntegrationTestFixture : IDisposable
         conn.Execute("DROP TABLE IF EXISTS migrations_history");
         conn.Execute("DROP TABLE IF EXISTS match_players");
         conn.Execute("DROP TABLE IF EXISTS matches");
+        conn.Execute("DROP TABLE IF EXISTS users");
     }
 }

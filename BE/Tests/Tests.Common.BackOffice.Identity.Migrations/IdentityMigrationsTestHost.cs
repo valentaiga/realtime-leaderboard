@@ -2,14 +2,16 @@
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 
-namespace Tests.Common.BackOffice.Identity;
+namespace Tests.Common.BackOffice.Identity.Migrations;
 
-public class IdentityTestHost : WebApplicationFactory<Program>
+public class IdentityMigrationsTestHost : WebApplicationFactory<Program>
 {
+    public const string BaseUrl = "http://localhost:2051";
+
     protected override TestServer CreateServer(IServiceProvider serviceProvider)
     {
         var testServer = base.CreateServer(serviceProvider);
-        testServer.BaseAddress = TestConstants.BaseUri.IdentityTestHostUri;
+        testServer.BaseAddress = new Uri(BaseUrl);
         return testServer;
     }
 
@@ -17,11 +19,5 @@ public class IdentityTestHost : WebApplicationFactory<Program>
     {
         base.ConfigureWebHost(builder);
         builder.UseSetting("ConnectionStrings:IdentityDb", TestConstants.TestsConnectionString);
-    }
-
-    protected override void ConfigureClient(HttpClient client)
-    {
-        base.ConfigureClient(client);
-        client.BaseAddress = TestConstants.BaseUri.IdentityTestHostUri;
     }
 }
