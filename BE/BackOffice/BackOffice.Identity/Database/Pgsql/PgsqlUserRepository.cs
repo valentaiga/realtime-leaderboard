@@ -81,7 +81,7 @@ public class PgsqlUserRepository(DbConnectionFactory dbConnectionFactory, ILogge
         }
         catch (PostgresException ex) when (ex.SqlState == "23505") // duplicate key value violates unique constraint "PK_users"
         {
-            throw new BusinessException("User with same id already exists", BusinessErrorCode.InvalidArgument);
+            throw new BusinessException("User with same id or username already exists", BusinessErrorCode.InvalidArgument);
         }
         catch (Exception ex)
         {

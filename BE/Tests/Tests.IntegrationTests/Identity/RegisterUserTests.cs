@@ -39,7 +39,7 @@ public class RegisterUserTests : IntegrationTestBase
 
         // assert
         var error = await response.AssertErrorResponseAsync<ApiError>(HttpStatusCode.BadRequest);
-        error.Message.Should().Be("User with same id already exists");
+        error.Message.Should().Be("User with same id or username already exists");
     }
 
     private async Task AssertSuccessLoginAsync(string username, string password)
