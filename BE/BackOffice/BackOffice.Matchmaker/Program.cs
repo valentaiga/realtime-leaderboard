@@ -20,9 +20,8 @@ builder.Services
     .AddSingleton(typeof(ObjectRingBuffer<>))
     .AddUnboundedChannel<MatchStatusMessage>()
     .AddMessageSender<MatchStatusMessageSender, MatchStatusMessage>()
-    .AddKafkaProducer<Guid, MatchStatusMessage>(builder.Configuration, "Kafka:Producer:MatchStatusMessage")
+    .AddKafkaProducer<string, MatchStatusMessage>(builder.Configuration, "Kafka:Producer:MatchStatusMessage")
     .AddMemoryPackKafkaSerializer(MessagesMessagePackResolver.Instance)
-    .OverrideKafkaSerializer<KafkaMemoryPackSerializer<Guid>, Guid>()
     .ConfigureKafka(builder.Configuration, configurator =>
     {
         configurator.CreateTopic("Kafka:Configuration:MatchStatus");

@@ -17,9 +17,8 @@ builder.Services
     .AddHostedService<MatchStatusHandler>()
     .AddSingleton<DbConnectionFactory>();
 builder.Services
-    .AddKafkaConsumer<Guid, MatchStatusMessage>(builder.Configuration, "Kafka:Consumer:MatchStatusMessage", config => config.ClientId = Dns.GetHostName())
-    .AddMemoryPackKafkaDeserializer(MessagesMessagePackResolver.Instance)
-    .OverrideKafkaDeserializer<KafkaMemoryPackDeserializer<Guid>, Guid>();
+    .AddKafkaConsumer<string, MatchStatusMessage>(builder.Configuration, "Kafka:Consumer:MatchStatusMessage", config => config.ClientId = Dns.GetHostName())
+    .AddMemoryPackKafkaDeserializer(MessagesMessagePackResolver.Instance);
 
 var app = builder.Build();
 

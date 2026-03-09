@@ -4,8 +4,8 @@ public class MatchDto
 {
     public const string TableName = "matches";
     
-    public long Id { get; set; } // different key than MatchId, since MatchId can be repeated (N/2^32 chance)
-    public Guid MatchId { get; set; }
+    public long Id { get; set; } // different key than MatchId for faster index searches
+    public string MatchId { get; set; } = null!;
     public DateTime StartedAt { get; set; }
     public DateTime FinishedAt { get; set; }
 

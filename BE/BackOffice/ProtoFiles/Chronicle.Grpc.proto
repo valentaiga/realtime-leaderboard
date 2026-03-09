@@ -42,7 +42,7 @@ message GrpcFilterDescriptor_Int64 {
    FilterOperator Operator = 2;
 }
 message GrpcMatchInfo {
-   string MatchId = 1; // default value could not be applied: 00000000-0000-0000-0000-000000000000
+   string MatchId = 1;
    repeated GrpcMatchPlayer Players = 2;
    .google.protobuf.Timestamp StartedAt = 3;
    .google.protobuf.Timestamp FinishedAt = 4;

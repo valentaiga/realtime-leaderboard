@@ -32,7 +32,7 @@ public class GetMatchesFixture : IDisposable
             {
                 var matchDto = new MatchDto
                 {
-                    MatchId = Guid.NewGuid(),
+                    MatchId = $"{DateTime.UtcNow.Ticks:D}{Guid.NewGuid():N}",
                     StartedAt = startedAt,
                     FinishedAt = startedAt.AddHours(1),
                     Players = []

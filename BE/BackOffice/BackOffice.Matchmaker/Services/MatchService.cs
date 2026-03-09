@@ -13,7 +13,7 @@ public class MatchService(
         // business logic simplifying: we don't have a GameServer
         // therefore we assume match has finished right after it started with random duration (less than 1h)
         var matchStartedMessage = ringBuffer.Get();
-        matchStartedMessage.MatchId = Guid.NewGuid();
+        matchStartedMessage.MatchId = GenerateUniqueMatchId();
         matchStartedMessage.MatchStartedEvent = new(players[..5].ToArray(), players[5..].ToArray(), DateTime.UtcNow);
         await channel.WriteAsync(matchStartedMessage, ct);
 
@@ -26,4 +26,6 @@ public class MatchService(
             matchStartedMessage.MatchStartedEvent.StartedAt.AddMinutes(Random.Shared.Next(30, 90)));
         await channel.WriteAsync(matchFinishedMessage, ct);
     }
+
+    private static string GenerateUniqueMatchId() => $"{DateTime.UtcNow.Ticks:D}{Guid.NewGuid():N}";
 }

@@ -17,7 +17,7 @@ public static class ChronicleGrpcExtensions
     public static IEnumerable<GrpcMatchInfo> ToGrpc(this IEnumerable<MatchDto> matches) =>
         matches.Select(x => new GrpcMatchInfo
         {
-            MatchId = x.MatchId.ToString(),
+            MatchId = x.MatchId,
             StartedAt = x.StartedAt.ToTimestamp(),
             FinishedAt = x.FinishedAt.ToTimestamp(),
             Players =

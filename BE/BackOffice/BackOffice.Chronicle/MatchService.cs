@@ -7,7 +7,7 @@ namespace BackOffice.Chronicle;
 
 public class MatchService(IMatchRepository matchRepository)
 {
-    public Task SaveFinishedMatchAsync(Guid matchId, MatchFinishedEvent @event, CancellationToken ct)
+    public Task SaveFinishedMatchAsync(string matchId, MatchFinishedEvent @event, CancellationToken ct)
     {
         var dto = new MatchDto
         {

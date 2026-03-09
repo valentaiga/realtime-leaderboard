@@ -10,7 +10,7 @@ namespace BackOffice.Matchmaker.Services;
 public class MatchStatusMessageSender(
     ChannelReader<MatchStatusMessage> channel,
     ObjectRingBuffer<MatchStatusMessage> ringBuffer,
-    IKafkaProducer<Guid, MatchStatusMessage> kafkaProducer,
+    IKafkaProducer<string, MatchStatusMessage> kafkaProducer,
     IOptionsMonitor<MessageSenderOptions> optionsMonitor,
     ILogger<MatchStatusMessageSender> logger) : MessageSenderBase<MatchStatusMessage>(optionsMonitor)
 {

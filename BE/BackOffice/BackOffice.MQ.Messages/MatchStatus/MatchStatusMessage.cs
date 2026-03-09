@@ -7,7 +7,7 @@ namespace BackOffice.MQ.Messages.MatchStatus;
 public class MatchStatusMessage : IClearable
 {
     [Key(0)]
-    public Guid MatchId { get; set; }
+    public string MatchId { get; set; } = null!;
 
     [Key(1)]
     public MatchStartedEvent? MatchStartedEvent { get; set; }
@@ -17,7 +17,7 @@ public class MatchStatusMessage : IClearable
 
     public void Clear()
     {
-        MatchId = Guid.Empty;
+        MatchId = null!;
         MatchStartedEvent = null;
         MatchFinishedEvent = null;
     }

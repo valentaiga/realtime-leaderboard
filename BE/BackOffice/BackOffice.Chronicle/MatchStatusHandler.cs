@@ -6,7 +6,7 @@ namespace BackOffice.Chronicle;
 // todo vm: add kafka DLQ
 public class MatchStatusHandler(
     MatchService matchService,
-    IKafkaConsumer<Guid, MatchStatusMessage> kafkaConsumer,
+    IKafkaConsumer<string, MatchStatusMessage> kafkaConsumer,
     ILogger<MatchStatusHandler> logger)
     : BackgroundService
 {

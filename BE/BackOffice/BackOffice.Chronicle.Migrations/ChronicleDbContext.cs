@@ -20,12 +20,12 @@ public class ChronicleDbContext(DbContextOptions<ChronicleDbContext> options) : 
             e.ToTable(MatchDto.TableName);
             e.HasKey(x => x.Id);
 
-            e.HasIndex(x => x.MatchId);
+            e.HasIndex(x => x.MatchId).IsUnique();
             e.HasIndex(x => x.StartedAt);
             e.HasIndex(x => x.FinishedAt);
 
             e.Property(x => x.Id).HasColumnName("id").ValueGeneratedNever();
-            e.Property(x => x.MatchId).HasColumnName("match_id").IsRequired().ValueGeneratedNever();
+            e.Property(x => x.MatchId).HasColumnName("match_id").IsRequired().HasMaxLength(60).ValueGeneratedNever();
             e.Property(x => x.StartedAt).HasColumnName("started_at").IsRequired();
             e.Property(x => x.FinishedAt).HasColumnName("finished_at").IsRequired();
         });

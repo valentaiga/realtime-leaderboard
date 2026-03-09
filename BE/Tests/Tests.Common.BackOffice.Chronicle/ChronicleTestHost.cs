@@ -27,11 +27,11 @@ public class ChronicleTestHost : WebApplicationFactory<Program>
     {
         base.ConfigureWebHost(builder);
         builder.ConfigureTestServices(services =>
-            services.ReplaceKafkaConsumerWithInMemoryQueue<Guid, MatchStatusMessage>());
+            services.ReplaceKafkaConsumerWithInMemoryQueue<string, MatchStatusMessage>());
 
         builder.UseSetting("ConnectionStrings:ChronicleDb", TestConstants.TestsConnectionString);
     }
 
-    public TestKafkaConsumer<Guid, MatchStatusMessage> MatchStatusConsumer =>
-        (TestKafkaConsumer<Guid, MatchStatusMessage>)Services.GetRequiredService<IKafkaConsumer<Guid, MatchStatusMessage>>();
+    public TestKafkaConsumer<string, MatchStatusMessage> MatchStatusConsumer =>
+        (TestKafkaConsumer<string, MatchStatusMessage>)Services.GetRequiredService<IKafkaConsumer<string, MatchStatusMessage>>();
 }

@@ -26,7 +26,7 @@ public class MatchmakerTestHost : WebApplicationFactory<Program>
         {
             services.RemoveAll(typeof(IKafkaTopicCreator));
             services.AddSingleton<IKafkaTopicCreator, TestTopicCreator>();
-            services.ReplaceKafkaProducerWithInMemoryQueue<Guid, MatchStatusMessage>();
+            services.ReplaceKafkaProducerWithInMemoryQueue<string, MatchStatusMessage>();
         });
     }
 }

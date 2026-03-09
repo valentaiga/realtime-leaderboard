@@ -49,7 +49,7 @@ public class GrpcFilterDescriptor<TValue>
 public class GrpcMatchInfo
 {
     [DataMember(Order = 1)]
-    public Guid MatchId { get; set; }
+    public string MatchId { get; set; } = null!;
     
     [DataMember(Order = 2)]
     public List<GrpcMatchPlayer> Players { get; set; } = [];
