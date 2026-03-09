@@ -35,7 +35,7 @@
   <Folder Name="/Solution Items/">
     <File Path="../.env/Postgres/01-init-users.sql" />
     <File Path="../docker-compose.yaml" />
-    <File Path="README.md" />
+    <File Path="../README.md" />
   </Folder>
   <Folder Name="/Tests/">
     <Project Path="Tests/Tests.IntegrationTests/Tests.IntegrationTests.csproj" />
