@@ -33,7 +33,8 @@
     <Project Path="FrontOffice/FrontOffice.Web/FrontOffice.Web.csproj" />
   </Folder>
   <Folder Name="/Solution Items/">
-    <File Path="../.env/Postgres/01-init-users.sql" />
+    <File Path="../.env" />
+    <File Path="../.init/Postgres/01-init-users.sql" />
     <File Path="../docker-compose.yaml" />
     <File Path="../README.md" />
   </Folder>

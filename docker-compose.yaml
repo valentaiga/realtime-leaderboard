@@ -167,7 +167,7 @@
       POSTGRES_HOST_AUTH_METHOD: password
     volumes:
       - pg_data:/var/lib/postgresql
-      - .env/Postgres/01-init-users.sql:/docker-entrypoint-initdb.d/01-init-users.sql
+      - .init/Postgres/01-init-users.sql:/docker-entrypoint-initdb.d/01-init-users.sql
 
   frontend:
     container_name: leaderboard.frontend
