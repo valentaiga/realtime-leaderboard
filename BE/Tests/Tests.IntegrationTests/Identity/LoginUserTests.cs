@@ -1,4 +1,5 @@
-﻿using FrontOffice.Web.Api.Identity;
+﻿using System.Net.Http.Headers;
+using FrontOffice.Web.Api.Identity;
 
 namespace Tests.IntegrationTests.Identity;
 
@@ -55,6 +56,7 @@ public class LoginUserTests : IntegrationTestBase, IClassFixture<LoginUserFixtur
         loginResponse.Token.Should().NotBeNull();
         loginResponse.User.Id.Should().Be(_userId);
         loginResponse.User.Username.Should().Be(_username);
+        await AssertValidAuthorizationAsync(loginResponse.Token);
     }
 
     [Fact]
@@ -64,7 +66,7 @@ public class LoginUserTests : IntegrationTestBase, IClassFixture<LoginUserFixtur
         var request = new LoginRequest(_username, "something wrong");
 
         // act
-        var response = await _client.PostAsync("api/identity/login", JsonContent.Create(request));
+        using var response = await _client.PostAsync("api/identity/login", JsonContent.Create(request));
 
         // assert
         var error = await response.AssertErrorResponseAsync<ApiError>(HttpStatusCode.BadRequest);
@@ -78,10 +80,75 @@ public class LoginUserTests : IntegrationTestBase, IClassFixture<LoginUserFixtur
         var request = new LoginRequest("some username", _password);
 
         // act
-        var response = await _client.PostAsync("api/identity/login", JsonContent.Create(request));
+        using var response = await _client.PostAsync("api/identity/login", JsonContent.Create(request));
 
         // assert
         var error = await response.AssertErrorResponseAsync<ApiError>(HttpStatusCode.BadRequest);
         error.Message.Should().Be("User not found or has incorrect password");
+    }
+
+    [Fact]
+    public async Task Logout_InvalidToken_Failure()
+    {
+        // arrange
+        using var client = Fixture.Web.CreateClient();
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "as4sDgtf32.asfasawfsome_invalid_token");
+
+        // act
+        using var response = await client.PostAsync("api/identity/logout", null);
+
+        // assert
+        response.AssertErrorResponse(HttpStatusCode.Unauthorized);
+    }
+
+    [Fact]
+    public async Task RefreshToken_Success()
+    {
+        // arrange
+        var loginRequest = new LoginRequest(_username, _password);
+        using var loginResponse = await _client.PostAsync("api/identity/login", JsonContent.Create(loginRequest));
+        var loginResp = await loginResponse.AssertSuccessResponseAsync<LoginResponse>();
+        var request = new RefreshTokenRequest(loginResp.Token);
+
+        // act
+        using var response = await _client.PostAsync("api/identity/refresh", JsonContent.Create(request));
+
+        // assert
+        var result = await response.AssertSuccessResponseAsync<RefreshTokenResponse>();
+        result.Token.Should().NotBeNull();
+        await AssertValidAuthorizationAsync(result.Token);
+    }
+
+    [Fact]
+    public async Task RefreshToken_NoToken_Failure()
+    {
+        // act
+        using var response = await _client.PostAsync("api/identity/refresh", null);
+
+        // assert
+        var error = await response.AssertErrorResponseAsync<ApiError>(HttpStatusCode.BadRequest);
+        error.Message.Should().Be("Request parameters are invalid");
+    }
+
+    [Fact]
+    public async Task RefreshToken_InvalidToken_Failure()
+    {
+        // arrange
+        var request = new RefreshTokenRequest("as4sDgtf32.asfasawfsome_invalid_token");
+
+        // act
+        using var response = await _client.PostAsync("api/identity/refresh", JsonContent.Create(request));
+
+        // assert
+        var error = await response.AssertErrorResponseAsync<ApiError>(HttpStatusCode.BadRequest);
+        error.Message.Should().Be("Invalid token");
+    }
+
+    private async Task AssertValidAuthorizationAsync(string token)
+    {
+        using var client = Fixture.Web.CreateClient();
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        using var response = await client.PostAsync("api/identity/logout", null);
+        await response.AssertSuccessResponseAsync<LogoutResponse>();
     }
 }

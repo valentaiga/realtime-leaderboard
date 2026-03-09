@@ -21,12 +21,20 @@ public class ExceptionHandleMiddleware(IOptions<JsonOptions> jsonOptions, ILogge
         catch (BusinessException exc)
         {
             context.Response.StatusCode = GetHttpStatusCode(exc);
-            await context.Response.WriteAsJsonAsync(new ApiError(exc.Message), _apiErrorTypeInfo, "application/json", context.RequestAborted);
+            await context.Response.WriteAsJsonAsync(new ApiError(exc.Message), _apiErrorTypeInfo, "application/json",
+                context.RequestAborted);
         }
         catch (InvalidOperationException exc) // request parameters internal cast exception
         {
             context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-            await context.Response.WriteAsJsonAsync(new ApiError(exc.Message), _apiErrorTypeInfo, "application/json", context.RequestAborted);
+            await context.Response.WriteAsJsonAsync(new ApiError(exc.Message), _apiErrorTypeInfo, "application/json",
+                context.RequestAborted);
+        }
+        catch (BadHttpRequestException)
+        {
+            context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+            await context.Response.WriteAsJsonAsync(new ApiError("Request parameters are invalid"), _apiErrorTypeInfo, "application/json",
+                context.RequestAborted);
         }
         catch (OperationCanceledException)
         {
