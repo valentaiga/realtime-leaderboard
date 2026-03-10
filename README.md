@@ -71,6 +71,7 @@ todo vm: insert some information
 - EF for migrations
 - gRPC for internal services communication
 - xUnit for tests (Unit tests, Integration tests)
+- OpenTelemetry for logging and tracing
 
 ### Technical Solutions
 
@@ -108,4 +109,18 @@ Why:
 - Faster development time in code-first paradigm
 ```
 
+## Hosting
 
+### Environment Variables
+`.env` file in repository root should contain next values:
+```markdown
+OTEL_EXPORTER_OTLP_PROTOCOL=<change>
+OTEL_EXPORTER_OTLP_ENDPOINT=<change>
+OTEL_EXPORTER_OTLP_HEADERS=<change>
+ASPNETCORE_ENVIRONMENT=Development
+```
+
+### Docker Compose
+Everything but Grafana Stack is hosting in docker via compose:  
+`docker compose up -d` for local testing  
+[Grafana Cloud Stack](https://grafana.com/products/cloud/) can be used testing 
