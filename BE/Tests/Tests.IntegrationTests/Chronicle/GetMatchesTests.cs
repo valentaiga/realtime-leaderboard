@@ -1,4 +1,5 @@
-﻿using BackOffice.Chronicle.Data.Models;
+﻿using System.Text.Json;
+using BackOffice.Chronicle.Data.Models;
 using BackOffice.Chronicle.Database;
 using Common.Filtering;
 using FrontOffice.Web.Api.Matches;
@@ -114,6 +115,7 @@ public class GetMatchesTests : IntegrationTestBase, IClassFixture<GetMatchesFixt
             PlayerWon = isWin
         };
         var requestedMatches = _localTestsFixture.Matches.FindAll(x => x.Players.Any(mp => mp.PlayerId == playerId && mp.IsWin == isWin));
+        var str = JsonSerializer.Serialize(request);
 
         // act
         var response = await _client.PostAsync("/api/matches", JsonContent.Create(request));

@@ -8,6 +8,10 @@ using FrontOffice.Web.Authentication;
 using FrontOffice.Web.Middleware;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.OpenApi;
+using OpenTelemetry;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 
 var builder = WebApplication.CreateSlimBuilder(args);
 
@@ -31,6 +35,26 @@ builder.Services
         options.DefaultPolicyName = "Frontend";
         options.AddPolicy("Frontend", policy);
     });
+
+builder.Logging.AddOpenTelemetry(logging =>
+{
+    logging.IncludeScopes = true;
+    logging.IncludeFormattedMessage = true;
+});
+
+builder.Services
+    .AddOpenTelemetry()
+    .ConfigureResource(r => r.AddService("FrontOffice.Web"))
+    .WithMetrics(metrics =>
+        metrics
+            .AddHttpClientInstrumentation()
+            .AddAspNetCoreInstrumentation())
+    .WithTracing(tracing =>
+        tracing
+            .AddHttpClientInstrumentation()
+            .AddGrpcClientInstrumentation()
+            .AddAspNetCoreInstrumentation())
+    .UseOtlpExporter();
 
 builder.Services
     .AddGrpcClient(builder.Configuration, "Grpc:Identity", invoker => new IdentityApi.IdentityApiClient(invoker))
@@ -58,7 +82,7 @@ else
     app.UseCors();
 }
 
-var identityGroup = app.MapGroup("/api/identity");
+var identityGroup = app.MapGroup("api/identity");
 identityGroup.MapPost("login", IdentityController.Login).AllowAnonymous();
 identityGroup.MapPost("register", IdentityController.Register).AllowAnonymous();
 identityGroup.MapPost("refresh", IdentityController.RefreshToken).AllowAnonymous();

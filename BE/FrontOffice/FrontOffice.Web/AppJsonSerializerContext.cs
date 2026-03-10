@@ -23,6 +23,7 @@ namespace FrontOffice.Web;
 [JsonSerializable(typeof(FilterRequest))]
 [JsonSerializable(typeof(GetMatchesRequest))]
 [JsonSerializable(typeof(FilterDescriptor<Guid>))]
+[JsonSerializable(typeof(FilterDescriptor<bool>))]
 [JsonSerializable(typeof(FilterDescriptor<long>))]
 [JsonSerializable(typeof(FilterDescriptor<DateTime>))]
 [JsonSerializable(typeof(FilterResult<Match>))]

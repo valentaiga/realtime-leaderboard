@@ -1,6 +1,5 @@
 ﻿using BackOffice.Chronicle.Migrations;
 using Common.Migrations.Postgres;
-using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
