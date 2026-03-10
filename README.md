@@ -58,6 +58,10 @@ The score and leaderboard records are persisted on the relational database as we
 - All .NET services are made with NativeAOT
 - Distributed cache allows to return cache directly ignoring db calls
 ```
+- [x] Observability
+```markdown
+- OpenTelemetry tracing and logging integrated into services
+```
 
 ## System Design
 
