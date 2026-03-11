@@ -7,4 +7,5 @@ public class MatchPlayerDto
     public long MatchId { get; set; }
     public long PlayerId { get; set; }
     public bool IsWin { get; set; }
+    public int? EloChange { get; set; }
 }

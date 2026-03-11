@@ -1,8 +1,10 @@
 ﻿using BackOffice.Chronicle.Migrations;
 using BackOffice.MQ.Messages.MatchStatus;
+using BackOffice.MQ.Messages.PlayerUpdate;
 using Common.MQ.Kafka.Producer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Tests.Common.Kafka;
 
 namespace Tests.IntegrationTests.Chronicle;
 
@@ -78,5 +80,49 @@ public class ChronicleKafkaTests : IntegrationTestBase
                 message.MatchFinishedEvent.Losers.Should().Contain(player.PlayerId);
                 message.MatchFinishedEvent.Winners.Should().NotContain(player.PlayerId);
             }
+    }
+
+    [Fact]
+    public async Task PlayerUpdate_PlayerEloChanged_EloUpdatedInDb()
+    {
+        // arrange
+        var matchProducer = Fixture.Mm.Services.GetRequiredService<IKafkaProducer<string, MatchStatusMessage>>();
+        var matchMessage = new MatchStatusMessage
+        {
+            MatchId = $"{DateTime.UtcNow.Ticks:D}{Guid.NewGuid():N}",
+            MatchFinishedEvent = new([1,2,3,4,5], [6,7,8,9,10], DateTime.UtcNow, DateTime.UtcNow.AddMinutes(99))
+        };
+        var matchConsumerOffset = Fixture.Chronicle.MatchStatusConsumer.CommitedOffset;
+        await matchProducer.ProduceAsync(matchMessage.MatchId, matchMessage, CancellationToken.None);
+        SpinWait.SpinUntil(() => Fixture.Chronicle.MatchStatusConsumer.CommitedOffset == matchConsumerOffset + 1, 1_000);
+
+        var playerUpdateProducer = TestKafkaProducer<long, PlayerUpdateMessage>.CreateInstance(string.Empty);
+        var playerUpdateMessage = new PlayerUpdateMessage
+        {
+            PlayerId = 1,
+            PlayerEloChangedEvent = new()
+            {
+                EloChange = 25,
+                MatchId = matchMessage.MatchId,
+            }
+        };
+        var playerUpdateConsumerOffset = Fixture.Chronicle.PlayerUpdateConsumer.CommitedOffset;
+
+        // act
+        await playerUpdateProducer.ProduceAsync(playerUpdateMessage.PlayerId, playerUpdateMessage, CancellationToken.None);
+
+        // assert
+        SpinWait.SpinUntil(() => Fixture.Chronicle.PlayerUpdateConsumer.CommitedOffset == playerUpdateConsumerOffset + 1, 1_000);
+        await using var scope = Fixture.ChronicleMigrations.Services.CreateAsyncScope();
+        await using var dbContext = scope.ServiceProvider.GetRequiredService<ChronicleDbContext>();
+        var entities = await dbContext.Matches
+            .Include(x => x.Players)
+            .ToListAsync();
+        entities.Should().HaveCount(1);
+        var dto = entities.First();
+        var matchPlayerDto = dto.Players.FirstOrDefault(x => x.PlayerId == playerUpdateMessage.PlayerId);
+        matchPlayerDto.Should().NotBeNull();
+        matchPlayerDto.EloChange.Should().Be(playerUpdateMessage.PlayerEloChangedEvent.EloChange);
+        dto.Players.Where(x => x.PlayerId != playerUpdateMessage.PlayerId).Should().AllSatisfy(x => x.EloChange.Should().BeNull());
     }
 }

@@ -1,6 +1,7 @@
 ﻿using BackOffice.Chronicle.Data.Models;
 using BackOffice.Chronicle.Database;
 using BackOffice.MQ.Messages.MatchStatus;
+using BackOffice.MQ.Messages.PlayerUpdate;
 using Common.Filtering;
 
 namespace BackOffice.Chronicle;
@@ -25,6 +26,9 @@ public class MatchService(IMatchRepository matchRepository)
 
         return matchRepository.AddAsync(dto, ct);
     }
+
+    public Task UpdatePlayerEloChangeAsync(long playerId, PlayerEloChangedEvent @event, CancellationToken ct) =>
+        matchRepository.UpdatePlayerEloChange(@event.MatchId, playerId, @event.EloChange, ct);
 
     public Task<FilterResult<MatchDto>> GetByFilterAsync(
         FilterDescriptor<long>? playerFilter,

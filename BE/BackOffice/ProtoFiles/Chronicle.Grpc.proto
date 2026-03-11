@@ -50,6 +50,7 @@ message GrpcMatchInfo {
 message GrpcMatchPlayer {
    int64 PlayerId = 1;
    bool IsWin = 2;
+   int32 EloChange = 3;
 }
 service ChronicleApi {
    rpc GetPlayerMatches (GetPlayerMatchesFilter) returns (FilterResult_GrpcMatchInfo);

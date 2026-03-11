@@ -1,6 +1,7 @@
 ﻿using Common.MQ.Kafka.Producer;
 using Confluent.Kafka;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 
 namespace Tests.Common.Kafka;
@@ -10,6 +11,15 @@ public class TestKafkaProducer<TKey, TMessage>(
     IMessageQueue<ConsumeResult<TKey, TMessage>> messageQueue,
     ILogger<TestKafkaProducer<TKey, TMessage>> logger) : IKafkaProducer<TKey, TMessage>
 {
+    public static TestKafkaProducer<TKey, TMessage> CreateInstance(string topic)
+    {
+        var optionsMonitor = new PredefinedOptionsMonitor<KafkaProducerConfig>(new KafkaProducerConfig()
+        {
+            Topic = topic
+        });
+        return new TestKafkaProducer<TKey, TMessage>(optionsMonitor, new SharedMessageQueue<ConsumeResult<TKey, TMessage>>(), NullLogger<TestKafkaProducer<TKey, TMessage>>.Instance);
+    }
+
     private long _offset = 0;
     private readonly string _topic = optionsMonitor.Get(nameof(TMessage)).Topic
         ?? throw new Exception("Configuration for producer is incorrect");

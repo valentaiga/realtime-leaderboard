@@ -1,5 +1,4 @@
-﻿using System.Text.Json;
-using BackOffice.Chronicle.Data.Models;
+﻿using BackOffice.Chronicle.Data.Models;
 using BackOffice.Chronicle.Database;
 using Common.Filtering;
 using FrontOffice.Web.Api.Matches;
@@ -41,9 +40,9 @@ public class GetMatchesFixture : IDisposable
                 Random.Shared.Shuffle(Winners);
                 Random.Shared.Shuffle(Losers);
                 foreach (var playerId in Winners[..5])
-                    matchDto.Players.Add(new MatchPlayerDto { IsWin = true, PlayerId = playerId });
+                    matchDto.Players.Add(new MatchPlayerDto { IsWin = true, PlayerId = playerId, EloChange = Random.Shared.Next(-25, 25) });
                 foreach (var playerId in Losers[..5])
-                    matchDto.Players.Add(new MatchPlayerDto { IsWin = false, PlayerId = playerId });
+                    matchDto.Players.Add(new MatchPlayerDto { IsWin = false, PlayerId = playerId, EloChange = Random.Shared.Next(-25, 25) });
                 Matches.Add(matchDto);
             }
         }
@@ -99,7 +98,13 @@ public class GetMatchesTests : IntegrationTestBase, IClassFixture<GetMatchesFixt
         var getMatchesResponse = await response.AssertSuccessResponseAsync<FilterResult<Match>>();
         getMatchesResponse.Total.Should().Be(requestedMatches.Count);
         getMatchesResponse.Data.Should().HaveCount(Math.Min((int)request.Limit, requestedMatches.Count));
-        getMatchesResponse.Data.Should().AllSatisfy(x => x.Players.Should().Contain(p => p.PlayerId == playerId));
+        foreach (var match in getMatchesResponse.Data)
+        {
+            match.Players.Should().Contain(x => x.PlayerId == playerId);
+            var matchDto = requestedMatches.Find(x => x.MatchId == match.MatchId)!;
+            foreach (var matchPlayer in match.Players)
+                matchPlayer.EloChange.Should().Be(matchDto.Players.Find(x => x.PlayerId == matchPlayer.PlayerId)!.EloChange);
+        }
     }
 
     [Theory]
@@ -115,7 +120,6 @@ public class GetMatchesTests : IntegrationTestBase, IClassFixture<GetMatchesFixt
             PlayerWon = isWin
         };
         var requestedMatches = _localTestsFixture.Matches.FindAll(x => x.Players.Any(mp => mp.PlayerId == playerId && mp.IsWin == isWin));
-        var str = JsonSerializer.Serialize(request);
 
         // act
         var response = await _client.PostAsync("/api/matches", JsonContent.Create(request));

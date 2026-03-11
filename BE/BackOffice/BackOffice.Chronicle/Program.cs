@@ -4,6 +4,7 @@ using BackOffice.Chronicle.Database;
 using BackOffice.Chronicle.Database.Pgsql;
 using BackOffice.MQ.Messages;
 using BackOffice.MQ.Messages.MatchStatus;
+using BackOffice.MQ.Messages.PlayerUpdate;
 using Common.Grpc.Server;
 using Common.MQ.Kafka;
 using Common.MQ.Kafka.Serializer.MessagePack;
@@ -20,10 +21,12 @@ builder.Services.AddGrpcServices();
 builder.Services.AddSingleton<MatchService>();
 builder.Services
     .AddSingleton<IMatchRepository, PgsqlMatchRepository>()
-    .AddHostedService<MatchStatusHandler>()
     .AddSingleton<DbConnectionFactory>();
 builder.Services
     .AddKafkaConsumer<string, MatchStatusMessage>(builder.Configuration, "Kafka:Consumer:MatchStatusMessage", config => config.ClientId = Dns.GetHostName())
+    .AddHostedService<MatchStatusHandler>()
+    .AddKafkaConsumer<long, PlayerUpdateMessage>(builder.Configuration, "Kafka:Consumer:PlayerUpdateMessage", config => config.ClientId = Dns.GetHostName())
+    .AddHostedService<PlayerUpdateHandler>()
     .AddMemoryPackKafkaDeserializer(MessagesMessagePackResolver.Instance);
 
 builder.Logging.AddOpenTelemetry(logging =>

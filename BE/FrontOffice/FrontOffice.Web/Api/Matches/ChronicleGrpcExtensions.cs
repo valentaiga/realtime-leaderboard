@@ -42,6 +42,7 @@ public static class ChronicleGrpcExtensions
         new()
     {
         PlayerId = player.PlayerId,
-        IsWin = player.IsWin
+        IsWin = player.IsWin,
+        EloChange = player.EloChange
     };
 }

@@ -1,14 +1,12 @@
-﻿using BackOffice.MQ.Messages.MatchStatus;
+﻿using BackOffice.MQ.Messages.PlayerUpdate;
 using Common.MQ.Kafka.Consumer;
 
 namespace BackOffice.Chronicle;
 
-// todo vm: add kafka DLQ
-public class MatchStatusHandler(
+public class PlayerUpdateHandler(
     MatchService matchService,
-    IKafkaConsumer<string, MatchStatusMessage> kafkaConsumer,
-    ILogger<MatchStatusHandler> logger)
-    : BackgroundService
+    IKafkaConsumer<long, PlayerUpdateMessage> kafkaConsumer,
+    ILogger<MatchStatusHandler> logger) : BackgroundService
 {
     protected override async Task ExecuteAsync(CancellationToken ct)
     {
@@ -19,8 +17,8 @@ public class MatchStatusHandler(
             try
             {
                 var result = kafkaConsumer.Consume(ct);
-                if (result.Message.Value.MatchFinishedEvent is { } matchFinishedEvent)
-                    await matchService.SaveFinishedMatchAsync(result.Message.Key, matchFinishedEvent, ct);
+                if (result.Message.Value.PlayerEloChangedEvent is { } playerEloChangedEvent)
+                    await matchService.UpdatePlayerEloChangeAsync(result.Message.Key, playerEloChangedEvent, ct);
 
                 kafkaConsumer.Commit(result);
             }

@@ -33,18 +33,19 @@ public class PgsqlMatchRepository(DbConnectionFactory dbConnectionFactory, ILogg
                         dto.FinishedAt
                     }, transaction).WaitAsync(ct);
 
-                var playersParams = dto.Players.Select(x => new
-                {
-                    matchId = dto.Id,
-                    playerId = x.PlayerId,
-                    Win = x.IsWin
-                });
                 await conn.ExecuteAsync(
                     """
-                    INSERT INTO match_players (match_id, player_id, is_win)
-                    VALUES (@matchId, @playerId, @win)
+                    INSERT INTO match_players (match_id, player_id, is_win, elo_change)
+                    VALUES (@matchId, @playerId, @isWin, @eloChange)
                     """,
-                    playersParams, transaction);
+                    dto.Players.Select(x => new
+                    {
+                        matchId = dto.Id,
+                        playerId = x.PlayerId,
+                        isWin = x.IsWin,
+                        eloChange = x.EloChange
+                    }),
+                    transaction);
 
                 await transaction.CommitAsync(ct);
             }
@@ -57,6 +58,37 @@ public class PgsqlMatchRepository(DbConnectionFactory dbConnectionFactory, ILogg
         catch (Exception ex)
         {
             logger.LogError(ex, "Error adding match");
+            throw;
+        }
+    }
+
+    public async Task UpdatePlayerEloChange(string matchId, long playerId, int eloChange, CancellationToken ct)
+    {
+        try
+        {
+            await using var conn = dbConnectionFactory.GetConnection("ChronicleDb");
+            await conn.OpenAsync(ct);
+
+            await conn.ExecuteAsync(
+                """
+                UPDATE match_players AS mp
+                SET elo_change = @eloChange
+                FROM matches AS m
+                WHERE 
+                    m.match_id = @matchId
+                  AND m.id = mp.match_id
+                  AND mp.player_id = @playerId
+                """,
+                new
+                {
+                    matchId,
+                    playerId,
+                    eloChange
+                });
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Error on updating match player elo");
             throw;
         }
     }
@@ -136,7 +168,7 @@ public class PgsqlMatchRepository(DbConnectionFactory dbConnectionFactory, ILogg
             var matchPlayers = matches.Count == 0
                 ? []
                 : await conn.QueryAsync<MatchPlayerDto>(
-                    "select match_id, player_id, is_win from match_players where match_id = ANY(@matchIds)", 
+                    "select match_id, player_id, is_win, elo_change from match_players where match_id = ANY(@matchIds)", 
                 new
                 {
                     MatchIds = matches.Keys.Select(x => x).ToArray()

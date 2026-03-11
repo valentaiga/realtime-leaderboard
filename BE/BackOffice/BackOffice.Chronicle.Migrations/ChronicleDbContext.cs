@@ -41,6 +41,7 @@ public class ChronicleDbContext(DbContextOptions<ChronicleDbContext> options) : 
             e.Property(x => x.MatchId).HasColumnName("match_id").IsRequired().ValueGeneratedNever();
             e.Property(x => x.PlayerId).HasColumnName("player_id").IsRequired();
             e.Property(x => x.IsWin).HasColumnName("is_win").IsRequired();
+            e.Property(x => x.EloChange).HasColumnName("elo_change");
 
             e.HasOne<MatchDto>()
                 .WithMany(x => x.Players)
