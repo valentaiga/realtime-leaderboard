@@ -17,6 +17,7 @@ public class IdentityTestHost : WebApplicationFactory<Program>
     {
         base.ConfigureWebHost(builder);
         builder.UseSetting("ConnectionStrings:IdentityDb", TestConstants.TestsConnectionString);
+        builder.UseSetting("EnableOpenTelemetry", "false");
     }
 
     protected override void ConfigureClient(HttpClient client)

@@ -28,5 +28,6 @@ public class MatchmakerTestHost : WebApplicationFactory<Program>
             services.AddSingleton<IKafkaTopicCreator, TestTopicCreator>();
             services.ReplaceKafkaProducerWithInMemoryQueue<string, MatchStatusMessage>();
         });
+        builder.UseSetting("EnableOpenTelemetry", "false");
     }
 }

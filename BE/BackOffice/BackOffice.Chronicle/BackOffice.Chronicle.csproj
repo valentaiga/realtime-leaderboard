@@ -16,16 +16,10 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Confluent.Kafka.Extensions.OpenTelemetry" Version="0.4.0" />
         <PackageReference Include="Dapper" Version="2.1.66" />
         <PackageReference Include="Dapper.AOT" Version="1.0.48" />
         <PackageReference Include="Grpc.AspNetCore" Version="2.76.0"/>
         <PackageReference Include="Npgsql" Version="10.0.1" />
-        <PackageReference Include="Npgsql.OpenTelemetry" Version="10.0.1" />
-        <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.15.0" />
-        <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.15.0" />
-        <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.15.0" />
-        <PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.15.0" />
     </ItemGroup>
 
     <ItemGroup>
@@ -38,6 +32,7 @@
       <ProjectReference Include="..\..\Common\Common.Grpc.Server\Common.Grpc.Server.csproj" />
       <ProjectReference Include="..\..\Common\Common.MQ.Kafka.Serializer.MessagePack\Common.MQ.Kafka.Serializer.MessagePack.csproj" />
       <ProjectReference Include="..\..\Common\Common.MQ.Kafka\Common.MQ.Kafka.csproj" />
+      <ProjectReference Include="..\..\Common\Common.OpenTelemetry\Common.OpenTelemetry.csproj" />
       <ProjectReference Include="..\BackOffice.Chronicle.Data\BackOffice.Chronicle.Data.csproj" />
       <ProjectReference Include="..\BackOffice.MQ.Messages\BackOffice.MQ.Messages.csproj" />
     </ItemGroup>

@@ -8,12 +8,7 @@ using BackOffice.MQ.Messages.PlayerUpdate;
 using Common.Grpc.Server;
 using Common.MQ.Kafka;
 using Common.MQ.Kafka.Serializer.MessagePack;
-using Confluent.Kafka.Extensions.OpenTelemetry;
-using Npgsql;
-using OpenTelemetry;
-using OpenTelemetry.Metrics;
-using OpenTelemetry.Resources;
-using OpenTelemetry.Trace;
+using Common.OpenTelemetry;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,27 +24,11 @@ builder.Services
     .AddHostedService<PlayerUpdateHandler>()
     .AddMemoryPackKafkaDeserializer(MessagesMessagePackResolver.Instance);
 
-builder.Logging.AddOpenTelemetry(logging =>
+if (builder.Configuration["EnableOpenTelemetry"] == "true")
 {
-    logging.IncludeScopes = true;
-    logging.IncludeFormattedMessage = true;
-});
-
-builder.Services
-    .AddOpenTelemetry()
-    .ConfigureResource(r => r.AddService("BackOffice.Chronicle"))
-    .WithMetrics(metrics =>
-        metrics
-            .AddHttpClientInstrumentation()
-            .AddAspNetCoreInstrumentation()
-            .AddNpgsqlInstrumentation())
-    .WithTracing(tracing =>
-        tracing
-            .AddHttpClientInstrumentation()
-            .AddAspNetCoreInstrumentation()
-            .AddConfluentKafkaInstrumentation()
-            .AddNpgsql())
-    .UseOtlpExporter();
+    builder.Logging.AddOpenTelemetryLogger();
+    builder.Services.AddOpenTelemetry("BackOffice.Chronicle");
+}
 
 var app = builder.Build();
 

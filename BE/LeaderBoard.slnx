@@ -27,6 +27,7 @@
     <Project Path="Common/Common.MQ/Common.MQ.csproj" />
     <Project Path="Common/Common.Grpc.Client/Common.Grpc.Client.csproj" />
     <Project Path="Common/Common.Tools.ProtoFilesGenerator/Common.Tools.ProtoFilesGenerator.csproj" />
+    <Project Path="Common/Common.OpenTelemetry/Common.OpenTelemetry.csproj" />
     <Project Path="Common/Common.Primitives/Common.Primitives.csproj" />
   </Folder>
   <Folder Name="/Src/FrontOffice/">

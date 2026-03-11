@@ -34,5 +34,6 @@ public class FrontOfficeTestHost : WebApplicationFactory<Program>
         
         builder.UseSetting("Grpc:Chronicle:Endpoint", TestConstants.BaseUri.ChronicleTestHostUri.ToString());
         builder.UseSetting("Grpc:Identity:Endpoint", TestConstants.BaseUri.IdentityTestHostUri.ToString());
+        builder.UseSetting("EnableOpenTelemetry", "false");
     }
 }

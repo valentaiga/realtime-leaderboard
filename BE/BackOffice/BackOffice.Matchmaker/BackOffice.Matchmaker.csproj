@@ -21,17 +21,13 @@
       <ProjectReference Include="..\..\Common\Common.MQ.Kafka.Serializer.MessagePack\Common.MQ.Kafka.Serializer.MessagePack.csproj" />
       <ProjectReference Include="..\..\Common\Common.MQ.Kafka\Common.MQ.Kafka.csproj" />
       <ProjectReference Include="..\..\Common\Common.MQ\Common.MQ.csproj" />
+      <ProjectReference Include="..\..\Common\Common.OpenTelemetry\Common.OpenTelemetry.csproj" />
       <ProjectReference Include="..\..\Common\Common.Primitives\Common.Primitives.csproj" />
       <ProjectReference Include="..\BackOffice.MQ.Messages\BackOffice.MQ.Messages.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Confluent.Kafka.Extensions.OpenTelemetry" Version="0.4.0" />
       <PackageReference Include="MessagePack" Version="3.1.4" />
-      <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.15.0" />
-      <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.15.0" />
-      <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.15.0" />
-      <PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.15.0" />
     </ItemGroup>
 
 </Project>

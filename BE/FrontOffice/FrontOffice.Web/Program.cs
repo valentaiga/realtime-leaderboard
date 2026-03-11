@@ -1,6 +1,7 @@
 using BackOffice.Chronicle.Grpc;
 using BackOffice.Identity.Grpc;
 using Common.Grpc.Client;
+using Common.OpenTelemetry;
 using FrontOffice.Web;
 using FrontOffice.Web.Api.Identity;
 using FrontOffice.Web.Api.Matches;
@@ -8,10 +9,6 @@ using FrontOffice.Web.Authentication;
 using FrontOffice.Web.Middleware;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.OpenApi;
-using OpenTelemetry;
-using OpenTelemetry.Metrics;
-using OpenTelemetry.Resources;
-using OpenTelemetry.Trace;
 
 var builder = WebApplication.CreateSlimBuilder(args);
 
@@ -35,25 +32,11 @@ builder.Services
         options.AddPolicy("Frontend", policy);
     });
 
-builder.Logging.AddOpenTelemetry(logging =>
+if (builder.Configuration["EnableOpenTelemetry"] == "true")
 {
-    logging.IncludeScopes = true;
-    logging.IncludeFormattedMessage = true;
-});
-
-builder.Services
-    .AddOpenTelemetry()
-    .ConfigureResource(r => r.AddService("FrontOffice.Web"))
-    .WithMetrics(metrics =>
-        metrics
-            .AddHttpClientInstrumentation()
-            .AddAspNetCoreInstrumentation())
-    .WithTracing(tracing =>
-        tracing
-            .AddHttpClientInstrumentation()
-            .AddGrpcClientInstrumentation()
-            .AddAspNetCoreInstrumentation())
-    .UseOtlpExporter();
+    builder.Logging.AddOpenTelemetryLogger();
+    builder.Services.AddOpenTelemetry("FrontOffice.Web");
+}
 
 builder.Services
     .AddGrpcClient(builder.Configuration, "Grpc:Identity", invoker => new IdentityApi.IdentityApiClient(invoker))

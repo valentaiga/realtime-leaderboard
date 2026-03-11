@@ -32,6 +32,7 @@ public class ChronicleTestHost : WebApplicationFactory<Program>
             .ReplaceKafkaConsumerWithInMemoryQueue<long, PlayerUpdateMessage>());
 
         builder.UseSetting("ConnectionStrings:ChronicleDb", TestConstants.TestsConnectionString);
+        builder.UseSetting("EnableOpenTelemetry", "false");
     }
 
     public TestKafkaConsumer<string, MatchStatusMessage> MatchStatusConsumer =>

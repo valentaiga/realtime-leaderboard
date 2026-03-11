@@ -6,12 +6,8 @@ using Common.MQ.Kafka;
 using Common.MQ.Kafka.Serializer.MessagePack;
 using BackOffice.MQ.Messages.MatchStatus;
 using Common.MQ.Kafka.Configurator;
+using Common.OpenTelemetry;
 using Common.Primitives;
-using Confluent.Kafka.Extensions.OpenTelemetry;
-using OpenTelemetry;
-using OpenTelemetry.Metrics;
-using OpenTelemetry.Resources;
-using OpenTelemetry.Trace;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,25 +28,11 @@ builder.Services
         configurator.CreateTopic("Kafka:Configuration:MatchStatus");
     });
 
-builder.Logging.AddOpenTelemetry(logging =>
+if (builder.Configuration["EnableOpenTelemetry"] == "true")
 {
-    logging.IncludeScopes = true;
-    logging.IncludeFormattedMessage = true;
-});
-
-builder.Services
-    .AddOpenTelemetry()
-    .ConfigureResource(r => r.AddService("BackOffice.Matchmaker"))
-    .WithMetrics(metrics =>
-        metrics
-            .AddHttpClientInstrumentation()
-            .AddAspNetCoreInstrumentation())
-    .WithTracing(tracing =>
-        tracing
-            .AddConfluentKafkaInstrumentation()
-            .AddHttpClientInstrumentation()
-            .AddAspNetCoreInstrumentation())
-    .UseOtlpExporter();
+    builder.Logging.AddOpenTelemetryLogger();
+    builder.Services.AddOpenTelemetry("BackOffice.Matchmaker");
+}
 
 var app = builder.Build();
 
