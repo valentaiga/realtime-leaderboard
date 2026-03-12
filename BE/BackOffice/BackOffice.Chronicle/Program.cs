@@ -22,7 +22,8 @@ builder.Services
     .AddHostedService<MatchStatusHandler>()
     .AddKafkaConsumer<long, PlayerUpdateMessage>(builder.Configuration, "Kafka:Consumer:PlayerUpdateMessage", config => config.ClientId = Dns.GetHostName())
     .AddHostedService<PlayerUpdateHandler>()
-    .AddMemoryPackKafkaDeserializer(MessagesMessagePackResolver.Instance);
+    .AddMemoryPackKafkaDeserializer(MessagesMessagePackResolver.Instance)
+    .OverrideKafkaDeserializer<KafkaMemoryPackDeserializer<long>, long>();
 
 if (builder.Configuration["EnableOpenTelemetry"] == "true")
 {
