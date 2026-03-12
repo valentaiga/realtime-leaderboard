@@ -1,4 +1,5 @@
-﻿using BackOffice.Chronicle.Grpc;
+﻿using BackOffice.PlayerSearch.Grpc;
+using BackOffice.Chronicle.Grpc;
 using BackOffice.Identity.Grpc;
 using Common.Tools.ProtoFilesGenerator;
 
@@ -9,7 +10,8 @@ Console.WriteLine("ProtoFilesGen: Args [" + string.Join(",", args) + "]");
 var grpcInterfaces = new Dictionary<string, Type>
 {
     { "Identity.Grpc", typeof(IIdentityApi) },
-    { "Chronicle.Grpc", typeof(IChronicleApi)}
+    { "Chronicle.Grpc", typeof(IChronicleApi)},
+    { "PlayerSearch.Grpc", typeof(IPlayerSearchApi)},
 };
 
 // ====================== do not update below ======================

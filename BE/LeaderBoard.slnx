@@ -11,8 +11,11 @@
     <Project Path="BackOffice/BackOffice.Identity.Migrations/BackOffice.Identity.Migrations.csproj" />
     <Project Path="BackOffice/BackOffice.Identity/BackOffice.Identity.csproj" />
     <Project Path="BackOffice/BackOffice.MQ.Messages/BackOffice.MQ.Messages.csproj" />
+    <Project Path="BackOffice/BackOffice.PlayerSearch.Grpc/BackOffice.PlayerSearch.Grpc.csproj" />
+    <Project Path="BackOffice/BackOffice.PlayerSearch/BackOffice.PlayerSearch.csproj" />
   </Folder>
   <Folder Name="/Src/BackOffice/ProtoFiles/">
+    <File Path="BackOffice/ProtoFiles/PlayerSearch.Grpc.proto" />
     <File Path="BackOffice/ProtoFiles/Chronicle.Grpc.proto" />
     <File Path="BackOffice/ProtoFiles/Identity.Grpc.proto" />
   </Folder>

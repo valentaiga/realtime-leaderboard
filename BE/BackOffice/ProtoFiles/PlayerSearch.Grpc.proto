@@ -1,0 +1,16 @@
+syntax = "proto3";
+package BackOffice.PlayerSearch.Grpc;
+
+message FindPlayersByUsernameRequest {
+   string Username = 1;
+}
+message GrpcPlayer {
+   int64 PlayerId = 1;
+   string Username = 2;
+}
+message GrpcPlayerSearchResult {
+   repeated GrpcPlayer Top = 1;
+}
+service PlayerSearchApi {
+   rpc FindPlayersByUsername (FindPlayersByUsernameRequest) returns (GrpcPlayerSearchResult);
+}

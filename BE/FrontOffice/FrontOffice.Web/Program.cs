@@ -1,10 +1,12 @@
 using BackOffice.Chronicle.Grpc;
 using BackOffice.Identity.Grpc;
+using BackOffice.PlayerSearch.Grpc;
 using Common.Grpc.Client;
 using Common.OpenTelemetry;
 using FrontOffice.Web;
 using FrontOffice.Web.Api.Identity;
 using FrontOffice.Web.Api.Matches;
+using FrontOffice.Web.Api.Player;
 using FrontOffice.Web.Authentication;
 using FrontOffice.Web.Middleware;
 using Microsoft.AspNetCore.Cors.Infrastructure;
@@ -40,7 +42,8 @@ if (builder.Configuration["EnableOpenTelemetry"] == "true")
 
 builder.Services
     .AddGrpcClient(builder.Configuration, "Grpc:Identity", invoker => new IdentityApi.IdentityApiClient(invoker))
-    .AddGrpcClient(builder.Configuration, "Grpc:Chronicle", invoker => new ChronicleApi.ChronicleApiClient(invoker));
+    .AddGrpcClient(builder.Configuration, "Grpc:Chronicle", invoker => new ChronicleApi.ChronicleApiClient(invoker))
+    .AddGrpcClient(builder.Configuration, "Grpc:PlayerSearch", invoker => new PlayerSearchApi.PlayerSearchApiClient(invoker));
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi(options => options.OpenApiVersion = OpenApiSpecVersion.OpenApi3_0);
@@ -71,7 +74,9 @@ identityGroup.MapPost("refresh", IdentityController.RefreshToken).AllowAnonymous
 identityGroup.MapPost("logout", IdentityController.Logout).RequireAuthorization();
 
 var matchesGroup = app.MapGroup("api/matches");
-matchesGroup.MapPost("/", PlayerController.GetMatches).AllowAnonymous();
+matchesGroup.MapPost("/", MatchesController.GetMatches).AllowAnonymous();
 
+var playersGroup = app.MapGroup("api/players");
+playersGroup.MapGet("search", PlayerController.SearchPlayersByUsername).AllowAnonymous();
 
 app.Run();

@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FrontOffice.Web.Api.Matches;
 
-public static class PlayerController
+public static class MatchesController
 {
     public static async Task<IResult> GetMatches([FromBody] GetMatchesRequest request, ChronicleApi.ChronicleApiClient chronicleApiClient, CancellationToken ct)
     {

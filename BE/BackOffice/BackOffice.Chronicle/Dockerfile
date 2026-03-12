@@ -18,6 +18,7 @@ COPY ["Common/Common.MQ/", "Common/Common.MQ/"]
 COPY ["Common/Common.MQ.Kafka.Serializer.MessagePack/", "Common/Common.MQ.Kafka.Serializer.MessagePack/"]
 COPY ["Common/Common.MQ.Kafka/", "Common/Common.MQ.Kafka/"]
 COPY ["Common/Common.Primitives/", "Common/Common.Primitives/"]
+COPY ["Common/Common.OpenTelemetry/", "Common/Common.OpenTelemetry/"]
 COPY ["BackOffice/BackOffice.MQ.Messages/", "BackOffice/BackOffice.MQ.Messages/"]
 COPY ["BackOffice/ProtoFiles/", "BackOffice/ProtoFiles/"]
 

@@ -13,6 +13,7 @@
       Kestrel__Endpoints__Localhost__Url: http://0.0.0.0:5110
       Grpc__Identity__Endpoint: http://identity:5010
       Grpc__Chronicle__Endpoint: http://chronicle:5020
+      Grpc__PlayerSearch__Endpoint: http://playersearch:5040
 
   backoffice.identity:
     container_name: leaderboard.backoffice.identity
@@ -46,6 +47,20 @@
       ConnectionStrings__ChronicleDb: "Host=postgresql;Port=5432;Database=chronicle;Username=chronicle;Password=chronicle-ha90Hxzw09fh2x!;Pooling=true;Minimum Pool Size=5;Maximum Pool Size=20;Include Error Detail=true"
     depends_on:
       - postgresql
+
+  backoffice.playersearch:
+    container_name: leaderboard.backoffice.playersearch
+    hostname: playersearch
+    image: leaderboard.backoffice.playersearch
+    ports:
+      - "5040:5040"
+    build:
+      context: ./BE
+      dockerfile: BackOffice/BackOffice.PlayerSearch/Dockerfile
+    env_file:
+      - .env
+    environment:
+      Kestrel__Endpoints__Localhost__Url: http://0.0.0.0:5040
 
   backoffice.matchmaker:
     container_name: leaderboard.backoffice.matchmaker

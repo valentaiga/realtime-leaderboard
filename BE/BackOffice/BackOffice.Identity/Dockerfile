@@ -14,6 +14,7 @@ COPY ["BackOffice/BackOffice.Identity/", "BackOffice/BackOffice.Identity/"]
 COPY ["BackOffice/BackOffice.Identity.Data/", "BackOffice/BackOffice.Identity.Data/"]
 COPY ["Common/Common.Grpc.Server/", "Common/Common.Grpc.Server/"]
 COPY ["Common/Common.Primitives/", "Common/Common.Primitives/"]
+COPY ["Common/Common.OpenTelemetry/", "Common/Common.OpenTelemetry/"]
 COPY ["BackOffice/ProtoFiles/", "BackOffice/ProtoFiles/"]
 
 # docker migrations

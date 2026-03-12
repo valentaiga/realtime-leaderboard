@@ -15,6 +15,7 @@ COPY ["Common/Common.Grpc.Client/", "Common/Common.Grpc.Client/"]
 COPY ["Common/Common.Filtering/", "Common/Common.Filtering/"]
 COPY ["Common/Common.Filtering.Generator/", "Common/Common.Filtering.Generator/"]
 COPY ["Common/Common.Primitives/", "Common/Common.Primitives/"]
+COPY ["Common/Common.OpenTelemetry/", "Common/Common.OpenTelemetry/"]
 COPY ["BackOffice/ProtoFiles/", "BackOffice/ProtoFiles/"]
 
 RUN dotnet restore "FrontOffice/FrontOffice.Web/FrontOffice.Web.csproj"

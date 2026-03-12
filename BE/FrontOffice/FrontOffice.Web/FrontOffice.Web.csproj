@@ -33,10 +33,7 @@
     <ItemGroup>
         <Protobuf Include="..\..\BackOffice\ProtoFiles\Identity.Grpc.proto" GrpcServices="Client" Link="ProtoFiles\Identity.Grpc.proto"/>
         <Protobuf Include="..\..\BackOffice\ProtoFiles\Chronicle.Grpc.proto" GrpcServices="Client" Link="ProtoFiles\Chronicle.Grpc.proto"/>
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Api\Player\" />
+        <Protobuf Include="..\..\BackOffice\ProtoFiles\PlayerSearch.Grpc.proto" GrpcServices="Client" Link="ProtoFiles\PlayerSearch.Grpc.proto"/>
     </ItemGroup>
 
 </Project>

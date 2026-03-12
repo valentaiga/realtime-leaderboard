@@ -4,6 +4,7 @@ using Common.Grpc.Client;
 using FrontOffice.Web.Api;
 using FrontOffice.Web.Api.Identity;
 using FrontOffice.Web.Api.Matches;
+using FrontOffice.Web.Api.Player;
 using FrontOffice.Web.Authentication;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 
@@ -27,6 +28,7 @@ namespace FrontOffice.Web;
 [JsonSerializable(typeof(FilterDescriptor<long>))]
 [JsonSerializable(typeof(FilterDescriptor<DateTime>))]
 [JsonSerializable(typeof(FilterResult<Match>))]
+[JsonSerializable(typeof(SearchPlayersResponse))]
 public partial class AppJsonSerializerContext : JsonSerializerContext
 {
 }
