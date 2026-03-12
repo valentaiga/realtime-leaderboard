@@ -6,13 +6,13 @@ namespace BackOffice.MQ.Messages.MatchStatus;
 [MessagePackObject]
 public class MatchStatusMessage : IClearable
 {
-    [Key(0)]
+    [Key("matchId")]
     public string MatchId { get; set; } = null!;
 
-    [Key(1)]
+    [Key("matchStartedEvent")]
     public MatchStartedEvent? MatchStartedEvent { get; set; }
 
-    [Key(2)]
+    [Key("matchFinishedEvent")]
     public MatchFinishedEvent? MatchFinishedEvent { get; set; }
 
     public void Clear()

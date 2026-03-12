@@ -5,15 +5,15 @@ namespace BackOffice.MQ.Messages.MatchStatus;
 [MessagePackObject]
 public class MatchFinishedEvent(long[] winners, long[] losers, DateTime startedAt, DateTime finishedAt)
 {
-    [Key(0)]
+    [Key("winners")]
     public long[] Winners { get; } = winners;
 
-    [Key(1)]
+    [Key("losers")]
     public long[] Losers { get; } = losers;
 
-    [Key(2)]
+    [Key("startedAt")]
     public DateTime StartedAt { get; } = startedAt;
 
-    [Key(3)]
+    [Key("finishedAt")]
     public DateTime FinishedAt { get; } = finishedAt;
 }
