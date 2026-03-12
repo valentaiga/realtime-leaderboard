@@ -1,12 +1,17 @@
-﻿using BackOffice.PlayerSearch.Grpc;
+﻿using BackOffice.PlayerSearch.DynamoDb;
+using BackOffice.PlayerSearch.Grpc;
 using Grpc.Core;
 
 namespace BackOffice.PlayerSearch;
 
-public class AutoCompleteApiService : PlayerSearchApi.PlayerSearchApiBase
+public class PlayerSearchApiService(PlayerSearchService playerSearchService) : PlayerSearchApi.PlayerSearchApiBase
 {
-    public override Task<GrpcPlayerSearchResult> FindPlayersByUsername(FindPlayersByUsernameRequest request, ServerCallContext context)
+    public override async Task<GrpcPlayerSearchResult> FindPlayersByUsername(FindPlayersByUsernameRequest request, ServerCallContext context)
     {
-        return base.FindPlayersByUsername(request, context);
+        var result = await playerSearchService.FindPlayersAsync(request.Username, ct: context.CancellationToken);
+        return new GrpcPlayerSearchResult
+        {
+            Top = { result.Select(x => new GrpcPlayer { PlayerId = x.Id, Username = x.Username }) }
+        };
     }
 }

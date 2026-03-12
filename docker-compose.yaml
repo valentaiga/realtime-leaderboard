@@ -13,7 +13,7 @@
       Kestrel__Endpoints__Localhost__Url: http://0.0.0.0:5110
       Grpc__Identity__Endpoint: http://identity:5010
       Grpc__Chronicle__Endpoint: http://chronicle:5020
-      Grpc__PlayerSearch__Endpoint: http://playersearch:5040
+      Grpc__PlayerSearch__Endpoint: http://playersearch:5030
 
   backoffice.identity:
     container_name: leaderboard.backoffice.identity
@@ -44,6 +44,7 @@
     environment:
       Kestrel__Endpoints__Localhost__Url: http://0.0.0.0:5020
       Kafka__Consumer__MatchStatusMessage__BootstrapServers: kafka1:9092,kafka2:9092,kafka3:9092
+      Kafka__Consumer__PlayerUpdateMessage__BootstrapServers: kafka1:9092,kafka2:9092,kafka3:9092
       ConnectionStrings__ChronicleDb: "Host=postgresql;Port=5432;Database=chronicle;Username=chronicle;Password=chronicle-ha90Hxzw09fh2x!;Pooling=true;Minimum Pool Size=5;Maximum Pool Size=20;Include Error Detail=true"
     depends_on:
       - postgresql
@@ -53,14 +54,17 @@
     hostname: playersearch
     image: leaderboard.backoffice.playersearch
     ports:
-      - "5040:5040"
+      - "5030:5030"
     build:
       context: ./BE
       dockerfile: BackOffice/BackOffice.PlayerSearch/Dockerfile
     env_file:
       - .env
     environment:
-      Kestrel__Endpoints__Localhost__Url: http://0.0.0.0:5040
+      Kestrel__Endpoints__Localhost__Url: http://0.0.0.0:5030
+      AWS__ServiceURL: http://dynamodb:8000/
+    depends_on:
+      - dynamodb
 
   backoffice.matchmaker:
     container_name: leaderboard.backoffice.matchmaker
@@ -78,6 +82,17 @@
       - kafka1
       - kafka2
       - kafka3
+
+  dynamodb:
+    image: amazon/dynamodb-local:latest
+    container_name: leaderboard.dynamodb
+    hostname: dynamodb
+    ports:
+      - "8000:8000"
+    command: "-jar DynamoDBLocal.jar -sharedDb"
+    volumes:
+      - dynamodb_data:/home/dynamodblocal/data
+    working_dir: /home/dynamodblocal
 
   kafka1:
     container_name: leaderboard.kafka1
@@ -204,3 +219,4 @@ volumes:
   kafka3_data: {}
   conduktor_data: {}
   pg_data: {}
+  dynamodb_data: {}
