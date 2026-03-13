@@ -21,6 +21,9 @@ public class KafkaConfigurator
 
     public KafkaConfigurator CreateTopic(TopicConfiguration topicSpecification)
     {
+        if (string.IsNullOrWhiteSpace(topicSpecification.BootstrapServers))
+            throw new InvalidOperationException("Bootstrap servers not set");
+
         _topics.Add(topicSpecification);
         return this;
     }

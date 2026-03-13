@@ -15,6 +15,10 @@ COPY ["BackOffice/BackOffice.Identity.Data/", "BackOffice/BackOffice.Identity.Da
 COPY ["Common/Common.Grpc.Server/", "Common/Common.Grpc.Server/"]
 COPY ["Common/Common.Primitives/", "Common/Common.Primitives/"]
 COPY ["Common/Common.OpenTelemetry/", "Common/Common.OpenTelemetry/"]
+COPY ["Common/Common.MQ.Kafka.Configurator/", "Common/Common.MQ.Kafka.Configurator/"]
+COPY ["Common/Common.MQ.Kafka.Serializer.MessagePack/", "Common/Common.MQ.Kafka.Serializer.MessagePack/"]
+COPY ["Common/Common.MQ.Kafka/", "Common/Common.MQ.Kafka/"]
+COPY ["Common/Common.MQ.Messages/", "Common/Common.MQ.Messages/"]
 COPY ["BackOffice/ProtoFiles/", "BackOffice/ProtoFiles/"]
 
 # docker migrations

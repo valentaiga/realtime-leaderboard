@@ -28,6 +28,26 @@ public class RegisterUserTests : IntegrationTestBase
     }
 
     [Fact]
+    public async Task RegisterUser_PlayerRegisteredEvent_ProduceOnSuccess()
+    {
+        // arrange
+        Fixture.Identity.PlayerMessageKafkaProducer.ResetSavedMessages();
+        var request = new RegisterRequest(1, "username", "password$1");
+
+        // act
+        using var response = await _client.PostAsync("/api/identity/register", JsonContent.Create(request));
+
+        // assert
+        response.AssertSuccessResponse();
+        await AssertSuccessLoginAsync(request.Username, request.Password);
+        var producedMessage = Fixture.Identity.PlayerMessageKafkaProducer.ProducedMessages.Should().ContainSingle().Which;
+        producedMessage.Message.Key.Should().Be(producedMessage.Message.Value.PlayerId);
+        var @event = producedMessage.Message.Value.PlayerRegisteredEvent;
+        @event.Should().NotBeNull();
+        @event.Username.Should().Be(request.Username);
+    }
+
+    [Fact]
     public async Task RegisterUser_Duplicate_Failure()
     {
         // arrange

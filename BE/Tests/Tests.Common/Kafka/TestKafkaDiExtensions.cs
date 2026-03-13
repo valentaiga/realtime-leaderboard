@@ -1,4 +1,5 @@
-﻿using Common.MQ.Kafka.Consumer;
+﻿using Common.MQ.Kafka.Configurator;
+using Common.MQ.Kafka.Consumer;
 using Common.MQ.Kafka.Producer;
 using Confluent.Kafka;
 using Microsoft.Extensions.DependencyInjection;
@@ -8,21 +9,28 @@ namespace Tests.Common.Kafka;
 
 public static class TestKafkaDiExtensions
 {
-    public static IServiceCollection ReplaceKafkaConsumerWithInMemoryQueue<TKey, TValue>(this IServiceCollection provider)
+    public static IServiceCollection ReplaceKafkaConsumerWithInMemoryQueue<TKey, TValue>(this IServiceCollection services)
     {
-        provider
+        services
             .RemoveAll<IKafkaConsumer<TKey, TValue>>()
             .AddSingleton<IKafkaConsumer<TKey, TValue>, TestKafkaConsumer<TKey, TValue>>()
             .TryAddSingleton<IMessageQueue<ConsumeResult<TKey, TValue>>, SharedMessageQueue<ConsumeResult<TKey, TValue>>>();
-        return provider;
+        return services;
     }
 
-    public static IServiceCollection ReplaceKafkaProducerWithInMemoryQueue<TKey, TValue>(this IServiceCollection provider)
+    public static IServiceCollection ReplaceKafkaProducerWithInMemoryQueue<TKey, TValue>(this IServiceCollection services)
     {
-        provider
+        services
             .RemoveAll<IKafkaProducer<TKey, TValue>>()
             .AddSingleton<IKafkaProducer<TKey, TValue>, TestKafkaProducer<TKey, TValue>>()
             .TryAddSingleton<IMessageQueue<ConsumeResult<TKey, TValue>>, SharedMessageQueue<ConsumeResult<TKey, TValue>>>();
-        return provider;
+        return services;
+    }
+
+    public static IServiceCollection ReplaceKafkaTopicCreator(this IServiceCollection services)
+    {
+        services.RemoveAll(typeof(IKafkaTopicCreator));
+        services.AddSingleton<IKafkaTopicCreator, TestTopicCreator>();
+        return services;
     }
 }

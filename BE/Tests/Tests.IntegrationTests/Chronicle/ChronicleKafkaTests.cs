@@ -1,7 +1,6 @@
 ﻿using BackOffice.Chronicle.Migrations;
 using BackOffice.MQ.Messages.MatchStatus;
-using BackOffice.MQ.Messages.PlayerUpdate;
-using Common.MQ.Kafka.Producer;
+using BackOffice.MQ.Messages.Player;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Tests.Common.Kafka;
@@ -11,16 +10,19 @@ namespace Tests.IntegrationTests.Chronicle;
 [Collection(TestConstants.TestCollections.IntegrationTests)]
 public class ChronicleKafkaTests : IntegrationTestBase
 {
+    private readonly TestKafkaProducer<string, MatchStatusMessage> _producer;
+    
     public ChronicleKafkaTests(IntegrationTestFixture fixture) : base(fixture)
     {
         IntegrationTestFixture.CleanChronicleDb();
+        _producer = fixture.Mm.MatchStatusMessageKafkaProducer;
+        _producer.ResetSavedMessages();
     }
 
     [Fact]
     public async Task MatchStatus_MatchStartedEvent_MatchSkipped()
     {
         // arrange
-        var producer = Fixture.Mm.Services.GetRequiredService<IKafkaProducer<string, MatchStatusMessage>>();
         var message = new MatchStatusMessage
         {
             MatchId = $"{DateTime.UtcNow.Ticks:D}{Guid.NewGuid():N}",
@@ -29,7 +31,7 @@ public class ChronicleKafkaTests : IntegrationTestBase
         var offset = Fixture.Chronicle.MatchStatusConsumer.CommitedOffset;
 
         // act
-        await producer.ProduceAsync(message.MatchId, message, CancellationToken.None);
+        await _producer.ProduceAsync(message.MatchId, message, CancellationToken.None);
 
         // assert
         SpinWait.SpinUntil(() => Fixture.Chronicle.MatchStatusConsumer.CommitedOffset == offset + 1, 1_000);
@@ -45,7 +47,6 @@ public class ChronicleKafkaTests : IntegrationTestBase
     public async Task MatchStatus_MatchFinishedEvent_MatchCreatedInDb()
     {
         // arrange
-        var producer = Fixture.Mm.Services.GetRequiredService<IKafkaProducer<string, MatchStatusMessage>>();
         var message = new MatchStatusMessage
         {
             MatchId = $"{DateTime.UtcNow.Ticks:D}{Guid.NewGuid():N}",
@@ -54,7 +55,7 @@ public class ChronicleKafkaTests : IntegrationTestBase
         var offset = Fixture.Chronicle.MatchStatusConsumer.CommitedOffset;
 
         // act
-        await producer.ProduceAsync(message.MatchId, message, CancellationToken.None);
+        await _producer.ProduceAsync(message.MatchId, message, CancellationToken.None);
 
         // assert
         SpinWait.SpinUntil(() => Fixture.Chronicle.MatchStatusConsumer.CommitedOffset == offset + 1, 1_000);
@@ -86,18 +87,17 @@ public class ChronicleKafkaTests : IntegrationTestBase
     public async Task PlayerUpdate_PlayerEloChanged_EloUpdatedInDb()
     {
         // arrange
-        var matchProducer = Fixture.Mm.Services.GetRequiredService<IKafkaProducer<string, MatchStatusMessage>>();
         var matchMessage = new MatchStatusMessage
         {
             MatchId = $"{DateTime.UtcNow.Ticks:D}{Guid.NewGuid():N}",
             MatchFinishedEvent = new([1,2,3,4,5], [6,7,8,9,10], DateTime.UtcNow, DateTime.UtcNow.AddMinutes(99))
         };
         var matchConsumerOffset = Fixture.Chronicle.MatchStatusConsumer.CommitedOffset;
-        await matchProducer.ProduceAsync(matchMessage.MatchId, matchMessage, CancellationToken.None);
+        await _producer.ProduceAsync(matchMessage.MatchId, matchMessage, CancellationToken.None);
         SpinWait.SpinUntil(() => Fixture.Chronicle.MatchStatusConsumer.CommitedOffset == matchConsumerOffset + 1, 1_000);
 
-        var playerUpdateProducer = TestKafkaProducer<long, PlayerUpdateMessage>.CreateInstance(string.Empty);
-        var playerUpdateMessage = new PlayerUpdateMessage
+        var playerUpdateProducer = TestKafkaProducer<long, PlayerMessage>.CreateInstance(string.Empty);
+        var playerUpdateMessage = new PlayerMessage
         {
             PlayerId = 1,
             PlayerEloChangedEvent = new()

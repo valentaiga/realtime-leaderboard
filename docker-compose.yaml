@@ -29,6 +29,12 @@
     environment:
       Kestrel__Endpoints__Localhost__Url: http://0.0.0.0:5010
       ConnectionStrings__IdentityDb: "Host=postgresql;Port=5432;Database=identity;Username=identity;Password=identity-1K2p1zvz52zag1@;Pooling=true;Minimum Pool Size=5;Maximum Pool Size=20;Include Error Detail=true"
+      Kafka__Producer__PlayerMessage__BootstrapServers: kafka1:9092,kafka2:9092,kafka3:9092
+      Kafka__Configuration__Player__BootstrapServers: kafka1:9092,kafka2:9092,kafka3:9092
+    depends_on:
+      - kafka1
+      - kafka2
+      - kafka3
 
   backoffice.chronicle:
     container_name: leaderboard.backoffice.chronicle
@@ -44,7 +50,7 @@
     environment:
       Kestrel__Endpoints__Localhost__Url: http://0.0.0.0:5020
       Kafka__Consumer__MatchStatusMessage__BootstrapServers: kafka1:9092,kafka2:9092,kafka3:9092
-      Kafka__Consumer__PlayerUpdateMessage__BootstrapServers: kafka1:9092,kafka2:9092,kafka3:9092
+      Kafka__Consumer__PlayerMessage__BootstrapServers: kafka1:9092,kafka2:9092,kafka3:9092
       ConnectionStrings__ChronicleDb: "Host=postgresql;Port=5432;Database=chronicle;Username=chronicle;Password=chronicle-ha90Hxzw09fh2x!;Pooling=true;Minimum Pool Size=5;Maximum Pool Size=20;Include Error Detail=true"
     depends_on:
       - postgresql

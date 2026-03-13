@@ -1,4 +1,5 @@
-﻿using Common.MQ.Kafka.Producer;
+﻿using System.Text.Json;
+using Common.MQ.Kafka.Producer;
 using Confluent.Kafka;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -20,18 +21,33 @@ public class TestKafkaProducer<TKey, TMessage>(
         return new TestKafkaProducer<TKey, TMessage>(optionsMonitor, new SharedMessageQueue<ConsumeResult<TKey, TMessage>>(), NullLogger<TestKafkaProducer<TKey, TMessage>>.Instance);
     }
 
-    private long _offset = 0;
+    public IReadOnlyList<ConsumeResult<TKey, TMessage>> ProducedMessages => _producedMessages;
+
+    private readonly List<ConsumeResult<TKey, TMessage>> _producedMessages = [];
     private readonly string _topic = optionsMonitor.Get(nameof(TMessage)).Topic
         ?? throw new Exception("Configuration for producer is incorrect");
+
+    private long _offset = 0;
 
     public Task ProduceAsync(TKey key, TMessage message, CancellationToken ct)
     {
         logger.LogInformation("Produced message {@Message}", message);
-        return messageQueue.WriteAsync(new ConsumeResult<TKey, TMessage>
+        
+        
+        var result = new ConsumeResult<TKey, TMessage>
         {
-            Offset = new Offset(Interlocked.Increment(ref _offset)),
+            Offset = Interlocked.Increment(ref _offset),
             Message = new Message<TKey, TMessage> { Key = key, Value = message },
             Topic = _topic,
-        }, ct);
+        };
+
+        // copying message because some services return them to ObjectPool after success produce
+        result.Message = JsonSerializer.Deserialize<Message<TKey, TMessage>>(JsonSerializer.Serialize(result.Message))
+            ?? throw new InvalidOperationException("Something went wrong in TestKafkaProducer");
+        
+        _producedMessages.Add(result);
+        return messageQueue.WriteAsync(result, ct);
     }
+
+    public void ResetSavedMessages() => _producedMessages.Clear();
 }

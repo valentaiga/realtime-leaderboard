@@ -1,6 +1,6 @@
 ﻿using MessagePack;
 
-namespace BackOffice.MQ.Messages.PlayerUpdate;
+namespace BackOffice.MQ.Messages.Player;
 
 [MessagePackObject]
 public class PlayerEloChangedEvent

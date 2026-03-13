@@ -1,5 +1,5 @@
 ﻿using BackOffice.MQ.Messages.MatchStatus;
-using BackOffice.MQ.Messages.PlayerUpdate;
+using BackOffice.MQ.Messages.Player;
 using Common.MQ.Kafka.Consumer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -29,7 +29,7 @@ public class ChronicleTestHost : WebApplicationFactory<Program>
         base.ConfigureWebHost(builder);
         builder.ConfigureTestServices(services => services
             .ReplaceKafkaConsumerWithInMemoryQueue<string, MatchStatusMessage>()
-            .ReplaceKafkaConsumerWithInMemoryQueue<long, PlayerUpdateMessage>());
+            .ReplaceKafkaConsumerWithInMemoryQueue<long, PlayerMessage>());
 
         builder.UseSetting("ConnectionStrings:ChronicleDb", TestConstants.TestsConnectionString);
         builder.UseSetting("EnableOpenTelemetry", "false");
@@ -38,6 +38,6 @@ public class ChronicleTestHost : WebApplicationFactory<Program>
     public TestKafkaConsumer<string, MatchStatusMessage> MatchStatusConsumer =>
         (TestKafkaConsumer<string, MatchStatusMessage>)Services.GetRequiredService<IKafkaConsumer<string, MatchStatusMessage>>();
 
-    public TestKafkaConsumer<long, PlayerUpdateMessage> PlayerUpdateConsumer =>
-        (TestKafkaConsumer<long, PlayerUpdateMessage>)Services.GetRequiredService<IKafkaConsumer<long, PlayerUpdateMessage>>();
+    public TestKafkaConsumer<long, PlayerMessage> PlayerUpdateConsumer =>
+        (TestKafkaConsumer<long, PlayerMessage>)Services.GetRequiredService<IKafkaConsumer<long, PlayerMessage>>();
 }

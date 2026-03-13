@@ -1,5 +1,6 @@
 ﻿using BackOffice.MQ.Messages.MatchStatus;
 using Common.MQ.Kafka.Configurator;
+using Common.MQ.Kafka.Producer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
@@ -11,6 +12,8 @@ namespace Tests.Common.BackOffice.Matchmaker;
 
 public class MatchmakerTestHost : WebApplicationFactory<Program>
 {
+    public TestKafkaProducer<string, MatchStatusMessage> MatchStatusMessageKafkaProducer => (TestKafkaProducer<string, MatchStatusMessage>)Services.GetRequiredService<IKafkaProducer<string, MatchStatusMessage>>();
+
     protected override TestServer CreateServer(IServiceProvider serviceProvider)
     {
         var testServer = base.CreateServer(serviceProvider);
@@ -24,8 +27,7 @@ public class MatchmakerTestHost : WebApplicationFactory<Program>
         builder.UseSetting("FakeActivity:IsEnabled", "false");
         builder.ConfigureTestServices(services =>
         {
-            services.RemoveAll(typeof(IKafkaTopicCreator));
-            services.AddSingleton<IKafkaTopicCreator, TestTopicCreator>();
+            services.ReplaceKafkaTopicCreator();
             services.ReplaceKafkaProducerWithInMemoryQueue<string, MatchStatusMessage>();
         });
         builder.UseSetting("EnableOpenTelemetry", "false");

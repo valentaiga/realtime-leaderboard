@@ -1,7 +1,7 @@
 ﻿using BackOffice.Chronicle.Data.Models;
 using BackOffice.Chronicle.Database;
 using BackOffice.MQ.Messages.MatchStatus;
-using BackOffice.MQ.Messages.PlayerUpdate;
+using BackOffice.MQ.Messages.Player;
 using Common.Filtering;
 
 namespace BackOffice.Chronicle;

@@ -1,11 +1,11 @@
-﻿using BackOffice.MQ.Messages.PlayerUpdate;
+﻿using BackOffice.MQ.Messages.Player;
 using Common.MQ.Kafka.Consumer;
 
 namespace BackOffice.Chronicle;
 
 public class PlayerUpdateHandler(
     MatchService matchService,
-    IKafkaConsumer<long, PlayerUpdateMessage> kafkaConsumer,
+    IKafkaConsumer<long, PlayerMessage> kafkaConsumer,
     ILogger<MatchStatusHandler> logger) : BackgroundService
 {
     protected override async Task ExecuteAsync(CancellationToken ct)

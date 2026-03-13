@@ -20,7 +20,6 @@ builder.Services.ConfigureHttpJsonOptions(options =>
 });
 
 // todo vm: nginx should handle user requests, not frontoffice directly
-// todo vm: add service with user search via nickname for FE 'search input'
 // todo vm: add remote cache (redis) for idempotent endpoints
 
 builder.Services

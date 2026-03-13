@@ -66,8 +66,8 @@ The score and leaderboard records are persisted on the relational database as we
 ## System Design
 
 [Link](https://excalidraw.com/#room=313c94cf4dcf72625202,4gJ_fFXYJwT50aGtW2X7KA)
-
-todo vm: insert some information
+  
+Matchmaker was simplified because our goal is to handle big read & write data, and we could easily simulate it.
 
 ### .NET Stack
 - .NET 10 with NativeAOT
@@ -87,6 +87,14 @@ Why:
 - High insert speed without table locks
 - Maturity, excellent documentation and a large community
 - Sharding opportunity for scaling
+```
+
+- DynamoDB for player search
+```markdown
+Why:
+- Built-in optimized search engine
+- Consistent search results based on input
+- No overhead
 ```
 
 - Kafka for inter-service message communication

@@ -1,11 +1,13 @@
-﻿using BackOffice.Identity.Data;
+﻿using System.Threading.Channels;
+using BackOffice.Identity.Data;
 using BackOffice.Identity.Database;
+using BackOffice.MQ.Messages.Player;
 using Common.Primitives;
 using Microsoft.AspNetCore.Identity;
 
 namespace BackOffice.Identity.Identity;
 
-public sealed class UserService(IUserRepository userRepository, IPasswordHasher<UserDto> passwordHasher)
+public sealed class UserService(IUserRepository userRepository, IPasswordHasher<UserDto> passwordHasher, ChannelWriter<PlayerMessage> channel)
 {
     public async Task<LoginUserResult> LoginUserAsync(string username, string password, CancellationToken ct)
     {
@@ -24,7 +26,7 @@ public sealed class UserService(IUserRepository userRepository, IPasswordHasher<
         return user;
     }
 
-    public Task RegisterUserAsync(long id, string username, string password, CancellationToken ct)
+    public async Task RegisterUserAsync(long id, string username, string password, CancellationToken ct)
     {
         var user = new UserDto
         {
@@ -32,6 +34,11 @@ public sealed class UserService(IUserRepository userRepository, IPasswordHasher<
             Username = username,
         };
         user.PasswordHash = passwordHasher.HashPassword(user, password);
-        return userRepository.Add(user, ct);
+        await userRepository.Add(user, ct);
+        await channel.WriteAsync(new PlayerMessage
+        {
+            PlayerId = user.Id,
+            PlayerRegisteredEvent = new() { Username = user.Username }
+        }, CancellationToken.None);
     }
 }
